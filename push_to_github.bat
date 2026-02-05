@@ -53,10 +53,19 @@ REM Adding username to URL to force correct account login
 echo Pushing to GitHub...
 echo.
 echo ========================================================
-echo PUSHING NOW...
-echo 1. Since you don't have 2FA, try your GitHub Password.
-echo 2. If Password fails, you need a Personal Access Token.
-echo    (GitHub removed password support for some accounts)
+echo CRITICAL: GitHub does NOT support passwords anymore.
+echo You MUST use a "Personal Access Token".
+echo.
+echo I am opening the GitHub Token page for you now...
+start https://github.com/settings/tokens/new?scopes=repo^&description=TechTrapPush
+echo.
+echo INSTRUCTIONS:
+echo 1. In the browser window that opened:
+echo    - Scroll down and click green "Generate token" button
+echo 2. COPY the long string starting with "ghp_..."
+echo 3. Come back to this black window.
+echo 4. When asked for "Password", PASTE that token.
+echo    (Note: You won't see the cursor move when you paste!)
 echo ========================================================
 echo.
 %GIT_PATH% push -u origin main
