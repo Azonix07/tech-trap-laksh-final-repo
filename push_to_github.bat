@@ -40,7 +40,7 @@ echo Adding files...
 %GIT_PATH% add .
 
 echo Committing changes...
-%GIT_PATH% commit -m "Final Sci-Fi Update: Mega logos, Animations, and Admin controls"
+%GIT_PATH% commit -m "Final Sci-Fi Update: Mega logos, Animations, and Admin controls" 2>nul
 
 echo Setting branch to main...
 %GIT_PATH% branch -M main
@@ -53,11 +53,21 @@ REM Adding username to URL to force correct account login
 echo Pushing to GitHub...
 echo.
 echo ========================================================
-echo IMPORTANT: You will be asked for a Password or Token.
-echo Please enter your Personal Access Token (or password).
+echo PUSHING NOW...
+echo 1. Since you don't have 2FA, try your GitHub Password.
+echo 2. If Password fails, you need a Personal Access Token.
+echo    (GitHub removed password support for some accounts)
 echo ========================================================
 echo.
 %GIT_PATH% push -u origin main
+if %errorlevel% neq 0 (
+    echo.
+    echo [ERROR] Push failed. 
+    echo Ensure you are entering the password for 'Azonix07', not 'Escanor360'.
+) else (
+    echo.
+    echo [SUCCESS] Code pushed to GitHub!
+)
 
 echo ==========================================
 echo Process Complete.
