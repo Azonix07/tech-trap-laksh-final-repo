@@ -21,8 +21,20 @@ if not exist %GIT_PATH% (
 
 echo Using Git at: %GIT_PATH%
 
+echo Fixing embedded repository issues...
+if exist "tech-trap-new-laksh\.git" (
+    echo Removing nested .git folder to fix conflict...
+    rmdir /s /q "tech-trap-new-laksh\.git"
+    %GIT_PATH% rm --cached tech-trap-new-laksh 2>nul
+)
+
 echo Initializing repository...
 %GIT_PATH% init
+
+echo Configuring local settings...
+REM Force git to forget the wrong user for this folder
+%GIT_PATH% config --local credential.helper ""
+%GIT_PATH% config --local user.name "Azonix07"
 
 echo Adding files...
 %GIT_PATH% add .
@@ -35,12 +47,15 @@ echo Setting branch to main...
 
 echo Adding remote origin...
 %GIT_PATH% remote remove origin 2>nul
-%GIT_PATH% remote add origin https://github.com/Azonix07/tech-trap-laksh-final-repo.git
+REM Adding username to URL to force correct account login
+%GIT_PATH% remote add origin https://Azonix07@github.com/Azonix07/tech-trap-laksh-final-repo.git
 
 echo Pushing to GitHub...
 echo.
-echo NOTE: If asked for credentials, please sign in.
-echo If you get a 403 error, ensure you are logged in as correctly.
+echo ========================================================
+echo IMPORTANT: You will be asked for a Password or Token.
+echo Please enter your Personal Access Token (or password).
+echo ========================================================
 echo.
 %GIT_PATH% push -u origin main
 
