@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Center - Tech Trap NIT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f0ff;
+            --primary-purple: #a855f7;
+            --primary-pink: #ec4899;
+            --success-green: #4ade80;
+            --danger-red: #f87171;
+            --warning-orange: #fb923c;
+            --dark-bg: #0a0a0f;
+            --card-bg: rgba(15, 15, 25, 0.95);
+            --border-glow: rgba(0, 240, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            animation: grid-pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes grid-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Scan Line Effect */
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary-cyan), transparent);
+            z-index: 1000;
+            animation: scan 3s linear infinite;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 60px rgba(0, 240, 255, 0.1),
+                inset 0 0 60px rgba(0, 240, 255, 0.03);
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.05), transparent);
+            animation: shine 4s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        .corner-decor {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--primary-cyan);
+        }
+
+        .corner-decor.top-left { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .corner-decor.top-right { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .corner-decor.bottom-left { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .corner-decor.bottom-right { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+        .login-icon {
+            font-size: 60px;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .login-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(0, 240, 255, 0.05);
+            border: 2px solid rgba(0, 240, 255, 0.2);
+            border-radius: 10px;
+            font-size: 18px;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 16px 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 2px solid;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            width: 100%;
+            color: #fff;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+            border-color: var(--primary-cyan);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.4) 0%, rgba(168, 85, 247, 0.4) 100%);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-start {
+            color: var(--success-green);
+            background: rgba(74, 222, 128, 0.1);
+            border-color: var(--success-green);
+        }
+
+        .btn-start:hover {
+            background: rgba(74, 222, 128, 0.3);
+            box-shadow: 0 0 25px rgba(74, 222, 128, 0.4);
+        }
+
+        .btn-stop {
+            color: var(--danger-red);
+            background: rgba(248, 113, 113, 0.1);
+            border-color: var(--danger-red);
+        }
+
+        .btn-stop:hover {
+            background: rgba(248, 113, 113, 0.3);
+            box-shadow: 0 0 25px rgba(248, 113, 113, 0.4);
+        }
+
+        .btn-reset {
+            color: var(--warning-orange);
+            background: rgba(251, 146, 60, 0.1);
+            border-color: var(--warning-orange);
+        }
+
+        .btn-reset:hover {
+            background: rgba(251, 146, 60, 0.3);
+            box-shadow: 0 0 25px rgba(251, 146, 60, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .error-message {
+            color: var(--danger-red);
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 25px 35px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-icon {
+            font-size: 40px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-text p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Status Badge */
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .status-indicator.running {
+            background: rgba(74, 222, 128, 0.15);
+            border: 2px solid var(--success-green);
+            color: var(--success-green);
+        }
+
+        .status-indicator.stopped {
+            background: rgba(248, 113, 113, 0.15);
+            border: 2px solid var(--danger-red);
+            color: var(--danger-red);
+        }
+
+        .status-indicator.completed {
+            background: rgba(168, 85, 247, 0.15);
+            border: 2px solid var(--primary-purple);
+            color: var(--primary-purple);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        .status-indicator.running .status-dot {
+            background: var(--success-green);
+        }
+
+        .status-indicator.stopped .status-dot {
+            background: var(--danger-red);
+        }
+
+        .status-indicator.completed .status-dot {
+            background: var(--primary-purple);
+            animation: none;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title span {
+            font-size: 20px;
+        }
+
+        /* Controls Card */
+        .controls-grid {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .controls-grid .btn {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* Timer Display */
+        .timer-display {
+            text-align: center;
+        }
+
+        .timer-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 72px;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .timer-label {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        /* Room Display */
+        .room-display {
+            text-align: center;
+        }
+
+        .room-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--primary-cyan);
+        }
+
+        .room-total {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 24px;
+        }
+
+        .room-name {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--primary-cyan);
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        /* Participants Section */
+        .participants-card {
+            grid-column: 1 / -1;
+        }
+
+        .participants-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .participants-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .participants-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .participants-list::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+            border-radius: 4px;
+        }
+
+        .participant-item {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .participant-item:hover {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 240, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .participant-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .participant-info {
+            flex: 1;
+        }
+
+        .participant-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .participant-status {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 3px;
+        }
+
+        .participant-room {
+            padding: 6px 14px;
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid var(--primary-purple);
+            border-radius: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary-purple);
+        }
+
+        .no-participants {
+            text-align: center;
+            padding: 50px 20px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .no-participants-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-title {
+                flex-direction: column;
+            }
+
+            .timer-value {
+                font-size: 48px;
+            }
+
+            .room-value {
+                font-size: 36px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls-grid .btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="scanline"></div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <div class="corner-decor top-left"></div>
+            <div class="corner-decor top-right"></div>
+            <div class="corner-decor bottom-left"></div>
+            <div class="corner-decor bottom-right"></div>
+
+            <div class="login-icon">🔐</div>
+            <h2 class="login-title">Command Center</h2>
+            <p class="login-subtitle">Admin Access Required</p>
+
+            <div class="input-group">
+                <label for="passwordInput">Access Code</label>
+                <input type="password" id="passwordInput" placeholder="Enter admin password...">
+            </div>
+
+            <button class="btn btn-primary" onclick="login()">Authenticate</button>
+            <p id="errorMessage" class="error-message hidden">⚠️ Access Denied - Invalid Credentials</p>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="container hidden">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="header-title">
+                <span class="header-icon">🎮</span>
+                <div class="header-text">
+                    <h1>TECH TRAP COMMAND CENTER</h1>
+                    <p>Real-time Event Control & Monitoring</p>
+                </div>
+            </div>
+            <div class="status-indicator stopped" id="statusIndicator">
+                <span class="status-dot"></span>
+                <span id="statusText">OFFLINE</span>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="dashboard-grid">
+            <!-- Event Controls -->
+            <div class="card">
+                <h3 class="card-title"><span>⚡</span> Event Controls</h3>
+                <div class="controls-grid">
+                    <button class="btn btn-start" onclick="startEvent()" id="startBtn">▶ START</button>
+                    <button class="btn btn-stop" onclick="stopEvent()" id="stopBtn" disabled>⏹ STOP</button>
+                    <button class="btn btn-reset" onclick="resetEvent()">↻ RESET</button>
+                    <button class="btn btn-primary" onclick="forceNextRoom()" id="forceNextBtn" disabled>⏩ FORCE NEXT</button>
+                </div>
+            </div>
+
+            <!-- Timer -->
+            <div class="card">
+                <h3 class="card-title"><span>⏱️</span> Room Timer</h3>
+                <div class="timer-display">
+                    <div class="timer-value" id="timerDisplay">10:00</div>
+                    <p class="timer-label">Time Remaining</p>
+                </div>
+            </div>
+
+            <!-- Current Room -->
+            <div class="card">
+                <h3 class="card-title"><span>🚪</span> Current Room</h3>
+                <div class="room-display">
+                    <span class="room-value" id="currentRoomNum">1</span>
+                    <span class="room-total">/ 3</span>
+                    <p class="room-name" id="roomName">The Knowledge Lobby</p>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="card">
+                <h3 class="card-title"><span>📊</span> Live Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="participantCount">0</div>
+                        <p class="stat-label">Active Users</p>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="timeElapsed">00:00</div>
+                        <p class="stat-label">Elapsed</p>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalRooms">3</div>
+                        <p class="stat-label">Total Rooms</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Participants -->
+            <div class="card participants-card">
+                <h3 class="card-title">
+                    <span>👥</span> Connected Participants 
+                    <span style="color: var(--primary-cyan);">(<span id="participantTotal">0</span>)</span>
+                </h3>
+                <div class="participants-list" id="participantsList">
+                    <div class="no-participants">
+                        <div class="no-participants-icon">👾</div>
+                        <p>No agents connected yet</p>
+                        <p style="font-size: 13px; margin-top: 5px;">Waiting for participants to join...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let isAuthenticated = false;
+        let participants = {};
+
+        const roomNames = {
+            1: 'The Knowledge Lobby',
+            2: 'Bug Fixing Lab',
+            3: 'The Logic Chamber'
+        };
+
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            socket.emit('adminAuth', password);
+        }
+
+        socket.on('authSuccess', () => {
+            isAuthenticated = true;
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('errorMessage').classList.add('hidden');
+        });
+
+        socket.on('authFailed', () => {
+            document.getElementById('errorMessage').classList.remove('hidden');
+            document.getElementById('passwordInput').value = '';
+        });
+
+        function startEvent() {
+            socket.emit('startEvent');
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+        }
+
+        function stopEvent() {
+            if (confirm('Are you sure you want to stop the event?')) {
+                socket.emit('stopEvent');
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+            }
+        }
+
+        function resetEvent() {
+            if (confirm('Are you sure you want to reset the event? All progress will be lost.')) {
+                socket.emit('resetEvent');
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('forceNextBtn').disabled = true;
+            }
+        }
+
+        function forceNextRoom() {
+            if (confirm('Are you sure you want to force participants to the next room?')) {
+                socket.emit('forceNextRoom');
+            }
+        }
+
+        socket.on('eventStarted', (data) => {
+            updateStatus('running', 'LIVE');
+            updateRoomName(data.currentRoom);
+            document.getElementById('forceNextBtn').disabled = false;
+        });
+
+        socket.on('eventStopped', () => {
+            updateStatus('stopped', 'OFFLINE');
+            document.getElementById('timerDisplay').textContent = '10:00';
+            document.getElementById('forceNextBtn').disabled = true;
+        });
+
+        socket.on('eventReset', () => {
+            updateStatus('stopped', 'OFFLINE');
+            document.getElementById('timerDisplay').textContent = '10:00';
+            document.getElementById('currentRoomNum').textContent = '1';
+            document.getElementById('roomName').textContent = roomNames[1];
+            document.getElementById('timeElapsed').textContent = '00:00';
+        });
+
+        socket.on('timerSync', (data) => {
+            const minutes = Math.floor(data.remaining / 60000);
+            const seconds = Math.floor((data.remaining % 60000) / 1000);
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            document.getElementById('currentRoomNum').textContent = data.currentRoom;
+            updateRoomName(data.currentRoom);
+
+            const elapsedMin = Math.floor(data.elapsed / 60000);
+            const elapsedSec = Math.floor((data.elapsed % 60000) / 1000);
+            document.getElementById('timeElapsed').textContent = 
+                `${elapsedMin.toString().padStart(2, '0')}:${elapsedSec.toString().padStart(2, '0')}`;
+        });
+
+        socket.on('roomChanged', (data) => {
+            document.getElementById('currentRoomNum').textContent = data.currentRoom;
+            updateRoomName(data.currentRoom);
+        });
+
+        socket.on('eventCompleted', () => {
+            updateStatus('completed', 'COMPLETED');
+            alert('🎉 Event Completed! All rooms finished.');
+        });
+
+        socket.on('gameState', (state) => {
+            participants = state.participants;
+            updateParticipantsList();
+            
+            if (state.isRunning) {
+                updateStatus('running', 'LIVE');
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+            }
+        });
+
+        socket.on('participantProgress', (data) => {
+            if (participants[data.participantId]) {
+                participants[data.participantId].progress = data.progress;
+                updateParticipantsList();
+            }
+        });
+
+        function updateStatus(type, text) {
+            const indicator = document.getElementById('statusIndicator');
+            indicator.className = `status-indicator ${type}`;
+            document.getElementById('statusText').textContent = text;
+        }
+
+        function updateRoomName(roomNum) {
+            document.getElementById('roomName').textContent = roomNames[roomNum] || `Room ${roomNum}`;
+        }
+
+        function updateParticipantsList() {
+            const list = document.getElementById('participantsList');
+            const participantKeys = Object.keys(participants);
+            
+            document.getElementById('participantCount').textContent = participantKeys.length;
+            document.getElementById('participantTotal').textContent = participantKeys.length;
+
+            if (participantKeys.length === 0) {
+                list.innerHTML = `
+                    <div class="no-participants">
+                        <div class="no-participants-icon">👾</div>
+                        <p>No agents connected yet</p>
+                        <p style="font-size: 13px; margin-top: 5px;">Waiting for participants to join...</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = participantKeys.map(id => {
+                const p = participants[id];
+                const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                const roomProgress = p.roomProgress ? Object.values(p.roomProgress).reduce((a, b) => a + b.length, 0) : 0;
+                
+                return `
+                    <div class="participant-item">
+                        <div class="participant-avatar">${initials}</div>
+                        <div class="participant-info">
+                            <div class="participant-name">${p.name}</div>
+                            <div class="participant-status">Progress: ${roomProgress}/15 answered</div>
+                        </div>
+                        <div class="participant-room">R${p.currentRoom || 1}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Allow Enter key to login
+        document.getElementById('passwordInput')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+
+        // Periodically request game state to keep participants list updated
+        setInterval(() => {
+            if (isAuthenticated) {
+                socket.emit('getGameState');
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
