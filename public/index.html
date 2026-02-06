@@ -58,12 +58,12 @@
             width: 350px;
             height: 350px;
             object-fit: contain;
-            filter: drop-shadow(0 0 40px rgba(0, 240, 255, 0.5));
+            filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.3));
             transition: all 0.4s ease;
         }
 
         .loading-logo:hover {
-            animation: thunder-shock 1.5s infinite;
+            animation: digital-glitch 0.6s ease-out forwards;
         }
 
         .loading-bar-container {
@@ -150,23 +150,51 @@
             width: 550px;
             height: 550px;
             object-fit: contain;
-            filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.4));
+            filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.3));
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
         }
 
-        @keyframes thunder-shock {
-            0% { filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.4)) hue-rotate(0deg); }
-            2% { filter: drop-shadow(0 0 100px rgba(255, 255, 255, 0.8)) hue-rotate(180deg) brightness(2); transform: scale(1.05) translate(-2px, 2px); }
-            4% { filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.4)) hue-rotate(0deg); transform: scale(1.02) translate(2px, -2px); }
-            6% { filter: drop-shadow(0 0 100px rgba(168, 85, 247, 0.8)) hue-rotate(90deg) brightness(1.5); transform: scale(1.05) translate(-2px, -2px); }
-            8% { filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.4)) hue-rotate(0deg); transform: scale(1.02); }
-            100% { filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.4)); }
+        @keyframes digital-glitch {
+            0% {
+                transform: translate(0, 0) scale(1);
+                filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.3));
+            }
+            10% {
+                transform: translate(-2px, 0) scale(1.02);
+                filter: drop-shadow(-3px 0 10px rgba(255, 0, 255, 0.5)) 
+                        drop-shadow(3px 0 10px rgba(0, 255, 255, 0.5));
+            }
+            20% {
+                transform: translate(2px, -1px) scale(1.01);
+                filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.5));
+            }
+            30% {
+                transform: translate(-1px, 1px) scale(1.03);
+                filter: drop-shadow(-2px 0 8px rgba(255, 0, 255, 0.4)) 
+                        drop-shadow(2px 0 8px rgba(0, 255, 255, 0.4));
+            }
+            40% {
+                transform: translate(0, 0) scale(1.04);
+                filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.6)) brightness(1.15);
+            }
+            100% {
+                transform: translate(0, 0) scale(1.04);
+                filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.6)) brightness(1.15);
+            }
         }
 
         .mega-logo:hover {
-            animation: thunder-shock 1.5s infinite;
+            animation: digital-glitch 0.6s ease-out forwards;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -5vh;
+            position: relative;
         }
 
         .partner-logo {
@@ -176,30 +204,22 @@
             width: 140px;
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.3));
+            filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.2));
             z-index: 100;
-        }
-
-        .logo-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            /* Negative margin to pull content up */
-            margin-top: -5vh;
         }
 
         .large-logo {
             width: 280px;
             height: 280px;
             object-fit: contain;
-            filter: drop-shadow(0 0 50px rgba(0, 240, 255, 0.6));
+            filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.4));
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
         }
 
         .large-logo:hover {
-            filter: drop-shadow(0 0 80px rgba(0, 240, 255, 1)) 
-                    drop-shadow(0 0 120px rgba(168, 85, 247, 0.7));
+            filter: drop-shadow(0 0 40px rgba(0, 240, 255, 0.7)) 
+                    drop-shadow(0 0 60px rgba(168, 85, 247, 0.5));
             transform: scale(1.1);
         }
 
@@ -214,26 +234,275 @@
             z-index: 10;
         }
 
+        /* Continuous warp effect for welcome screen */
+        #welcomeScreen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, transparent 30%, rgba(0, 240, 255, 0.03) 50%, transparent 70%);
+            animation: warp-pulse 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes warp-pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.8;
+            }
+        }
+
+        #welcomeScreen::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            box-shadow: 
+                0 0 100px 50px rgba(0, 240, 255, 0.1),
+                0 0 200px 100px rgba(168, 85, 247, 0.05),
+                0 0 300px 150px rgba(0, 240, 255, 0.03);
+            animation: energy-pulse 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes energy-pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        /* Flying spaceships */
+        .spaceship {
+            position: absolute;
+            width: 40px;
+            height: 15px;
+            background: linear-gradient(90deg, 
+                rgba(0, 240, 255, 0.2) 0%, 
+                rgba(0, 240, 255, 0.4) 50%, 
+                rgba(0, 240, 255, 0.1) 100%);
+            clip-path: polygon(0% 50%, 20% 0%, 80% 0%, 100% 50%, 80% 100%, 20% 100%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .spaceship::before {
+            content: '';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(0, 240, 255, 0.6) 0%, 
+                transparent 100%);
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+        }
+
+        .spaceship::after {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 3px 10px 3px 0;
+            border-color: transparent rgba(0, 240, 255, 0.3) transparent transparent;
+        }
+
+        @keyframes spaceship-fly-1 {
+            0% {
+                left: -60px;
+                top: 20%;
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.7;
+            }
+            95% {
+                opacity: 0.7;
+            }
+            100% {
+                left: calc(100% + 60px);
+                top: 30%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes spaceship-fly-2 {
+            0% {
+                left: -60px;
+                top: 60%;
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.6;
+            }
+            95% {
+                opacity: 0.6;
+            }
+            100% {
+                left: calc(100% + 60px);
+                top: 55%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes spaceship-fly-3 {
+            0% {
+                left: -60px;
+                top: 80%;
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.5;
+            }
+            95% {
+                opacity: 0.5;
+            }
+            100% {
+                left: calc(100% + 60px);
+                top: 75%;
+                opacity: 0;
+            }
+        }
+
+        .spaceship-1 {
+            animation: spaceship-fly-1 12s linear infinite;
+        }
+
+        .spaceship-2 {
+            animation: spaceship-fly-2 15s linear infinite 3s;
+        }
+
+        .spaceship-3 {
+            animation: spaceship-fly-3 18s linear infinite 6s;
+        }
+
+        /* Futuristic light beams */
+        .light-beam {
+            position: absolute;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg,
+                transparent 0%,
+                rgba(0, 240, 255, 0.3) 30%,
+                rgba(168, 85, 247, 0.2) 50%,
+                rgba(0, 240, 255, 0.3) 70%,
+                transparent 100%);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes beam-move-1 {
+            0% {
+                left: 10%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                left: 90%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes beam-move-2 {
+            0% {
+                left: 80%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                left: 20%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes beam-move-3 {
+            0% {
+                left: 40%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.35;
+            }
+            90% {
+                opacity: 0.35;
+            }
+            100% {
+                left: 70%;
+                opacity: 0;
+            }
+        }
+
+        .beam-1 {
+            animation: beam-move-1 10s ease-in-out infinite;
+        }
+
+        .beam-2 {
+            animation: beam-move-2 12s ease-in-out infinite 2s;
+        }
+
+        .beam-3 {
+            animation: beam-move-3 8s ease-in-out infinite 4s;
+        }
+
         .sci-fi-input {
-            width: 380px;
-            padding: 16px 20px;
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid rgba(0, 240, 255, 0.3);
+            width: 400px;
+            padding: 18px 25px;
+            background: linear-gradient(135deg, rgba(10, 25, 47, 0.9) 0%, rgba(15, 32, 56, 0.9) 100%);
+            border: 2px solid rgba(0, 240, 255, 0.5);
             border-radius: 0;
             font-size: 18px;
             color: #fff;
             font-family: 'Rajdhani', sans-serif;
             text-align: center;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             transition: all 0.3s ease;
             outline: none;
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 20px rgba(0, 240, 255, 0.05);
         }
 
         .sci-fi-input:focus {
             border-color: var(--primary-cyan);
-            background: rgba(0, 240, 255, 0.1);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.15) 0%, rgba(20, 45, 75, 0.9) 100%);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.5), inset 0 0 30px rgba(0, 240, 255, 0.1);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 40px rgba(0, 240, 255, 0.5), inset 0 0 30px rgba(0, 240, 255, 0.1); }
+            50% { box-shadow: 0 0 60px rgba(0, 240, 255, 0.8), inset 0 0 40px rgba(0, 240, 255, 0.15); }
         }
 
         .sci-fi-input::placeholder {
@@ -243,26 +512,47 @@
 
         /* Sci-Fi Button */
         .sci-fi-btn {
-            padding: 16px 50px;
+            padding: 18px 60px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--primary-cyan);
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid rgba(0, 240, 255, 0.4);
+            letter-spacing: 4px;
+            color: #000;
+            background: linear-gradient(135deg, var(--primary-cyan) 0%, rgba(0, 200, 255, 1) 100%);
+            border: 2px solid var(--primary-cyan);
             cursor: pointer;
             transition: all 0.3s ease;
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sci-fi-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: btn-shine 3s linear infinite;
+        }
+
+        @keyframes btn-shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
         .sci-fi-btn:hover {
-            background: rgba(0, 240, 255, 0.15);
-            border-color: var(--primary-cyan);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
-            text-shadow: 0 0 10px var(--primary-cyan);
-            transform: translateY(-2px);
+            background: linear-gradient(135deg, #fff 0%, var(--primary-cyan) 100%);
+            color: #000;
+            border-color: #fff;
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.8), 0 0 100px rgba(0, 240, 255, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+            transform: translateY(-3px) scale(1.05);
         }
 
         /* ==================== WAITING SCREEN ==================== */
@@ -312,12 +602,71 @@
             position: absolute;
             inset: 0;
             background: radial-gradient(ellipse at center, rgba(5, 5, 8, 0.7) 0%, rgba(5, 5, 8, 0.95) 100%);
+            transition: background 0.8s ease;
+        }
+
+        /* Room startup animation */
+        .room-bg.room-startup::after {
+            background: radial-gradient(ellipse at center, rgba(5, 5, 8, 0.3) 0%, rgba(5, 5, 8, 0.6) 100%);
+        }
+
+        .startup-logo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 60px rgba(0, 240, 255, 0.8));
+            z-index: 1000;
+            opacity: 1;
+            animation: logo-startup 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes logo-startup {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+            30% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .game-header {
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .game-header.show {
+            opacity: 1;
+        }
+
+        .question-area {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .question-area.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Top Header Bar */
         .game-header {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 400px 1fr 400px;
             align-items: center;
             padding: 10px 40px;
             height: 160px;
@@ -332,6 +681,7 @@
             object-fit: contain;
             filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.4));
             transition: all 0.4s ease;
+            justify-self: start;
         }
 
         .header-logo:hover {
@@ -341,6 +691,7 @@
 
         .timer-display {
             text-align: center;
+            justify-self: center;
         }
 
         .timer-value {
@@ -361,20 +712,24 @@
         }
 
         .room-info {
+            position: absolute;
+            top: 20px;
+            right: 40px;
             text-align: right;
         }
 
         .room-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 16px;
+            font-size: 20px;
             color: var(--primary-cyan);
             letter-spacing: 3px;
             text-shadow: 0 0 15px var(--primary-cyan);
+            font-weight: 700;
         }
 
         .room-progress {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
             letter-spacing: 2px;
             margin-top: 5px;
         }
@@ -394,17 +749,13 @@
         .question-container {
             width: 100%;
             max-width: 1100px;
-            background: rgba(4, 12, 24, 0.85);
+            background: linear-gradient(135deg, rgba(10, 25, 47, 0.95) 0%, rgba(15, 32, 56, 0.95) 100%);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(0, 240, 255, 0.05);
-            padding: 40px 60px;
+            border: 2px solid rgba(0, 240, 255, 0.6);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.3), inset 0 0 60px rgba(0, 240, 255, 0.05);
+            padding: 35px 50px;
             position: relative;
-            clip-path: polygon(
-                40px 0, 100% 0, 
-                100% calc(100% - 40px), calc(100% - 40px) 100%, 
-                0 100%, 0 40px
-            );
+            border-radius: 15px;
         }
 
         .question-container::before {
@@ -412,11 +763,12 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 40px;
-            height: 40px;
-            border-top: 2px solid var(--primary-cyan);
-            border-left: 2px solid var(--primary-cyan);
-            opacity: 0.6;
+            width: 60px;
+            height: 60px;
+            border-top: 3px solid var(--primary-cyan);
+            border-left: 3px solid var(--primary-cyan);
+            border-radius: 15px 0 0 0;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
         }
 
         .question-container::after {
@@ -424,11 +776,12 @@
             position: absolute;
             bottom: 0;
             right: 0;
-            width: 40px;
-            height: 40px;
-            border-bottom: 2px solid var(--primary-cyan);
-            border-right: 2px solid var(--primary-cyan);
-            opacity: 0.6;
+            width: 60px;
+            height: 60px;
+            border-bottom: 3px solid var(--primary-cyan);
+            border-right: 3px solid var(--primary-cyan);
+            border-radius: 0 0 15px 0;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
         }
 
         .question-header {
@@ -474,9 +827,10 @@
         .question-text {
             font-size: 22px;
             line-height: 1.7;
-            color: #fff;
-            font-weight: 500;
+            color: #ffffff;
+            font-weight: 600;
             text-align: center;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
         }
 
         .code-block {
@@ -502,22 +856,19 @@
         }
 
         .option-btn {
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            padding: 25px 30px;
+            background: linear-gradient(135deg, rgba(15, 35, 60, 0.8) 0%, rgba(20, 45, 75, 0.8) 100%);
+            border: 2px solid rgba(0, 240, 255, 0.4);
+            padding: 20px 25px;
             font-family: 'Rajdhani', sans-serif;
             font-size: 18px;
-            color: rgba(255, 255, 255, 0.8);
+            color: #ffffff;
             text-align: left;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            clip-path: polygon(
-                20px 0, 100% 0, 
-                100% calc(100% - 20px), calc(100% - 20px) 100%, 
-                0 100%, 0 20px
-            );
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .option-btn::before {
@@ -533,11 +884,11 @@
         }
 
         .option-btn:hover {
-            background: rgba(0, 240, 255, 0.15);
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2) 0%, rgba(20, 60, 90, 0.9) 100%);
             border-color: var(--primary-cyan);
             color: #fff;
-            transform: translateX(5px);
-            box-shadow: -5px 0 15px rgba(0, 240, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3);
         }
 
         .option-btn:hover::before {
@@ -547,10 +898,12 @@
         }
 
         .option-btn.selected {
-            background: rgba(0, 240, 255, 0.3);
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.3) 0%, rgba(30, 70, 100, 0.9) 100%);
             border-color: var(--primary-cyan);
             color: #fff;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.7), inset 0 0 20px rgba(0, 240, 255, 0.2);
+            font-weight: 600;
+            border-width: 3px;
         }
 
         .option-btn.selected::before {
@@ -565,8 +918,8 @@
         }
 
         .option-letter {
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px solid rgba(0, 240, 255, 0.3);
+            background: var(--primary-cyan);
+            border: none;
             width: 36px;
             height: 36px;
             display: flex;
@@ -574,27 +927,28 @@
             justify-content: center;
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
-            color: var(--primary-cyan);
+            color: #fff;
             flex-shrink: 0;
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            border-radius: 8px;
         }
 
         .option-text {
             font-family: 'Rajdhani', sans-serif;
             font-size: 18px;
-            color: rgba(255, 255, 255, 0.9);
+            color: #ffffff;
             line-height: 1.4;
+            font-weight: 500;
         }
 
         .option-btn:hover .option-letter {
-            background: var(--primary-cyan);
-            color: #000;
+            background: #fff;
+            color: var(--primary-cyan);
             box-shadow: 0 0 10px var(--primary-cyan);
         }
 
         .option-btn.selected .option-letter {
-            background: var(--primary-cyan);
-            color: #000;
+            background: #fff;
+            color: var(--primary-cyan);
             box-shadow: 0 0 15px var(--primary-cyan);
         }
 
@@ -699,6 +1053,7 @@
         /* ==================== ROOM COMPLETE ==================== */
         .room-complete {
             text-align: center;
+            position: relative;
         }
 
         .room-complete-icon {
@@ -712,6 +1067,215 @@
             letter-spacing: 5px;
             text-shadow: 0 0 30px var(--neon-green);
             margin-top: 30px;
+        }
+
+        /* Space Warp Animations */
+        .warp-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            pointer-events: none;
+            overflow: hidden;
+            background: radial-gradient(ellipse at center, rgba(0, 240, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .warp-line {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #fff;
+            transform: translateX(-50%) translateY(-50%);
+            opacity: 0;
+            box-shadow: 0 0 20px var(--primary-cyan), 0 0 40px var(--primary-cyan);
+        }
+
+        @keyframes warp-speed {
+            0% {
+                transform: translateX(-50%) translateY(-50%) scale(1);
+                opacity: 0;
+                box-shadow: 0 0 5px #fff;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(calc(-50% + var(--x))) translateY(calc(-50% + var(--y))) scale(1, 50);
+                opacity: 0;
+                background: var(--primary-cyan);
+                box-shadow: 0 0 40px var(--primary-cyan), 0 0 80px var(--primary-cyan);
+            }
+        }
+
+        .warp-particle {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: particle-warp 1.2s ease-out forwards;
+        }
+
+        @keyframes particle-warp {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(calc(-50% + var(--px)), calc(-50% + var(--py))) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .warp-ring {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 100px;
+            height: 100px;
+            border: 3px solid var(--primary-cyan);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            animation: ring-expand 1.5s ease-out forwards;
+        }
+
+        @keyframes ring-expand {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+                box-shadow: 0 0 30px var(--primary-cyan), inset 0 0 30px var(--primary-cyan);
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(15);
+                opacity: 0;
+                border-width: 1px;
+            }
+        }
+
+        .warp-flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 240, 255, 0.4) 0%, transparent 50%);
+            opacity: 0;
+            animation: flash-pulse 0.5s ease-out forwards;
+        }
+
+        @keyframes flash-pulse {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .cleared-badge {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, rgba(57, 255, 20, 0.2) 0%, rgba(0, 255, 136, 0.2) 100%);
+            border: 3px solid var(--neon-green);
+            border-radius: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--neon-green);
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            box-shadow: 0 0 50px rgba(57, 255, 20, 0.6), inset 0 0 30px rgba(57, 255, 20, 0.2);
+            animation: cleared-pulse 2s ease-in-out;
+            text-shadow: 0 0 20px var(--neon-green), 0 0 40px var(--neon-green);
+        }
+
+        @keyframes cleared-pulse {
+            0% {
+                transform: scale(0.5) rotateY(180deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1) rotateY(0deg);
+            }
+            100% {
+                transform: scale(1) rotateY(0deg);
+                opacity: 1;
+            }
+        }
+
+        .next-room-preview {
+            margin-top: 60px;
+            opacity: 0;
+            animation: room-reveal 1.5s ease-out 2s forwards;
+        }
+
+        @keyframes room-reveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(100px);
+                filter: blur(20px);
+            }
+            60% {
+                transform: scale(1.05) translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .next-room-logo {
+            width: 250px;
+            height: 250px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 50px rgba(0, 240, 255, 0.8));
+            animation: logo-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes logo-glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 40px rgba(0, 240, 255, 0.6));
+            }
+            50% {
+                filter: drop-shadow(0 0 70px rgba(0, 240, 255, 1)) drop-shadow(0 0 100px rgba(168, 85, 247, 0.6));
+            }
+        }
+
+        .next-room-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-cyan);
+            margin-top: 30px;
+            letter-spacing: 6px;
+            text-shadow: 0 0 30px var(--primary-cyan);
+        }
+
+        .warp-message {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 15px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            animation: blink-text 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink-text {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
         /* ==================== COMPLETED SCREEN ==================== */
@@ -777,6 +1341,17 @@
     <!-- Welcome Screen -->
     <div id="welcomeScreen" class="fullscreen">
         <img src="/img/lakshlogo.PNG" alt="Laksh" class="partner-logo">
+        
+        <!-- Spaceships -->
+        <div class="spaceship spaceship-1"></div>
+        <div class="spaceship spaceship-2"></div>
+        <div class="spaceship spaceship-3"></div>
+        
+        <!-- Light beams -->
+        <div class="light-beam beam-1"></div>
+        <div class="light-beam beam-2"></div>
+        <div class="light-beam beam-3"></div>
+        
         <div class="logo-container">
             <img src="/img/techtraplogo.PNG" alt="Tech Trap" class="mega-logo">
         </div>
@@ -831,7 +1406,80 @@
         const socket = io();
         let participantId = null, currentRoom = 1, userAnswers = {}, totalCorrect = 0, currentQuestionIndex = 0;
 
-        window.addEventListener('load', () => setTimeout(() => document.getElementById('loadingScreen').classList.add('fade-out'), 2500));
+        window.addEventListener('load', () => {
+            setTimeout(() => document.getElementById('loadingScreen').classList.add('fade-out'), 2500);
+            // Add warp effect when welcome screen appears
+            setTimeout(() => {
+                createWelcomeWarpEffect();
+            }, 3000);
+        });
+
+        function createWelcomeWarpEffect() {
+            const warpContainer = document.createElement('div');
+            warpContainer.className = 'warp-container';
+            warpContainer.style.zIndex = '5';
+            document.getElementById('welcomeScreen').appendChild(warpContainer);
+            
+            // Flash effect
+            const flash = document.createElement('div');
+            flash.className = 'warp-flash';
+            warpContainer.appendChild(flash);
+            
+            // Create expanding rings
+            for (let r = 0; r < 2; r++) {
+                setTimeout(() => {
+                    const ring = document.createElement('div');
+                    ring.className = 'warp-ring';
+                    warpContainer.appendChild(ring);
+                }, r * 300);
+            }
+            
+            // Create 40 star streaks
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const line = document.createElement('div');
+                    line.className = 'warp-line';
+                    line.style.animation = 'warp-speed 1.2s ease-out forwards';
+                    
+                    const angle = (i / 40) * Math.PI * 2 + (Math.random() * 0.3);
+                    const distance = 900 + Math.random() * 400;
+                    const x = Math.cos(angle) * distance;
+                    const y = Math.sin(angle) * distance;
+                    
+                    line.style.setProperty('--x', `${x}px`);
+                    line.style.setProperty('--y', `${y}px`);
+                    
+                    const size = 2 + Math.random() * 3;
+                    line.style.width = `${size}px`;
+                    line.style.height = `${size}px`;
+                    
+                    warpContainer.appendChild(line);
+                }, i * 25);
+            }
+            
+            // Add particles
+            for (let i = 0; i < 60; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'warp-particle';
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 700 + Math.random() * 300;
+                    const px = Math.cos(angle) * distance;
+                    const py = Math.sin(angle) * distance;
+                    
+                    particle.style.setProperty('--px', `${px}px`);
+                    particle.style.setProperty('--py', `${py}px`);
+                    particle.style.animationDelay = `${Math.random() * 0.2}s`;
+                    
+                    warpContainer.appendChild(particle);
+                }, i * 15);
+            }
+            
+            setTimeout(() => {
+                warpContainer.remove();
+            }, 2500);
+        }
 
         function register() {
             const name = document.getElementById('nameInput').value.trim();
@@ -868,9 +1516,31 @@
         function loadRoom(roomNum) {
             const config = roomConfig[roomNum];
             if (config) {
-                document.getElementById('roomBg').style.backgroundImage = `url('${config.bg}')`;
+                // Set background and logo
+                const roomBg = document.getElementById('roomBg');
+                roomBg.style.backgroundImage = `url('${config.bg}')`;
+                roomBg.classList.add('room-startup');
+                
                 document.getElementById('roomLogo').src = config.logo;
                 document.getElementById('roomTitle').textContent = config.name;
+                
+                // Hide header and questions initially
+                document.querySelector('.game-header').classList.remove('show');
+                document.getElementById('questionsContainer').classList.remove('show');
+                
+                // Create startup logo
+                const startupLogo = document.createElement('img');
+                startupLogo.src = config.logo;
+                startupLogo.className = 'startup-logo';
+                document.getElementById('gameScreen').appendChild(startupLogo);
+                
+                // After 2.5s, remove startup logo and show content
+                setTimeout(() => {
+                    startupLogo.remove();
+                    roomBg.classList.remove('room-startup');
+                    document.querySelector('.game-header').classList.add('show');
+                    document.getElementById('questionsContainer').classList.add('show');
+                }, 2500);
             }
             document.getElementById('roomInfo').textContent = `Room ${roomNum} of 3`;
             currentQuestionIndex = 0;
@@ -880,7 +1550,7 @@
         function displayQuestion(questions, index) {
             const container = document.getElementById('questionsContainer');
             if (index >= questions.length) {
-                container.innerHTML = `<div class="room-complete"><div class="room-complete-icon">✅</div><p class="room-complete-text">Room Cleared</p></div>`;
+                showRoomWaitingScreen();
                 return;
             }
             const q = questions[index];
@@ -936,6 +1606,118 @@
         }
 
         function nextQuestion() { currentQuestionIndex++; displayQuestion(codingQuestions[`room${currentRoom}`], currentQuestionIndex); }
+        
+        function showRoomWaitingScreen() {
+            const nextRoom = currentRoom + 1;
+            const container = document.getElementById('questionsContainer');
+            
+            // Create warp effect
+            createWarpEffect();
+            
+            if (nextRoom <= 3) {
+                const nextConfig = roomConfig[nextRoom];
+                const roomNames = ['One', 'Two', 'Three'];
+                
+                container.innerHTML = `
+                    <div class="room-complete">
+                        <div class="cleared-badge">ROOM ${roomNames[currentRoom - 1]} CLEARED</div>
+                        <div class="next-room-preview">
+                            <img src="${nextConfig.logo}" alt="Next Room" class="next-room-logo">
+                            <div class="next-room-name">ENTERING: ${nextConfig.name.toUpperCase()}</div>
+                            <div class="warp-message">⚡ Warping to Next Challenge ⚡</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Update background to next room with delay
+                setTimeout(() => {
+                    document.getElementById('roomBg').style.transition = 'background-image 1.5s ease-in-out';
+                    document.getElementById('roomBg').style.backgroundImage = `url('${nextConfig.bg}')`;
+                }, 2000);
+            } else {
+                const roomNames = ['One', 'Two', 'Three'];
+                container.innerHTML = `
+                    <div class="room-complete">
+                        <div class="cleared-badge">ROOM ${roomNames[currentRoom - 1]} CLEARED</div>
+                        <div class="next-room-preview">
+                            <div class="room-complete-icon">🏆</div>
+                            <div class="next-room-name">ALL ROOMS COMPLETED!</div>
+                            <div class="warp-message">Awaiting Final Results...</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function createWarpEffect() {
+            const warpContainer = document.createElement('div');
+            warpContainer.className = 'warp-container';
+            document.body.appendChild(warpContainer);
+            
+            // Flash effect
+            const flash = document.createElement('div');
+            flash.className = 'warp-flash';
+            warpContainer.appendChild(flash);
+            
+            // Create expanding rings
+            for (let r = 0; r < 3; r++) {
+                setTimeout(() => {
+                    const ring = document.createElement('div');
+                    ring.className = 'warp-ring';
+                    ring.style.animationDelay = `${r * 0.1}s`;
+                    warpContainer.appendChild(ring);
+                }, r * 200);
+            }
+            
+            // Create 60 star streaks (main warp effect)
+            for (let i = 0; i < 60; i++) {
+                setTimeout(() => {
+                    const line = document.createElement('div');
+                    line.className = 'warp-line';
+                    line.style.animation = 'warp-speed 1s ease-out forwards';
+                    
+                    const angle = (Math.random() * Math.PI * 2);
+                    const distance = 1200 + Math.random() * 600;
+                    const x = Math.cos(angle) * distance;
+                    const y = Math.sin(angle) * distance;
+                    
+                    line.style.setProperty('--x', `${x}px`);
+                    line.style.setProperty('--y', `${y}px`);
+                    line.style.animationDelay = `${Math.random() * 0.2}s`;
+                    
+                    // Random sizes
+                    const size = 2 + Math.random() * 4;
+                    line.style.width = `${size}px`;
+                    line.style.height = `${size}px`;
+                    
+                    warpContainer.appendChild(line);
+                }, i * 15);
+            }
+            
+            // Create 100 particles for depth
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'warp-particle';
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 800 + Math.random() * 400;
+                    const px = Math.cos(angle) * distance;
+                    const py = Math.sin(angle) * distance;
+                    
+                    particle.style.setProperty('--px', `${px}px`);
+                    particle.style.setProperty('--py', `${py}px`);
+                    particle.style.animationDelay = `${Math.random() * 0.3}s`;
+                    
+                    warpContainer.appendChild(particle);
+                }, i * 8);
+            }
+            
+            setTimeout(() => {
+                warpContainer.remove();
+            }, 2500);
+        }
+        
         document.getElementById('nameInput')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') register(); });
     </script>
 </body>
