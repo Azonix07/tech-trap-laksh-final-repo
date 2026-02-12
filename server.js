@@ -17,7 +17,7 @@ let gameState = {
   isRunning: false,
   startTime: null,
   currentRoom: 1,
-  totalRooms: 3,  // 3 rooms: Knowledge Lobby, Bug Fixing Lab, Logic Chamber
+  totalRooms: 5,  // 5 rooms: Knowledge Lobby, Logic Chamber, Code Mirror Room, Bug Fixing Lab, Final Coding Vault
   roomDuration: 600000, // 10 minutes in milliseconds
   participants: {},
   roomStartTimes: {}

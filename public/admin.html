@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Command Center - Tech Trap NIT</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Admin Dashboard - Tech Trap NIT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
     <style>
         * {
@@ -13,768 +13,917 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --primary-cyan: #00f0ff;
-            --primary-purple: #a855f7;
-            --primary-pink: #ec4899;
-            --success-green: #4ade80;
-            --danger-red: #f87171;
-            --warning-orange: #fb923c;
-            --dark-bg: #0a0a0f;
-            --card-bg: rgba(15, 15, 25, 0.95);
-            --border-glow: rgba(0, 240, 255, 0.3);
-        }
-
         body {
-            font-family: 'Rajdhani', sans-serif;
-            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
-            min-height: 100vh;
-            color: #fff;
-            overflow-x: hidden;
-        }
-
-        /* Animated Background */
-        .bg-grid {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: -1;
-            animation: grid-pulse 4s ease-in-out infinite;
-        }
-
-        @keyframes grid-pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        /* Scan Line Effect */
-        .scanline {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, var(--primary-cyan), transparent);
-            z-index: 1000;
-            animation: scan 3s linear infinite;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            color: #1e293b;
+            line-height: 1.6;
         }
 
         .hidden {
             display: none !important;
         }
 
-        /* Login Screen */
+        /* ==================== LOGIN PAGE ==================== */
         .login-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
         }
 
-        .login-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-glow);
-            border-radius: 20px;
-            padding: 50px;
-            max-width: 450px;
+        .login-box {
+            background: white;
+            padding: 48px 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             width: 100%;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 
-                0 0 60px rgba(0, 240, 255, 0.1),
-                inset 0 0 60px rgba(0, 240, 255, 0.03);
+            max-width: 420px;
+            animation: slideIn 0.4s ease-out;
         }
 
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.05), transparent);
-            animation: shine 4s ease-in-out infinite;
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        @keyframes shine {
-            0% { left: -100%; }
-            50%, 100% { left: 100%; }
-        }
-
-        .corner-decor {
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            border: 2px solid var(--primary-cyan);
-        }
-
-        .corner-decor.top-left { top: 10px; left: 10px; border-right: none; border-bottom: none; }
-        .corner-decor.top-right { top: 10px; right: 10px; border-left: none; border-bottom: none; }
-        .corner-decor.bottom-left { bottom: 10px; left: 10px; border-right: none; border-top: none; }
-        .corner-decor.bottom-right { bottom: 10px; right: 10px; border-left: none; border-top: none; }
-
-        .login-icon {
-            font-size: 60px;
+        .login-header {
             text-align: center;
-            margin-bottom: 20px;
-            animation: float 3s ease-in-out infinite;
+            margin-bottom: 32px;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .login-logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
         }
 
-        .login-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 24px;
+        .login-logo svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
             font-weight: 700;
-            text-align: center;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .login-subtitle {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-        }
-
-        .input-group {
-            margin-bottom: 25px;
-        }
-
-        .input-group label {
-            display: block;
+            color: #1e293b;
             margin-bottom: 8px;
-            color: var(--primary-cyan);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 2px;
-            text-transform: uppercase;
         }
 
-        input {
-            width: 100%;
-            padding: 16px 20px;
-            background: rgba(0, 240, 255, 0.05);
-            border: 2px solid rgba(0, 240, 255, 0.2);
-            border-radius: 10px;
-            font-size: 18px;
-            color: #fff;
-            font-family: 'Rajdhani', sans-serif;
-            transition: all 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary-cyan);
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.1);
-        }
-
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 16px 30px;
-            font-family: 'Orbitron', sans-serif;
+        .login-header p {
             font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border: 2px solid;
-            border-radius: 10px;
+            color: #64748b;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+            font-family: inherit;
         }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary {
-            width: 100%;
-            color: #fff;
-            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
-            border-color: var(--primary-cyan);
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, rgba(0, 240, 255, 0.4) 0%, rgba(168, 85, 247, 0.4) 100%);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+        .login-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-start {
-            color: var(--success-green);
-            background: rgba(74, 222, 128, 0.1);
-            border-color: var(--success-green);
-        }
-
-        .btn-start:hover {
-            background: rgba(74, 222, 128, 0.3);
-            box-shadow: 0 0 25px rgba(74, 222, 128, 0.4);
-        }
-
-        .btn-stop {
-            color: var(--danger-red);
-            background: rgba(248, 113, 113, 0.1);
-            border-color: var(--danger-red);
-        }
-
-        .btn-stop:hover {
-            background: rgba(248, 113, 113, 0.3);
-            box-shadow: 0 0 25px rgba(248, 113, 113, 0.4);
-        }
-
-        .btn-reset {
-            color: var(--warning-orange);
-            background: rgba(251, 146, 60, 0.1);
-            border-color: var(--warning-orange);
-        }
-
-        .btn-reset:hover {
-            background: rgba(251, 146, 60, 0.3);
-            box-shadow: 0 0 25px rgba(251, 146, 60, 0.4);
-        }
-
-        .btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
+        .login-btn:active {
+            transform: translateY(0);
         }
 
         .error-message {
-            color: var(--danger-red);
-            text-align: center;
-            margin-top: 15px;
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 8px;
             font-size: 14px;
-            animation: shake 0.5s ease;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s;
         }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
 
-        /* Dashboard Header */
-        .dashboard-header {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-glow);
-            border-radius: 15px;
-            padding: 25px 35px;
-            margin-bottom: 25px;
+        /* ==================== DASHBOARD ==================== */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-logo-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .sidebar-logo-text h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .sidebar-logo-text p {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .sidebar-nav {
+            padding: 24px 0;
+            flex: 1;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #f8fafc;
+            color: #667eea;
+        }
+
+        .nav-item.active {
+            background: #f1f5f9;
+            color: #667eea;
+            border-right: 3px solid #667eea;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 10px;
+            background: #f1f5f9;
+            color: #64748b;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .topbar {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
         }
 
-        .header-title {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-icon {
-            font-size: 40px;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .header-text h1 {
-            font-family: 'Orbitron', sans-serif;
+        .topbar-left h1 {
             font-size: 24px;
             font-weight: 700;
-            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #1e293b;
         }
 
-        .header-text p {
-            color: rgba(255, 255, 255, 0.5);
+        .topbar-left p {
             font-size: 14px;
-            margin-top: 5px;
+            color: #64748b;
+            margin-top: 4px;
         }
 
-        /* Status Badge */
-        .status-indicator {
-            display: flex;
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 2px;
+            gap: 8px;
         }
 
-        .status-indicator.running {
-            background: rgba(74, 222, 128, 0.15);
-            border: 2px solid var(--success-green);
-            color: var(--success-green);
+        .status-badge.offline {
+            background: #f1f5f9;
+            color: #64748b;
         }
 
-        .status-indicator.stopped {
-            background: rgba(248, 113, 113, 0.15);
-            border: 2px solid var(--danger-red);
-            color: var(--danger-red);
+        .status-badge.live {
+            background: #dcfce7;
+            color: #16a34a;
         }
 
-        .status-indicator.completed {
-            background: rgba(168, 85, 247, 0.15);
-            border: 2px solid var(--primary-purple);
-            color: var(--primary-purple);
+        .status-badge.completed {
+            background: #dbeafe;
+            color: #2563eb;
         }
 
         .status-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            animation: blink 1s ease-in-out infinite;
+            background: currentColor;
+            animation: pulse 2s infinite;
         }
 
-        .status-indicator.running .status-dot {
-            background: var(--success-green);
-        }
-
-        .status-indicator.stopped .status-dot {
-            background: var(--danger-red);
-        }
-
-        .status-indicator.completed .status-dot {
-            background: var(--primary-purple);
-            animation: none;
-        }
-
-        @keyframes blink {
+        @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            50% { opacity: 0.5; }
         }
 
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 25px;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-glow);
-            border-radius: 15px;
-            padding: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
-        }
-
-        .card-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.6);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-title span {
-            font-size: 20px;
-        }
-
-        /* Controls Card */
-        .controls-grid {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .controls-grid .btn {
-            flex: 1;
-            min-width: 140px;
-        }
-
-        /* Timer Display */
-        .timer-display {
-            text-align: center;
-        }
-
-        .timer-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 72px;
-            font-weight: 900;
-            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1;
-        }
-
-        .timer-label {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 14px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: 10px;
-        }
-
-        /* Room Display */
-        .room-display {
-            text-align: center;
-        }
-
-        .room-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 48px;
-            font-weight: 900;
-            color: var(--primary-cyan);
-        }
-
-        .room-total {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 24px;
-        }
-
-        .room-name {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 18px;
-            margin-top: 10px;
+        .content-area {
+            padding: 32px;
         }
 
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
         }
 
-        .stat-item {
-            text-align: center;
-            padding: 20px;
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid rgba(0, 240, 255, 0.1);
+        .stat-card {
+            background: white;
+            padding: 24px;
             border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon.purple {
+            background: #f3e8ff;
+        }
+
+        .stat-icon.blue {
+            background: #dbeafe;
+        }
+
+        .stat-icon.green {
+            background: #dcfce7;
+        }
+
+        .stat-icon.orange {
+            background: #fed7aa;
+        }
+
+        .stat-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .stat-icon.purple svg { fill: #9333ea; }
+        .stat-icon.blue svg { fill: #2563eb; }
+        .stat-icon.green svg { fill: #16a34a; }
+        .stat-icon.orange svg { fill: #ea580c; }
+
+        .stat-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 36px;
-            font-weight: 900;
-            color: var(--primary-cyan);
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
         }
 
-        .stat-label {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 12px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+        .stat-change {
+            font-size: 13px;
             margin-top: 8px;
         }
 
+        .stat-change.positive {
+            color: #16a34a;
+        }
+
+        .stat-change.negative {
+            color: #dc2626;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .panel-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #15803d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-warning {
+            background: #ea580c;
+            color: white;
+        }
+
+        .btn-warning:hover:not(:disabled) {
+            background: #c2410c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e2e8f0;
+        }
+
+        /* Room Info Display */
+        .room-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .info-box {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
         /* Participants Section */
-        .participants-card {
-            grid-column: 1 / -1;
+        .participants-section {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .participant-count-badge {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .participants-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
-            max-height: 400px;
-            overflow-y: auto;
+            gap: 12px;
         }
 
-        .participants-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .participants-list::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-        }
-
-        .participants-list::-webkit-scrollbar-thumb {
-            background: var(--primary-cyan);
-            border-radius: 4px;
-        }
-
-        .participant-item {
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid rgba(0, 240, 255, 0.15);
-            border-radius: 12px;
-            padding: 18px;
+        .participant-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            transition: all 0.3s ease;
+            gap: 16px;
+            transition: all 0.2s;
         }
 
-        .participant-item:hover {
-            border-color: var(--primary-cyan);
-            background: rgba(0, 240, 255, 0.1);
-            transform: translateY(-2px);
+        .participant-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
         }
 
         .participant-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 18px;
             font-weight: 700;
-            color: #fff;
+            font-size: 16px;
         }
 
-        .participant-info {
+        .participant-details {
             flex: 1;
         }
 
         .participant-name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
-            color: #fff;
+            color: #1e293b;
+            margin-bottom: 4px;
         }
 
-        .participant-status {
+        .participant-meta {
+            display: flex;
+            gap: 16px;
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 3px;
+            color: #64748b;
         }
 
-        .participant-room {
-            padding: 6px 14px;
-            background: rgba(168, 85, 247, 0.2);
-            border: 1px solid var(--primary-purple);
-            border-radius: 20px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
+        .participant-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .participant-room-badge {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
             font-weight: 600;
-            color: var(--primary-purple);
         }
 
         .no-participants {
             text-align: center;
-            padding: 50px 20px;
-            color: rgba(255, 255, 255, 0.4);
+            padding: 48px;
+            color: #94a3b8;
         }
 
-        .no-participants-icon {
-            font-size: 50px;
-            margin-bottom: 15px;
-            opacity: 0.5;
+        .no-participants svg {
+            width: 64px;
+            height: 64px;
+            fill: #cbd5e1;
+            margin-bottom: 16px;
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+            }
+        }
+
         @media (max-width: 768px) {
-            .dashboard-header {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .header-title {
-                flex-direction: column;
-            }
-
-            .timer-value {
-                font-size: 48px;
-            }
-
-            .room-value {
-                font-size: 36px;
+            .content-area {
+                padding: 20px;
             }
 
             .stats-grid {
                 grid-template-columns: 1fr;
             }
 
-            .controls-grid .btn {
-                min-width: 100%;
+            .control-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="bg-grid"></div>
-    <div class="scanline"></div>
-
     <!-- Login Screen -->
     <div id="loginScreen" class="login-container">
-        <div class="login-card">
-            <div class="corner-decor top-left"></div>
-            <div class="corner-decor top-right"></div>
-            <div class="corner-decor bottom-left"></div>
-            <div class="corner-decor bottom-right"></div>
-
-            <div class="login-icon">🔐</div>
-            <h2 class="login-title">Command Center</h2>
-            <p class="login-subtitle">Admin Access Required</p>
-
-            <div class="input-group">
-                <label for="passwordInput">Access Code</label>
-                <input type="password" id="passwordInput" placeholder="Enter admin password...">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="login-logo">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                    </svg>
+                </div>
+                <h1>Admin Login</h1>
+                <p>Enter your credentials to access the dashboard</p>
             </div>
-
-            <button class="btn btn-primary" onclick="login()">Authenticate</button>
-            <p id="errorMessage" class="error-message hidden">⚠️ Access Denied - Invalid Credentials</p>
+            
+            <div class="form-group">
+                <label for="passwordInput">Password</label>
+                <input type="password" id="passwordInput" placeholder="Enter admin password" autocomplete="current-password">
+            </div>
+            
+            <button class="login-btn" onclick="login()">Sign In</button>
+            
+            <div class="error-message" id="errorMessage">
+                Incorrect password. Please try again.
+            </div>
         </div>
     </div>
 
     <!-- Dashboard -->
-    <div id="dashboard" class="container hidden">
-        <!-- Header -->
-        <div class="dashboard-header">
-            <div class="header-title">
-                <span class="header-icon">🎮</span>
-                <div class="header-text">
-                    <h1>TECH TRAP COMMAND CENTER</h1>
-                    <p>Real-time Event Control & Monitoring</p>
-                </div>
-            </div>
-            <div class="status-indicator stopped" id="statusIndicator">
-                <span class="status-dot"></span>
-                <span id="statusText">OFFLINE</span>
-            </div>
-        </div>
-
-        <!-- Main Grid -->
-        <div class="dashboard-grid">
-            <!-- Event Controls -->
-            <div class="card">
-                <h3 class="card-title"><span>⚡</span> Event Controls</h3>
-                <div class="controls-grid">
-                    <button class="btn btn-start" onclick="startEvent()" id="startBtn">▶ START</button>
-                    <button class="btn btn-stop" onclick="stopEvent()" id="stopBtn" disabled>⏹ STOP</button>
-                    <button class="btn btn-reset" onclick="resetEvent()">↻ RESET</button>
-                    <button class="btn btn-primary" onclick="forceNextRoom()" id="forceNextBtn" disabled>⏩ FORCE NEXT</button>
+    <div id="dashboardScreen" class="dashboard hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="sidebar-logo-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                        </svg>
+                    </div>
+                    <div class="sidebar-logo-text">
+                        <h2>Tech Trap</h2>
+                        <p>Admin Panel</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Timer -->
-            <div class="card">
-                <h3 class="card-title"><span>⏱️</span> Room Timer</h3>
-                <div class="timer-display">
-                    <div class="timer-value" id="timerDisplay">10:00</div>
-                    <p class="timer-label">Time Remaining</p>
+            <nav class="sidebar-nav">
+                <div class="nav-item active">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                    Dashboard
+                </div>
+                <div class="nav-item">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
+                    Participants
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="logout()">
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor">
+                        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="topbar-left">
+                    <h1>Event Dashboard</h1>
+                    <p id="dashboardSubtitle">Welcome back, Administrator</p>
+                </div>
+                <div class="topbar-right">
+                    <div class="status-badge offline" id="statusBadge">
+                        <span class="status-dot"></span>
+                        <span id="statusText">OFFLINE</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Current Room -->
-            <div class="card">
-                <h3 class="card-title"><span>🚪</span> Current Room</h3>
-                <div class="room-display">
-                    <span class="room-value" id="currentRoomNum">1</span>
-                    <span class="room-total">/ 3</span>
-                    <p class="room-name" id="roomName">The Knowledge Lobby</p>
-                </div>
-            </div>
-
-            <!-- Statistics -->
-            <div class="card">
-                <h3 class="card-title"><span>📊</span> Live Statistics</h3>
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Stats Grid -->
                 <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-value" id="participantCount">0</div>
-                        <p class="stat-label">Active Users</p>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Current Room</div>
+                                <div class="stat-value" id="currentRoomNum">1</div>
+                            </div>
+                            <div class="stat-icon purple">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-label" id="roomName">MCQ — The Knowledge Lobby</div>
+                        <div class="stat-sublabel" id="roomTagline" style="font-size: 11px; color: #94a3b8; margin-top: 4px; font-style: italic;">Answer to enter the world of Coding</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="timeElapsed">00:00</div>
-                        <p class="stat-label">Elapsed</p>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="totalRooms">3</div>
-                        <p class="stat-label">Total Rooms</p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Participants -->
-            <div class="card participants-card">
-                <h3 class="card-title">
-                    <span>👥</span> Connected Participants 
-                    <span style="color: var(--primary-cyan);">(<span id="participantTotal">0</span>)</span>
-                </h3>
-                <div class="participants-list" id="participantsList">
-                    <div class="no-participants">
-                        <div class="no-participants-icon">👾</div>
-                        <p>No agents connected yet</p>
-                        <p style="font-size: 13px; margin-top: 5px;">Waiting for participants to join...</p>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Time Remaining</div>
+                                <div class="stat-value" id="timerDisplay">10:00</div>
+                            </div>
+                            <div class="stat-icon blue">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                                    <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-label">Per Room Duration</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Participants</div>
+                                <div class="stat-value"><span id="participantCount">0</span>/<span id="participantTotal">0</span></div>
+                            </div>
+                            <div class="stat-icon green">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Time Elapsed</div>
+                                <div class="stat-value" id="timeElapsed">00:00</div>
+                            </div>
+                            <div class="stat-icon orange">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-label">Current Session</div>
+                    </div>
+                </div>
+
+                <!-- Control Panel -->
+                <div class="control-panel">
+                    <div class="panel-header">
+                        <h2>Event Controls</h2>
+                    </div>
+
+                    <div class="room-info-grid">
+                        <div class="info-box">
+                            <div class="info-label">Total Rooms</div>
+                            <div class="info-value">5</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Room Duration</div>
+                            <div class="info-value">10 min</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Total Duration</div>
+                            <div class="info-value">50 min</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Questions</div>
+                            <div class="info-value">25</div>
+                        </div>
+                    </div>
+
+                    <div class="control-buttons">
+                        <button class="btn btn-primary" id="startBtn" onclick="startEvent()">
+                            <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            Start Event
+                        </button>
+                        <button class="btn btn-danger" id="stopBtn" onclick="stopEvent()" disabled>
+                            <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor">
+                                <path d="M6 6h12v12H6z"/>
+                            </svg>
+                            Stop Event
+                        </button>
+                        <button class="btn btn-warning" id="forceNextBtn" onclick="forceNextRoom()" disabled>
+                            <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor">
+                                <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                            </svg>
+                            Force Next Room
+                        </button>
+                        <button class="btn btn-secondary" id="resetBtn" onclick="resetEvent()">
+                            <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor">
+                                <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                            </svg>
+                            Reset Event
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Participants Section -->
+                <div class="participants-section">
+                    <div class="section-header">
+                        <h2>Active Participants</h2>
+                        <span class="participant-count-badge">
+                            <span id="participantCountBadge">0</span> Connected
+                        </span>
+                    </div>
+                    <div class="participants-list" id="participantsList">
+                        <div class="no-participants">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                            </svg>
+                            <h3>No Participants Yet</h3>
+                            <p>Participants will appear here once they register</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <script>
@@ -783,9 +932,19 @@
         let participants = {};
 
         const roomNames = {
-            1: 'The Knowledge Lobby',
-            2: 'Bug Fixing Lab',
-            3: 'The Logic Chamber'
+            1: 'MCQ — The Knowledge Lobby',
+            2: 'Puzzle — The Logic Chamber',
+            3: 'Output Prediction — The Code Mirror Room',
+            4: 'Debugging — The Bug Fixing Lab',
+            5: 'Coding — The Final Coding Vault'
+        };
+        
+        const roomTaglines = {
+            1: 'Answer to enter the world of Coding',
+            2: 'Think smart to move ahead',
+            3: 'See what the code reveals',
+            4: 'Repair before you proceed',
+            5: 'Write code to unlock victory'
         };
 
         function login() {
@@ -793,65 +952,146 @@
             socket.emit('adminAuth', password);
         }
 
-        socket.on('authSuccess', () => {
-            isAuthenticated = true;
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.getElementById('errorMessage').classList.add('hidden');
-        });
-
-        socket.on('authFailed', () => {
-            document.getElementById('errorMessage').classList.remove('hidden');
+        function logout() {
+            isAuthenticated = false;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('dashboardScreen').classList.add('hidden');
             document.getElementById('passwordInput').value = '';
-        });
+        }
 
         function startEvent() {
-            socket.emit('startEvent');
-            document.getElementById('startBtn').disabled = true;
-            document.getElementById('stopBtn').disabled = false;
+            if (confirm('Start the event? This will begin the timer and notify all participants.')) {
+                socket.emit('startEvent');
+            }
         }
 
         function stopEvent() {
-            if (confirm('Are you sure you want to stop the event?')) {
+            if (confirm('Stop the event? This will pause the timer and freeze all participant progress.')) {
                 socket.emit('stopEvent');
-                document.getElementById('startBtn').disabled = false;
-                document.getElementById('stopBtn').disabled = true;
             }
         }
 
         function resetEvent() {
-            if (confirm('Are you sure you want to reset the event? All progress will be lost.')) {
+            if (confirm('Reset the event? This will clear all progress and reset to Room 1.')) {
                 socket.emit('resetEvent');
-                document.getElementById('startBtn').disabled = false;
-                document.getElementById('stopBtn').disabled = true;
-                document.getElementById('forceNextBtn').disabled = true;
             }
         }
 
         function forceNextRoom() {
-            if (confirm('Are you sure you want to force participants to the next room?')) {
+            if (confirm('Force advance to next room? This will immediately move all participants to the next room.')) {
                 socket.emit('forceNextRoom');
             }
         }
 
+        function updateStatus(type, text) {
+            const badge = document.getElementById('statusBadge');
+            badge.className = `status-badge ${type}`;
+            document.getElementById('statusText').textContent = text;
+        }
+
+        function updateRoomName(roomNum) {
+            document.getElementById('roomName').textContent = roomNames[roomNum] || `Room ${roomNum}`;
+            const taglineEl = document.getElementById('roomTagline');
+            if (taglineEl) {
+                taglineEl.textContent = roomTaglines[roomNum] || '';
+            }
+        }
+
+        function updateParticipantsList() {
+            const list = document.getElementById('participantsList');
+            const participantKeys = Object.keys(participants);
+            const count = participantKeys.length;
+            
+            document.getElementById('participantCount').textContent = count;
+            document.getElementById('participantTotal').textContent = count;
+            document.getElementById('participantCountBadge').textContent = count;
+
+            if (count === 0) {
+                list.innerHTML = `
+                    <div class="no-participants">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        <h3>No Participants Yet</h3>
+                        <p>Participants will appear here once they register</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = participantKeys.map(id => {
+                const p = participants[id];
+                const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                const roomProgress = p.roomProgress ? Object.values(p.roomProgress).reduce((a, b) => a + b.length, 0) : 0;
+                const totalQuestions = 25;
+                const currentRoom = p.currentRoom || 1;
+                
+                return `
+                    <div class="participant-card">
+                        <div class="participant-avatar">${initials}</div>
+                        <div class="participant-details">
+                            <div class="participant-name">${p.name}</div>
+                            <div class="participant-meta">
+                                <span>
+                                    <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor">
+                                        <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+                                    </svg>
+                                    Progress: ${roomProgress}/${totalQuestions}
+                                </span>
+                                <span>
+                                    <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                    ${Math.round((roomProgress / totalQuestions) * 100)}% Complete
+                                </span>
+                            </div>
+                        </div>
+                        <div class="participant-room-badge">Room ${currentRoom}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Socket event handlers
+        socket.on('authSuccess', () => {
+            isAuthenticated = true;
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').classList.remove('hidden');
+            document.getElementById('errorMessage').classList.remove('show');
+            socket.emit('getGameState');
+        });
+
+        socket.on('authFailed', () => {
+            document.getElementById('errorMessage').classList.add('show');
+            setTimeout(() => {
+                document.getElementById('errorMessage').classList.remove('show');
+            }, 3000);
+        });
+
         socket.on('eventStarted', (data) => {
-            updateStatus('running', 'LIVE');
-            updateRoomName(data.currentRoom);
+            updateStatus('live', 'LIVE');
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
             document.getElementById('forceNextBtn').disabled = false;
+            document.getElementById('dashboardSubtitle').textContent = `Event started at ${new Date().toLocaleTimeString()}`;
         });
 
         socket.on('eventStopped', () => {
-            updateStatus('stopped', 'OFFLINE');
-            document.getElementById('timerDisplay').textContent = '10:00';
+            updateStatus('offline', 'OFFLINE');
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
             document.getElementById('forceNextBtn').disabled = true;
         });
 
         socket.on('eventReset', () => {
-            updateStatus('stopped', 'OFFLINE');
+            updateStatus('offline', 'OFFLINE');
             document.getElementById('timerDisplay').textContent = '10:00';
             document.getElementById('currentRoomNum').textContent = '1';
             document.getElementById('roomName').textContent = roomNames[1];
             document.getElementById('timeElapsed').textContent = '00:00';
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('forceNextBtn').disabled = true;
         });
 
         socket.on('timerSync', (data) => {
@@ -876,7 +1116,8 @@
 
         socket.on('eventCompleted', () => {
             updateStatus('completed', 'COMPLETED');
-            alert('🎉 Event Completed! All rooms finished.');
+            document.getElementById('dashboardSubtitle').textContent = 'Event completed successfully!';
+            document.getElementById('forceNextBtn').disabled = true;
         });
 
         socket.on('gameState', (state) => {
@@ -884,9 +1125,14 @@
             updateParticipantsList();
             
             if (state.isRunning) {
-                updateStatus('running', 'LIVE');
+                updateStatus('live', 'LIVE');
                 document.getElementById('startBtn').disabled = true;
                 document.getElementById('stopBtn').disabled = false;
+                document.getElementById('forceNextBtn').disabled = false;
+            } else {
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('forceNextBtn').disabled = true;
             }
         });
 
@@ -897,60 +1143,14 @@
             }
         });
 
-        function updateStatus(type, text) {
-            const indicator = document.getElementById('statusIndicator');
-            indicator.className = `status-indicator ${type}`;
-            document.getElementById('statusText').textContent = text;
-        }
-
-        function updateRoomName(roomNum) {
-            document.getElementById('roomName').textContent = roomNames[roomNum] || `Room ${roomNum}`;
-        }
-
-        function updateParticipantsList() {
-            const list = document.getElementById('participantsList');
-            const participantKeys = Object.keys(participants);
-            
-            document.getElementById('participantCount').textContent = participantKeys.length;
-            document.getElementById('participantTotal').textContent = participantKeys.length;
-
-            if (participantKeys.length === 0) {
-                list.innerHTML = `
-                    <div class="no-participants">
-                        <div class="no-participants-icon">👾</div>
-                        <p>No agents connected yet</p>
-                        <p style="font-size: 13px; margin-top: 5px;">Waiting for participants to join...</p>
-                    </div>
-                `;
-                return;
-            }
-
-            list.innerHTML = participantKeys.map(id => {
-                const p = participants[id];
-                const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-                const roomProgress = p.roomProgress ? Object.values(p.roomProgress).reduce((a, b) => a + b.length, 0) : 0;
-                
-                return `
-                    <div class="participant-item">
-                        <div class="participant-avatar">${initials}</div>
-                        <div class="participant-info">
-                            <div class="participant-name">${p.name}</div>
-                            <div class="participant-status">Progress: ${roomProgress}/15 answered</div>
-                        </div>
-                        <div class="participant-room">R${p.currentRoom || 1}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Allow Enter key to login
+        // Enter key to login
         document.getElementById('passwordInput')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 login();
             }
         });
 
-        // Periodically request game state to keep participants list updated
+        // Periodically refresh participant list
         setInterval(() => {
             if (isAuthenticated) {
                 socket.emit('getGameState');

@@ -974,6 +974,243 @@
             color: #ff3366;
         }
 
+        /* ==================== PUZZLE INPUT STYLES ==================== */
+        .puzzle-input-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 30px auto;
+        }
+
+        .puzzle-input {
+            width: 100%;
+            padding: 20px 30px;
+            font-size: 24px;
+            font-family: 'Orbitron', monospace;
+            text-align: center;
+            background: rgba(10, 25, 47, 0.8);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            color: var(--primary-cyan);
+            box-shadow: 
+                0 0 20px rgba(0, 240, 255, 0.3),
+                inset 0 0 20px rgba(0, 240, 255, 0.1);
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+        }
+
+        .puzzle-input:focus {
+            outline: none;
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 
+                0 0 30px rgba(57, 255, 20, 0.5),
+                inset 0 0 20px rgba(57, 255, 20, 0.2);
+        }
+
+        .puzzle-input::placeholder {
+            color: rgba(0, 240, 255, 0.4);
+            font-size: 16px;
+        }
+
+        .puzzle-hint {
+            margin-top: 20px;
+            padding: 15px 25px;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 8px;
+            color: var(--primary-purple);
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        .puzzle-hint.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hint-button {
+            margin-top: 15px;
+            padding: 10px 25px;
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid var(--primary-purple);
+            border-radius: 6px;
+            color: var(--primary-purple);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .hint-button:hover {
+            background: rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+        }
+
+        /* ==================== DRAG AND DROP STYLES ==================== */
+        .drag-drop-container {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 20px auto;
+            max-width: 1000px;
+            height: 400px;
+        }
+
+        .components-panel {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: var(--primary-cyan);
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .components-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .draggable-component {
+            padding: 20px;
+            border: 2px solid var(--primary-cyan);
+            border-radius: 12px;
+            background: rgba(10, 25, 47, 0.8);
+            cursor: grab;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .draggable-component:active {
+            cursor: grabbing;
+        }
+
+        .draggable-component.dragging {
+            opacity: 0.5;
+            transform: scale(1.05);
+        }
+
+        .draggable-component.placed {
+            opacity: 0.3;
+            pointer-events: none;
+            border-color: #666;
+        }
+
+        .component-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .component-name {
+            font-size: 12px;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary-cyan);
+            letter-spacing: 1px;
+        }
+
+        .drop-zones-panel {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .drop-zones-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .drop-zone {
+            min-height: 100px;
+            border: 3px dashed rgba(0, 240, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(10, 25, 47, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .drop-zone-label {
+            font-size: 11px;
+            font-family: 'Orbitron', sans-serif;
+            color: rgba(0, 240, 255, 0.6);
+            margin-bottom: 10px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .drop-zone.drag-over {
+            border-color: var(--neon-green);
+            background: rgba(57, 255, 20, 0.1);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+        }
+
+        .drop-zone.filled {
+            border-color: var(--primary-cyan);
+            border-style: solid;
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .drop-zone.correct {
+            border-color: var(--neon-green);
+            background: rgba(57, 255, 20, 0.2);
+            animation: successPulse 0.6s ease;
+        }
+
+        .drop-zone.incorrect {
+            border-color: #ff3366;
+            background: rgba(255, 51, 102, 0.2);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .dropped-component {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        .dropped-component .component-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .dropped-component .component-name {
+            font-size: 11px;
+        }
+        
+        .draggable-component.placed {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Compact question text for drag-drop */
+        .drag-drop-container + .question-container .question-text {
+            font-size: 14px;
+            padding: 15px 0;
+        }
+
         /* ==================== FEEDBACK & ACTIONS ==================== */
         .feedback-container {
             width: 100%;
@@ -1399,8 +1636,10 @@
     <script>
         const roomConfig = {
             1: { name: 'The Knowledge Lobby', bg: '/img/knowledgelobbybg.PNG', logo: '/img/knowledgelobbylogo.PNG' },
-            2: { name: 'Bug Fixing Lab', bg: '/img/bugfixingbg.jpg', logo: '/img/bugfixinglogo.PNG' },
-            3: { name: 'The Logic Chamber', bg: '/img/logicchamberbg.PNG', logo: '/img/logicchamberlogo.PNG' }
+            2: { name: 'The Logic Chamber', bg: '/img/logicchamberbg.PNG', logo: '/img/logicchamberlogo.PNG' },
+            3: { name: 'The Code Mirror Room', bg: '/img/logicchamberbg.PNG', logo: '/img/logicchamberlogo.PNG' },
+            4: { name: 'Bug Fixing Lab', bg: '/img/bugfixingbg.jpg', logo: '/img/bugfixinglogo.PNG' },
+            5: { name: 'The Final Coding Vault', bg: '/img/bugfixingbg.jpg', logo: '/img/bugfixinglogo.PNG' }
         };
 
         const socket = io();
@@ -1553,32 +1792,202 @@
                 showRoomWaitingScreen();
                 return;
             }
-            const q = questions[index];
-            let qText = q.question + (q.codeBlock ? `<div class="code-block">${q.codeBlock}</div>` : '');
             
-            container.innerHTML = `
-                <div class="question-container">
-                    <div class="question-header">
-                        <span class="question-number">Question ${index + 1} of ${questions.length}</span>
-                        <div class="question-indicator">
-                            ${questions.map((_, i) => `<div class="indicator-dot ${i < index ? 'completed' : i === index ? 'active' : ''}"></div>`).join('')}
+            // Reset drag-drop state for new question
+            dropState = {};
+            
+            const q = questions[index];
+            
+            // Check if this is a drag-drop question
+            if (q.isDragDrop) {
+                container.innerHTML = `
+                    <div class="question-container">
+                        <div class="question-header">
+                            <span class="question-number">${q.question}</span>
+                            <div class="question-indicator">
+                                ${questions.map((_, i) => `<div class="indicator-dot ${i < index ? 'completed' : i === index ? 'active' : ''}"></div>`).join('')}
+                            </div>
+                        </div>
+                        <div class="question-text">${q.instructions}</div>
+                    </div>
+                    <div class="drag-drop-container">
+                        <div class="components-panel">
+                            <div class="panel-title">COMPONENTS</div>
+                            <div class="components-list" id="componentsList">
+                                ${q.components.map(comp => `
+                                    <div class="draggable-component" 
+                                         draggable="true" 
+                                         data-component-id="${comp.id}"
+                                         style="border-color: ${comp.color}">
+                                        <div class="component-icon">${comp.icon}</div>
+                                        <div class="component-name">${comp.name}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="drop-zones-panel">
+                            <div class="panel-title">DROP ZONES</div>
+                            <div class="drop-zones-grid" id="dropZonesList">
+                                ${q.dropZones.map(zone => `
+                                    <div class="drop-zone" 
+                                         data-zone-id="${zone.id}"
+                                         data-accepts="${zone.accepts}">
+                                        <div class="drop-zone-label">${zone.label}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
                     </div>
-                    <div class="question-text">${qText}</div>
-                </div>
-                <div class="options-container">
-                    ${q.options.map((opt, i) => `
-                        <div class="option-btn" data-index="${i}" onclick="selectOption(${i})">
-                            <span class="option-letter">${String.fromCharCode(65 + i)}</span>
-                            <span class="option-text">${opt}</span>
+                    <div class="feedback-container" id="feedback"></div>
+                    <div class="action-container">
+                        <button class="action-btn submit" id="submitBtn" onclick="submitAnswer()">Check Answer</button>
+                    </div>
+                `;
+                
+                // Initialize drag and drop
+                setTimeout(() => initDragAndDrop(), 100);
+            } else if (q.isPuzzle) {
+                container.innerHTML = `
+                    <div class="question-container">
+                        <div class="question-header">
+                            <span class="question-number">Puzzle ${index + 1} of ${questions.length}</span>
+                            <div class="question-indicator">
+                                ${questions.map((_, i) => `<div class="indicator-dot ${i < index ? 'completed' : i === index ? 'active' : ''}"></div>`).join('')}
+                            </div>
                         </div>
-                    `).join('')}
-                </div>
-                <div class="feedback-container" id="feedback"></div>
-                <div class="action-container">
-                    <button class="action-btn submit" id="submitBtn" onclick="submitAnswer()">Lock Answer</button>
-                </div>
-            `;
+                        <div class="question-text" style="white-space: pre-line;">${q.question}</div>
+                    </div>
+                    <div class="puzzle-input-container">
+                        <input type="${q.inputType || 'text'}" 
+                               class="puzzle-input" 
+                               id="puzzleAnswer" 
+                               placeholder="Enter your answer here..."
+                               autocomplete="off">
+                        ${q.hint ? `
+                            <button class="hint-button" onclick="toggleHint()">💡 Show Hint</button>
+                            <div class="puzzle-hint" id="puzzleHint">${q.hint}</div>
+                        ` : ''}
+                    </div>
+                    <div class="feedback-container" id="feedback"></div>
+                    <div class="action-container">
+                        <button class="action-btn submit" id="submitBtn" onclick="submitAnswer()">Submit Answer</button>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    const input = document.getElementById('puzzleAnswer');
+                    if (input) {
+                        input.addEventListener('keypress', (e) => {
+                            if (e.key === 'Enter') submitAnswer();
+                        });
+                        input.focus();
+                    }
+                }, 100);
+            } else {
+                // MCQ questions
+                let qText = q.question + (q.codeBlock ? `<div class="code-block">${q.codeBlock}</div>` : '');
+                container.innerHTML = `
+                    <div class="question-container">
+                        <div class="question-header">
+                            <span class="question-number">Question ${index + 1} of ${questions.length}</span>
+                            <div class="question-indicator">
+                                ${questions.map((_, i) => `<div class="indicator-dot ${i < index ? 'completed' : i === index ? 'active' : ''}"></div>`).join('')}
+                            </div>
+                        </div>
+                        <div class="question-text">${qText}</div>
+                    </div>
+                    <div class="options-container">
+                        ${q.options.map((opt, i) => `
+                            <div class="option-btn" data-index="${i}" onclick="selectOption(${i})">
+                                <span class="option-letter">${String.fromCharCode(65 + i)}</span>
+                                <span class="option-text">${opt}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="feedback-container" id="feedback"></div>
+                    <div class="action-container">
+                        <button class="action-btn submit" id="submitBtn" onclick="submitAnswer()">Lock Answer</button>
+                    </div>
+                `;
+            }
+        }
+
+        let draggedElement = null;
+        let dropState = {};
+
+        function initDragAndDrop() {
+            const components = document.querySelectorAll('.draggable-component');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            components.forEach(comp => {
+                comp.addEventListener('dragstart', handleDragStart);
+                comp.addEventListener('dragend', handleDragEnd);
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('dragleave', handleDragLeave);
+                zone.addEventListener('drop', handleDrop);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', e.target.innerHTML);
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            e.target.closest('.drop-zone').classList.add('drag-over');
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            e.target.closest('.drop-zone')?.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) e.stopPropagation();
+            e.preventDefault();
+
+            const dropZone = e.target.closest('.drop-zone');
+            dropZone.classList.remove('drag-over');
+
+            if (draggedElement && dropZone) {
+                const componentId = draggedElement.dataset.componentId;
+                const zoneId = dropZone.dataset.zoneId;
+
+                // Remove previous content if any
+                dropZone.querySelectorAll('.dropped-component').forEach(el => el.remove());
+
+                // Clone and add component to drop zone
+                const clone = draggedElement.cloneNode(true);
+                clone.classList.remove('draggable-component', 'dragging');
+                clone.classList.add('dropped-component');
+                clone.removeAttribute('draggable');
+                dropZone.appendChild(clone);
+
+                // Mark original as placed
+                draggedElement.classList.add('placed');
+                dropZone.classList.add('filled');
+
+                // Store drop state
+                dropState[zoneId] = componentId;
+            }
+
+            return false;
+        }
+
+        function toggleHint() {
+            const hint = document.getElementById('puzzleHint');
+            if (hint) hint.classList.toggle('show');
         }
 
         function selectOption(index) {
@@ -1587,21 +1996,94 @@
         }
 
         function submitAnswer() {
-            const selected = document.querySelector('.option-btn.selected');
-            if (!selected) return alert('Select an answer');
-            const idx = parseInt(selected.dataset.index), questions = codingQuestions[`room${currentRoom}`], q = questions[currentQuestionIndex];
-            const correct = idx === q.correctAnswer;
+            const questions = codingQuestions[`room${currentRoom}`];
+            const q = questions[currentQuestionIndex];
+            let correct = false;
+            let userAnswer;
+
+            if (q.isDragDrop) {
+                // Handle drag-and-drop validation
+                const dropZones = document.querySelectorAll('.drop-zone');
+                const allFilled = q.dropZones.every(zone => dropState[zone.id]);
+                
+                if (!allFilled) {
+                    return alert('Please place all components in the drop zones');
+                }
+                
+                // Validate each placement
+                correct = true;
+                q.dropZones.forEach(zone => {
+                    const dropZoneElement = document.querySelector(`.drop-zone[data-zone-id="${zone.id}"]`);
+                    const placedComponent = dropState[zone.id];
+                    const isCorrect = placedComponent === zone.accepts;
+                    
+                    if (isCorrect) {
+                        dropZoneElement.classList.add('correct');
+                        dropZoneElement.classList.remove('incorrect');
+                    } else {
+                        dropZoneElement.classList.add('incorrect');
+                        dropZoneElement.classList.remove('correct');
+                        correct = false;
+                    }
+                });
+                
+                userAnswer = JSON.stringify(dropState);
+                
+                // Disable dragging after submission
+                document.querySelectorAll('.draggable-component').forEach(comp => {
+                    comp.setAttribute('draggable', 'false');
+                    comp.style.cursor = 'not-allowed';
+                    comp.style.opacity = '0.6';
+                });
+            } else if (q.isPuzzle) {
+                // Handle puzzle input
+                const input = document.getElementById('puzzleAnswer');
+                if (!input || !input.value.trim()) {
+                    return alert('Please enter an answer');
+                }
+                userAnswer = input.value.trim();
+                
+                // Check if answer is correct (case-insensitive for text, exact for numbers)
+                if (q.inputType === 'number') {
+                    correct = parseFloat(userAnswer) === parseFloat(q.correctAnswer);
+                } else {
+                    correct = userAnswer.toLowerCase() === q.correctAnswer.toLowerCase();
+                }
+                
+                // Disable input after submission
+                input.disabled = true;
+                input.style.cursor = 'not-allowed';
+                input.style.opacity = '0.6';
+            } else {
+                // Handle MCQ
+                const selected = document.querySelector('.option-btn.selected');
+                if (!selected) return alert('Select an answer');
+                const idx = parseInt(selected.dataset.index);
+                userAnswer = idx;
+                correct = idx === q.correctAnswer;
+                
+                // Disable options after submission
+                document.querySelectorAll('.option-btn').forEach((o, i) => {
+                    o.style.pointerEvents = 'none';
+                    if (i === q.correctAnswer) o.classList.add('correct');
+                    else if (i === idx && !correct) o.classList.add('incorrect');
+                });
+            }
+
             if (correct) totalCorrect++;
             if (!userAnswers[currentRoom]) userAnswers[currentRoom] = [];
-            userAnswers[currentRoom].push({ questionId: q.id, answer: idx, correct });
-            socket.emit('submitAnswer', { room: currentRoom, questionId: q.id, answer: idx });
+            userAnswers[currentRoom].push({ questionId: q.id, answer: userAnswer, correct });
+            socket.emit('submitAnswer', { room: currentRoom, questionId: q.id, answer: userAnswer });
 
-            document.getElementById('feedback').innerHTML = `<div class="feedback ${correct ? 'correct' : 'incorrect'}">${correct ? '✓ CORRECT' : '✗ INCORRECT'}</div>`;
-            document.querySelectorAll('.option-btn').forEach((o, i) => {
-                o.style.pointerEvents = 'none';
-                if (i === q.correctAnswer) o.classList.add('correct');
-                else if (i === idx && !correct) o.classList.add('incorrect');
-            });
+            // Show feedback
+            let feedbackHTML = `<div class="feedback ${correct ? 'correct' : 'incorrect'}">${correct ? '✓ CORRECT!' : '✗ INCORRECT'}</div>`;
+            if (!correct && q.explanation) {
+                feedbackHTML += `<div class="puzzle-hint show" style="margin-top: 15px; color: #ff3366; border-color: #ff3366;">
+                    <strong>💡 Solution:</strong><br>${q.explanation}
+                </div>`;
+            }
+            document.getElementById('feedback').innerHTML = feedbackHTML;
+            
             document.getElementById('submitBtn').outerHTML = '<button class="action-btn next" onclick="nextQuestion()">Next →</button>';
         }
 
@@ -1614,9 +2096,9 @@
             // Create warp effect
             createWarpEffect();
             
-            if (nextRoom <= 3) {
+            if (nextRoom <= 5) {
                 const nextConfig = roomConfig[nextRoom];
-                const roomNames = ['One', 'Two', 'Three'];
+                const roomNames = ['One', 'Two', 'Three', 'Four', 'Five'];
                 
                 container.innerHTML = `
                     <div class="room-complete">
@@ -1635,7 +2117,7 @@
                     document.getElementById('roomBg').style.backgroundImage = `url('${nextConfig.bg}')`;
                 }, 2000);
             } else {
-                const roomNames = ['One', 'Two', 'Three'];
+                const roomNames = ['One', 'Two', 'Three', 'Four', 'Five'];
                 container.innerHTML = `
                     <div class="room-complete">
                         <div class="cleared-badge">ROOM ${roomNames[currentRoom - 1]} CLEARED</div>
