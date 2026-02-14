@@ -7,11 +7,17 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": ["escape-room", "event", "websocket", "realtime"],
+  "keywords": [
+    "escape-room",
+    "event",
+    "websocket",
+    "realtime"
+  ],
   "author": "Azonix07",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.1",
+    "three": "^0.182.0"
   }
 }

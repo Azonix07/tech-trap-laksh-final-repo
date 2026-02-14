@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Trap NIT - Escape Room Challenge</title>
+    <title>Tech Trap NIT - Escape Room Challenge v2.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
-    <script src="questions.js"></script>
+    <script src="questions.js?v=2.0"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
     <style>
         * {
             margin: 0;
@@ -757,6 +765,16 @@
             position: relative;
             border-radius: 15px;
         }
+        
+        /* Smaller question container for 3D questions only */
+        .viewer-3d-container + .feedback-container,
+        .viewer-3d-container ~ .question-container {
+            padding: 15px 25px;
+        }
+        
+        .question-container:has(+ .viewer-3d-container) {
+            padding: 15px 25px;
+        }
 
         .question-container::before {
             content: '';
@@ -792,6 +810,11 @@
             padding-bottom: 15px;
             border-bottom: 1px solid rgba(0, 240, 255, 0.15);
         }
+        
+        .question-container:has(+ .viewer-3d-container) .question-header {
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+        }
 
         .question-number {
             font-family: 'Orbitron', sans-serif;
@@ -799,6 +822,11 @@
             color: var(--primary-cyan);
             letter-spacing: 4px;
             text-transform: uppercase;
+        }
+        
+        .question-container:has(+ .viewer-3d-container) .question-number {
+            font-size: 10px;
+            letter-spacing: 2px;
         }
 
         .question-indicator {
@@ -831,6 +859,12 @@
             font-weight: 600;
             text-align: center;
             text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+        
+        .question-container:has(+ .viewer-3d-container) .question-text {
+            font-size: 14px;
+            line-height: 1.4;
+            font-weight: 500;
         }
 
         .code-block {
@@ -1211,6 +1245,73 @@
             padding: 15px 0;
         }
 
+        /* ==================== 3D VIEWER ==================== */
+        .viewer-3d-container {
+            width: 100%;
+            max-width: 100%;
+            height: calc(100vh - 380px);
+            min-height: 350px;
+            margin: 10px auto;
+            position: relative;
+            border: 2px solid var(--primary-cyan);
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3),
+                        inset 0 0 30px rgba(0, 240, 255, 0.1);
+        }
+
+        #canvas3d {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .viewer-3d-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 1px solid var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+
+        .control-btn-3d {
+            background: transparent;
+            border: 1px solid var(--primary-cyan);
+            color: var(--primary-cyan);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .control-btn-3d:hover {
+            background: var(--primary-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--primary-cyan);
+        }
+
+        .loading-3d {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary-cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--primary-cyan);
+        }
+
         /* ==================== FEEDBACK & ACTIONS ==================== */
         .feedback-container {
             width: 100%;
@@ -1246,6 +1347,9 @@
             display: flex;
             justify-content: center;
             gap: 20px;
+            margin: 20px auto;
+            position: relative;
+            z-index: 100;
         }
 
         .action-btn {
@@ -1266,13 +1370,15 @@
         .action-btn.submit {
             color: var(--primary-cyan);
             border-color: var(--primary-cyan);
-            background: rgba(0, 240, 255, 0.05);
+            background: rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
         }
 
         .action-btn.submit:hover {
-            background: rgba(0, 240, 255, 0.15);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            background: rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.6);
             text-shadow: 0 0 10px var(--primary-cyan);
+            transform: scale(1.05);
         }
 
         .action-btn.next {
@@ -1637,9 +1743,9 @@
         const roomConfig = {
             1: { name: 'The Knowledge Lobby', bg: '/img/knowledgelobbybg.PNG', logo: '/img/knowledgelobbylogo.PNG' },
             2: { name: 'The Logic Chamber', bg: '/img/logicchamberbg.PNG', logo: '/img/logicchamberlogo.PNG' },
-            3: { name: 'The Code Mirror Room', bg: '/img/logicchamberbg.PNG', logo: '/img/logicchamberlogo.PNG' },
-            4: { name: 'Bug Fixing Lab', bg: '/img/bugfixingbg.jpg', logo: '/img/bugfixinglogo.PNG' },
-            5: { name: 'The Final Coding Vault', bg: '/img/bugfixingbg.jpg', logo: '/img/bugfixinglogo.PNG' }
+            3: { name: 'Bug Fixing Lab', bg: '/img/bugfixingbg.jpg', logo: '/img/bugfixinglogo.PNG' },
+            4: { name: 'The Code Mirror Room', bg: '/img/codemirrorbg.PNG', logo: '/img/codemirrorlogo.PNG' },
+            5: { name: 'The Final Coding Vault', bg: '/img/finalcodevaultbg.PNG', logo: '/img/finalcodingvaultlogo.PNG' }
         };
 
         const socket = io();
@@ -1798,8 +1904,56 @@
             
             const q = questions[index];
             
-            // Check if this is a drag-drop question
-            if (q.isDragDrop) {
+            // Check if this is a 3D question
+            if (q.is3D) {
+                container.innerHTML = `
+                    <div class="question-container">
+                        <div class="question-header">
+                            <span class="question-number">${q.question}</span>
+                            <div class="question-indicator">
+                                ${questions.map((_, i) => `<div class="indicator-dot ${i < index ? 'completed' : i === index ? 'active' : ''}"></div>`).join('')}
+                            </div>
+                        </div>
+                        <div class="question-text">${q.instructions}</div>
+                    </div>
+                    <div class="viewer-3d-container">
+                        <canvas id="canvas3d"></canvas>
+                        <div class="loading-3d" id="loading3d">LOADING 3D MODELS...</div>
+                        <div class="viewer-3d-controls" style="display:none;" id="controls3d">
+                            <button class="control-btn-3d" onclick="reset3DView()">↻ RESET VIEW</button>
+                            <button class="control-btn-3d" onclick="toggle3DRotation()">⟳ AUTO-ROTATE</button>
+                            <button class="control-btn-3d" onclick="toggleCalibrationMode()" id="calibBtn">🎯 CALIBRATION MODE</button>
+                        </div>
+                        <div id="calibrationPanel" style="display:none; position:fixed; top:120px; left:10px; background:rgba(0,0,0,0.9); padding:12px; border-radius:8px; color:#00f0ff; font-family:monospace; font-size:11px; max-width:280px; max-height:calc(100vh - 140px); overflow-y:auto; z-index:1000; border:1px solid #00f0ff;">
+                            <div style="font-weight:bold; margin-bottom:8px; color:#39ff14;">📍 CALIBRATION MODE</div>
+                            <div id="calibrationInfo">Click components to see positions...</div>
+                        </div>
+                        <div id="heightSliders" style="display:none; position:fixed; top:120px; right:10px; background:rgba(0,0,0,0.9); padding:12px; border-radius:8px; color:#00f0ff; font-family:monospace; font-size:11px; min-width:180px; z-index:1000; border:1px solid #00f0ff;">
+                            <div style="font-weight:bold; margin-bottom:8px;">HEIGHT CONTROLS</div>
+                            <div style="margin-bottom:8px;">
+                                <label>RAM: <span id="ramHeight">1.0</span></label><br>
+                                <input type="range" id="ramSlider" min="0" max="3" step="0.1" value="1" style="width:100%;" oninput="adjustHeight('ram', this.value)">
+                            </div>
+                            <div style="margin-bottom:8px;">
+                                <label>SSD: <span id="ssdHeight">1.0</span></label><br>
+                                <input type="range" id="ssdSlider" min="0" max="3" step="0.1" value="1" style="width:100%;" oninput="adjustHeight('ssd', this.value)">
+                            </div>
+                            <div>
+                                <label>GPU: <span id="gpuHeight">1.0</span></label><br>
+                                <input type="range" id="gpuSlider" min="0" max="3" step="0.1" value="1" style="width:100%;" oninput="adjustHeight('gpu', this.value)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feedback-container" id="feedback"></div>
+                    <div class="action-container">
+                        <button class="action-btn" onclick="reset3DPositions()" style="background: rgba(255, 107, 107, 0.2); border-color: #ff6b6b;">🔄 Reset Positions</button>
+                        <button class="action-btn submit" id="submitBtn" onclick="submitAnswer()">✓ Confirm & Check</button>
+                    </div>
+                `;
+                
+                // Initialize 3D scene
+                setTimeout(() => init3DScene(q), 100);
+            } else if (q.isDragDrop) {
                 container.innerHTML = `
                     <div class="question-container">
                         <div class="question-header">
@@ -2001,7 +2155,33 @@
             let correct = false;
             let userAnswer;
 
-            if (q.isDragDrop) {
+            if (q.is3D) {
+                // Handle 3D motherboard assembly validation by checking actual positions
+                const validations = q.dropZones.map(zone => {
+                    const component = components3D[zone.accepts];
+                    if (!component) return false;
+                    
+                    const distance = Math.sqrt(
+                        Math.pow(component.position.x - zone.position.x, 2) +
+                        Math.pow(component.position.z - zone.position.z, 2)
+                    );
+                    
+                    // Check if within acceptable range
+                    const acceptableDistance = zone.accepts === 'ram' ? 1.0 : 
+                                              zone.accepts === 'ssd' ? 0.8 : 1.5;
+                    return distance < acceptableDistance;
+                });
+                
+                const correctCount = validations.filter(v => v).length;
+                correct = correctCount === q.dropZones.length;
+                
+                userAnswer = JSON.stringify({
+                    ram: components3D.ram ? components3D.ram.position : null,
+                    ssd: components3D.ssd ? components3D.ssd.position : null,
+                    gpu: components3D.gpu ? components3D.gpu.position : null
+                });
+                
+            } else if (q.isDragDrop) {
                 // Handle drag-and-drop validation
                 const dropZones = document.querySelectorAll('.drop-zone');
                 const allFilled = q.dropZones.every(zone => dropState[zone.id]);
@@ -2087,7 +2267,438 @@
             document.getElementById('submitBtn').outerHTML = '<button class="action-btn next" onclick="nextQuestion()">Next →</button>';
         }
 
-        function nextQuestion() { currentQuestionIndex++; displayQuestion(codingQuestions[`room${currentRoom}`], currentQuestionIndex); }
+        function nextQuestion() { 
+            // Cleanup 3D scene if exists
+            if (window.scene3D) cleanup3DScene();
+            currentQuestionIndex++; 
+            displayQuestion(codingQuestions[`room${currentRoom}`], currentQuestionIndex); 
+        }
+        
+        // ==================== 3D SCENE SETUP ====================
+        let scene3D, camera3D, renderer3D, controls3D;
+        let motherboard3D, components3D = {};
+        let raycaster3D, mouse3D, selectedObject3D = null;
+        let autoRotate = false;
+        let placedComponents3D = {};
+        let THREE_MODULE = null; // Store THREE for use in other functions
+        let calibrationMode = false;
+        
+        async function init3DScene(questionData) {
+            try {
+                const THREE = await import('three');
+                THREE_MODULE = THREE; // Save for use in other functions
+                const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+                const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
+                
+                const canvas = document.getElementById('canvas3d');
+                const loadingEl = document.getElementById('loading3d');
+                
+                // Scene setup
+                scene3D = new THREE.Scene();
+                scene3D.background = new THREE.Color(0x050508);
+            
+            // Camera
+            camera3D = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            camera3D.position.set(0, 6, 10);
+            camera3D.lookAt(0, 0, 0);
+            
+            // Renderer
+            renderer3D = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer3D.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer3D.setPixelRatio(window.devicePixelRatio);
+            renderer3D.shadowMap.enabled = true;
+            
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene3D.add(ambientLight);
+            
+            const mainLight = new THREE.DirectionalLight(0xffffff, 1);
+            mainLight.position.set(5, 10, 5);
+            mainLight.castShadow = true;
+            scene3D.add(mainLight);
+            
+            const cyanLight = new THREE.PointLight(0x00f0ff, 0.5, 20);
+            cyanLight.position.set(-3, 3, 3);
+            scene3D.add(cyanLight);
+            
+            const purpleLight = new THREE.PointLight(0xa855f7, 0.5, 20);
+            purpleLight.position.set(3, 3, -3);
+            scene3D.add(purpleLight);
+            
+            // Controls
+            controls3D = new OrbitControls(camera3D, renderer3D.domElement);
+            controls3D.enableDamping = true;
+            controls3D.dampingFactor = 0.05;
+            controls3D.maxDistance = 15;
+            controls3D.minDistance = 3;
+            
+            // Raycaster for drag-drop
+            raycaster3D = new THREE.Raycaster();
+            mouse3D = new THREE.Vector2();
+            
+            // Load models
+            const loader = new GLTFLoader();
+            
+            try {
+                // Load motherboard
+                const mbData = await loader.loadAsync('/models/motherboard.glb');
+                motherboard3D = mbData.scene;
+                motherboard3D.position.set(0, 0, 0);
+                motherboard3D.scale.set(1, 1, 1);
+                
+                // Brighten motherboard materials
+                motherboard3D.traverse((child) => {
+                    if (child.isMesh) {
+                        if (child.material) {
+                            child.material.emissive = new THREE.Color(0x222222);
+                            child.material.emissiveIntensity = 0.3;
+                            child.material.metalness = 0.3;
+                            child.material.roughness = 0.6;
+                        }
+                    }
+                });
+                
+                scene3D.add(motherboard3D);
+                
+                // Create drop zone visual indicators
+                const dropZoneMaterial = new THREE.MeshBasicMaterial({ 
+                    color: 0x00f0ff, 
+                    transparent: true, 
+                    opacity: 0.3,
+                    side: THREE.DoubleSide
+                });
+                
+                questionData.dropZones.forEach(zone => {
+                    const geometry = new THREE.CircleGeometry(0.8, 32);
+                    const circle = new THREE.Mesh(geometry, dropZoneMaterial);
+                    circle.rotation.x = -Math.PI / 2;
+                    circle.position.set(zone.position.x, 0.01, zone.position.z);
+                    circle.userData = { isDropZone: true, zoneId: zone.id };
+                    scene3D.add(circle);
+                    
+                    // Add pulsing animation
+                    circle.userData.animate = (time) => {
+                        circle.material.opacity = 0.3 + Math.sin(time * 2) * 0.2;
+                    };
+                });
+                
+                // Load components
+                console.log('Loading components:', questionData.components);
+                for (const comp of questionData.components) {
+                    console.log(`Loading ${comp.id} from /models/${comp.model}`);
+                    const compData = await loader.loadAsync(`/models/${comp.model}`);
+                    const compMesh = compData.scene;
+                    compMesh.userData = { id: comp.id, name: comp.name, isDraggable: true };
+                    compMesh.position.set(comp.position.x, comp.position.y, comp.position.z);
+                    
+                    // Special handling for components
+                    if (comp.id === 'ram') {
+                        compMesh.scale.set(1.5, 1.5, 1.5);
+                        compMesh.rotation.y = Math.PI / 2; // 90 degrees on Y-axis (horizontal rotation)
+                    } else if (comp.id === 'ssd') {
+                        compMesh.scale.set(0.6, 0.6, 0.6); // Smaller SSD
+                    } else {
+                        compMesh.scale.set(1, 1, 1);
+                    }
+                    
+                    console.log(`Loaded ${comp.id}, position:`, compMesh.position);
+                    
+                    // Make all children draggable
+                    compMesh.traverse((child) => {
+                        if (child.isMesh) {
+                            child.userData = { id: comp.id, name: comp.name, isDraggable: true, parent: compMesh };
+                            console.log(`  - Added userData to mesh in ${comp.id}`);
+                        }
+                    });
+                    
+                    components3D[comp.id] = compMesh;
+                    scene3D.add(compMesh);
+                    console.log(`Added ${comp.id} to scene`);
+                }
+                
+                console.log('All components loaded:', Object.keys(components3D));
+                
+                // Show height sliders
+                document.getElementById('heightSliders').style.display = 'block';
+                
+                loadingEl.style.display = 'none';
+                document.getElementById('controls3d').style.display = 'flex';
+                
+            } catch (error) {
+                console.error('Error loading 3D models:', error);
+                loadingEl.textContent = 'ERROR LOADING MODELS - Please add .glb files to /public/models/';
+                loadingEl.style.color = '#ff3366';
+            }
+            
+            // Event listeners
+            canvas.addEventListener('mousedown', onMouseDown3D);
+            canvas.addEventListener('mousemove', onMouseMove3D);
+            canvas.addEventListener('mouseup', onMouseUp3D);
+            window.addEventListener('resize', onResize3D);
+            
+            // Animation loop
+            animate3D();
+            
+            } catch (error) {
+                console.error('Failed to initialize 3D scene:', error);
+                const loadingEl = document.getElementById('loading3d');
+                if (loadingEl) {
+                    loadingEl.textContent = 'ERROR: Failed to load 3D library - Check console';
+                    loadingEl.style.color = '#ff3366';
+                }
+            }
+        }
+        
+        function animate3D() {
+            if (!renderer3D) return;
+            requestAnimationFrame(animate3D);
+            
+            const time = Date.now() * 0.001;
+            
+            if (autoRotate && motherboard3D) {
+                motherboard3D.rotation.y += 0.005;
+            }
+            
+            // Animate drop zones
+            scene3D.children.forEach(child => {
+                if (child.userData.animate) {
+                    child.userData.animate(time);
+                }
+            });
+            
+            controls3D.update();
+            renderer3D.render(scene3D, camera3D);
+        }
+        
+        function onMouseDown3D(event) {
+            if (event.target.tagName !== 'CANVAS') return;
+            event.preventDefault();
+            
+            const rect = event.target.getBoundingClientRect();
+            mouse3D.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse3D.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+            
+            raycaster3D.setFromCamera(mouse3D, camera3D);
+            
+            // Check all scene objects
+            const allObjects = [];
+            scene3D.traverse((obj) => {
+                if (obj.isMesh && obj.userData.isDraggable) {
+                    allObjects.push(obj);
+                }
+            });
+            
+            console.log('Draggable objects found:', allObjects.length);
+            
+            const intersects = raycaster3D.intersectObjects(allObjects, false);
+            console.log('Intersects:', intersects.length);
+            
+            if (intersects.length > 0) {
+                const hitObject = intersects[0].object;
+                console.log('Hit object userData:', hitObject.userData);
+                const componentId = hitObject.userData.id;
+                
+                if (componentId && components3D[componentId]) {
+                    selectedObject3D = components3D[componentId];
+                    controls3D.enabled = false;
+                    console.log('Selected component:', componentId, selectedObject3D);
+                    
+                    // Show calibration info if in calibration mode
+                    if (calibrationMode) {
+                        updateCalibrationInfo(componentId, selectedObject3D.position);
+                    }
+                } else {
+                    console.log('Component not found in components3D:', componentId);
+                }
+            } else {
+                console.log('No intersects detected');
+            }
+        }
+        
+        function onMouseMove3D(event) {
+            if (!selectedObject3D || !THREE_MODULE) return;
+            event.preventDefault();
+            
+            const rect = event.target.getBoundingClientRect();
+            mouse3D.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse3D.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+            
+            raycaster3D.setFromCamera(mouse3D, camera3D);
+            const plane = new THREE_MODULE.Plane(new THREE_MODULE.Vector3(0, 1, 0), 0);
+            const intersection = new THREE_MODULE.Vector3();
+            raycaster3D.ray.intersectPlane(plane, intersection);
+            
+            if (intersection) {
+                selectedObject3D.position.x = intersection.x;
+                selectedObject3D.position.z = intersection.z;
+                selectedObject3D.position.y = parseFloat(document.getElementById(selectedObject3D.userData.id + 'Slider').value);
+                
+                // Update calibration info in real-time
+                if (calibrationMode && selectedObject3D) {
+                    updateCalibrationInfo(selectedObject3D.userData.id, selectedObject3D.position);
+                }
+            }
+        }
+        
+        function onMouseUp3D() {
+            if (selectedObject3D) {
+                console.log('Mouse up on:', selectedObject3D.userData.id);
+                console.log('Position:', selectedObject3D.position);
+                
+                // Just release the component, no auto-snapping
+                // User must click Confirm button to validate
+                
+                if (calibrationMode) {
+                    // Show position info in calibration mode
+                    const q = codingQuestions[`room${currentRoom}`][currentQuestionIndex];
+                    const targetZone = q.dropZones.find(z => z.accepts === selectedObject3D.userData.id);
+                    if (targetZone) {
+                        updateCalibrationInfo(selectedObject3D.userData.id, selectedObject3D.position);
+                    }
+                }
+                
+                selectedObject3D = null;
+                controls3D.enabled = true;
+            }
+        }
+        
+        function onResize3D() {
+            if (!camera3D || !renderer3D) return;
+            const canvas = document.getElementById('canvas3d');
+            camera3D.aspect = canvas.clientWidth / canvas.clientHeight;
+            camera3D.updateProjectionMatrix();
+            renderer3D.setSize(canvas.clientWidth, canvas.clientHeight);
+        }
+        
+        function reset3DView() {
+            if (camera3D && controls3D) {
+                camera3D.position.set(0, 6, 10);
+                camera3D.lookAt(0, 0, 0);
+                controls3D.target.set(0, 0, 0);
+                controls3D.update();
+            }
+        }
+        
+        function reset3DPositions() {
+            const q = codingQuestions[`room${currentRoom}`][currentQuestionIndex];
+            if (!q || !q.components) return;
+            
+            // Reset all components to starting positions
+            q.components.forEach(comp => {
+                if (components3D[comp.id]) {
+                    components3D[comp.id].position.set(comp.position.x, comp.position.y, comp.position.z);
+                }
+            });
+            
+            // Clear placed components tracking
+            placedComponents3D = {};
+            
+            // Clear feedback
+            document.getElementById('feedback').innerHTML = '';
+            document.getElementById('feedback').className = 'feedback-container';
+        }
+        
+        function toggle3DRotation() {
+            autoRotate = !autoRotate;
+        }
+        
+        function toggleCalibrationMode() {
+            calibrationMode = !calibrationMode;
+            const panel = document.getElementById('calibrationPanel');
+            const btn = document.getElementById('calibBtn');
+            
+            if (calibrationMode) {
+                panel.style.display = 'block';
+                btn.style.background = '#39ff14';
+                btn.style.color = '#000';
+                
+                // Show current positions of all components
+                let info = '<div style="margin-bottom:10px;">📊 CURRENT POSITIONS:</div>';
+                for (const [id, comp] of Object.entries(components3D)) {
+                    const pos = comp.position;
+                    info += `<div style="margin:5px 0; padding:5px; background:rgba(57,255,20,0.1); border-left:2px solid #39ff14;">`;
+                    info += `<strong>${id.toUpperCase()}</strong><br>`;
+                    info += `x: ${pos.x.toFixed(2)}, y: ${pos.y.toFixed(2)}, z: ${pos.z.toFixed(2)}`;
+                    info += `</div>`;
+                }
+                
+                // Show target positions
+                const q = codingQuestions[`room${currentRoom}`][currentQuestionIndex];
+                info += '<div style="margin-top:15px; margin-bottom:10px; color:#ff6b6b;">🎯 TARGET POSITIONS:</div>';
+                q.dropZones.forEach(zone => {
+                    info += `<div style="margin:5px 0; padding:5px; background:rgba(255,107,107,0.1); border-left:2px solid #ff6b6b;">`;
+                    info += `<strong>${zone.accepts.toUpperCase()} SLOT</strong><br>`;
+                    info += `x: ${zone.position.x.toFixed(2)}, y: ${zone.position.y.toFixed(2)}, z: ${zone.position.z.toFixed(2)}`;
+                    info += `</div>`;
+                });
+                
+                document.getElementById('calibrationInfo').innerHTML = info;
+            } else {
+                panel.style.display = 'none';
+                btn.style.background = '';
+                btn.style.color = '';
+            }
+        }
+        
+        function updateCalibrationInfo(componentId, position) {
+            if (!calibrationMode) return;
+            
+            const q = codingQuestions[`room${currentRoom}`][currentQuestionIndex];
+            const targetZone = q.dropZones.find(z => z.accepts === componentId);
+            
+            let info = `<div style="margin-bottom:10px; color:#39ff14;">🎯 DRAGGING: ${componentId.toUpperCase()}</div>`;
+            info += `<div style="margin:10px 0; padding:8px; background:rgba(0,240,255,0.2); border-radius:4px;">`;
+            info += `<strong>Current Position:</strong><br>`;
+            info += `x: ${position.x.toFixed(2)}<br>`;
+            info += `y: ${position.y.toFixed(2)}<br>`;
+            info += `z: ${position.z.toFixed(2)}`;
+            info += `</div>`;
+            
+            if (targetZone) {
+                const distance = Math.sqrt(
+                    Math.pow(position.x - targetZone.position.x, 2) +
+                    Math.pow(position.z - targetZone.position.z, 2)
+                );
+                
+                info += `<div style="margin:10px 0; padding:8px; background:rgba(255,107,107,0.2); border-radius:4px;">`;
+                info += `<strong>Target Position:</strong><br>`;
+                info += `x: ${targetZone.position.x.toFixed(2)}<br>`;
+                info += `y: ${targetZone.position.y.toFixed(2)}<br>`;
+                info += `z: ${targetZone.position.z.toFixed(2)}`;
+                info += `</div>`;
+                
+                info += `<div style="margin-top:10px; padding:8px; background:rgba(168,85,247,0.2); border-radius:4px;">`;
+                info += `<strong>Distance:</strong> ${distance.toFixed(2)} units<br>`;
+                info += `<strong>Status:</strong> ${distance < 1.5 ? '<span style="color:#39ff14;">✓ WILL SNAP</span>' : '<span style="color:#ff6b6b;">✗ TOO FAR</span>'}`;
+                info += `</div>`;
+            }
+            
+            document.getElementById('calibrationInfo').innerHTML = info;
+        }
+        
+        function adjustHeight(componentId, height) {
+            const h = parseFloat(height);
+            document.getElementById(componentId + 'Height').textContent = h.toFixed(1);
+            
+            if (components3D[componentId]) {
+                components3D[componentId].position.y = h;
+            }
+        }
+        
+        function cleanup3DScene() {
+            if (renderer3D) {
+                renderer3D.dispose();
+                renderer3D = null;
+            }
+            scene3D = null;
+            camera3D = null;
+            controls3D = null;
+            motherboard3D = null;
+            components3D = {};
+            placedComponents3D = {};
+            selectedObject3D = null;
+            window.scene3D = null;
+        }
         
         function showRoomWaitingScreen() {
             const nextRoom = currentRoom + 1;

@@ -18,15 +18,21 @@ let gameState = {
   startTime: null,
   currentRoom: 1,
   totalRooms: 5,  // 5 rooms: Knowledge Lobby, Logic Chamber, Code Mirror Room, Bug Fixing Lab, Final Coding Vault
-  roomDuration: 600000, // 10 minutes in milliseconds
+  roomDuration: 300000, // 5 minutes in milliseconds (5 * 60 * 1000)
   participants: {},
   roomStartTimes: {}
 };
 
 let roomTimerId = null;
 
-// Serve static files
-app.use(express.static('public'));
+// Serve static files with no cache
+app.use(express.static('public', {
+  setHeaders: (res, path) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+}));
 app.use(express.json());
 
 // Routes
@@ -71,7 +77,7 @@ io.on('connection', (socket) => {
     
     console.log('Event started at:', new Date(gameState.startTime));
     
-    // Auto-advance rooms every 10 minutes
+    // Auto-advance rooms every 5 minutes
     startRoomTimer();
   });
 

@@ -70,12 +70,29 @@ const codingQuestions = {
 
     // ========================================
     // ROOM 2: PUZZLE - THE LOGIC CHAMBER
-    // Mathematical and Logical Puzzles (Drag-and-Drop)
+    // First question: 3D Motherboard Assembly
+    // Remaining: Mathematical and Logical Puzzles
     // Tagline: "Think smart to move ahead"
     // ========================================
     room2: [
         {
             id: 1,
+            question: "🖥️ MOTHERBOARD ASSEMBLY",
+            instructions: "Drag and place components onto the 3D motherboard in their correct positions",
+            is3D: true,
+            components: [
+                { id: 'ram', name: 'RAM', model: 'ram.glb', position: { x: -4, y: 1, z: -4 } },
+                { id: 'ssd', name: 'SSD', model: 'ssd.glb', position: { x: 4, y: 0.4, z: -4 } },
+                { id: 'gpu', name: 'GPU', model: 'gpu.glb', position: { x: -4, y: 0.7, z: 4 } }
+            ],
+            dropZones: [
+                { id: 'ram-slot', label: 'RAM Slot', position: { x: 2.5, y: 1.0, z: -2.0 }, accepts: 'ram' },
+                { id: 'ssd-slot', label: 'M.2 Slot', position: { x: 0.43, y: 0.30, z: 0.81 }, accepts: 'ssd' },
+                { id: 'gpu-slot', label: 'PCIe Slot', position: { x: -0.4, y: 0.6, z: 5.2 }, accepts: 'gpu' }
+            ]
+        },
+        {
+            id: 2,
             question: "🔢 NUMBER SEQUENCE PUZZLE",
             instructions: "Complete the sequence: 2, 6, 12, 20, 30, ?  (Pattern: n×(n+1))",
             isDragDrop: true,
