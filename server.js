@@ -105,8 +105,8 @@ io.on('connection', (socket) => {
       isRunning: false,
       startTime: null,
       currentRoom: 1,
-      totalRooms: 3,
-      roomDuration: 600000,
+      totalRooms: 5,
+      roomDuration: 300000, // 5 minutes
       participants: {},
       roomStartTimes: {}
     };
@@ -157,6 +157,7 @@ io.on('connection', (socket) => {
       email: data.email,
       currentRoom: gameState.currentRoom,
       roomProgress: {},
+      unlockedKeys: [],
       connectedAt: Date.now()
     };
     socket.emit('registered', {
@@ -175,6 +176,7 @@ io.on('connection', (socket) => {
       participant.roomProgress[data.room].push({
         question: data.questionId,
         answer: data.answer,
+        correct: data.correct || false,
         timestamp: Date.now()
       });
       
@@ -184,6 +186,31 @@ io.on('connection', (socket) => {
         participantName: participant.name,
         room: data.room,
         progress: participant.roomProgress[data.room].length
+      });
+    }
+  });
+
+  // Unlock special key
+  socket.on('unlockKey', (data) => {
+    const participant = gameState.participants[socket.id];
+    if (participant) {
+      if (!participant.unlockedKeys) participant.unlockedKeys = [];
+      participant.unlockedKeys.push({
+        key: data.key,
+        room: data.room,
+        score: data.score,
+        unlockedAt: Date.now()
+      });
+      
+      console.log(`${participant.name} unlocked key: ${data.key} (Room ${data.room}, Score: ${data.score})`);
+      
+      // Broadcast to admins
+      io.to('admins').emit('keyUnlocked', {
+        participantId: socket.id,
+        participantName: participant.name,
+        key: data.key,
+        room: data.room,
+        score: data.score
       });
     }
   });

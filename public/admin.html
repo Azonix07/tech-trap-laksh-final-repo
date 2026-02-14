@@ -665,6 +665,15 @@
             margin-bottom: 16px;
         }
 
+        /* Tab Views */
+        .tab-view {
+            display: block;
+        }
+
+        .tab-view.hidden {
+            display: none;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .dashboard {
@@ -744,13 +753,13 @@
             </div>
 
             <nav class="sidebar-nav">
-                <div class="nav-item active">
+                <div class="nav-item active" onclick="switchTab('dashboard')">
                     <svg viewBox="0 0 24 24">
                         <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                     </svg>
                     Dashboard
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" onclick="switchTab('participants')">
                     <svg viewBox="0 0 24 24">
                         <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
                     </svg>
@@ -786,6 +795,8 @@
 
             <!-- Content Area -->
             <div class="content-area">
+                <!-- Dashboard View -->
+                <div id="dashboardView" class="tab-view active">
                 <!-- Stats Grid -->
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -872,7 +883,7 @@
                         </div>
                         <div class="info-box">
                             <div class="info-label">Questions</div>
-                            <div class="info-value">25</div>
+                            <div class="info-value">48</div>
                         </div>
                     </div>
 
@@ -894,6 +905,12 @@
                                 <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
                             </svg>
                             Force Next Room
+                        </button>
+                        <button class="btn btn-success" id="finishBtn" onclick="finishEvent()" disabled style="background:#16a34a;border-color:#16a34a">
+                            <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor">
+                                <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                            </svg>
+                            Finish Event
                         </button>
                         <button class="btn btn-secondary" id="resetBtn" onclick="resetEvent()">
                             <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor">
@@ -922,6 +939,20 @@
                         </div>
                     </div>
                 </div>
+                </div>
+                <!-- End Dashboard View -->
+
+                <!-- Participants View -->
+                <div id="participantsView" class="tab-view hidden">
+                    <div class="section-header" style="margin-bottom: 24px;">
+                        <h2>All Participants</h2>
+                        <span class="participant-count-badge">
+                            <span id="participantCountBadge2">0</span> Total
+                        </span>
+                    </div>
+                    <div id="participantsDetailList"></div>
+                </div>
+                <!-- End Participants View -->
             </div>
         </main>
     </div>
@@ -930,6 +961,24 @@
         const socket = io();
         let isAuthenticated = false;
         let participants = {};
+
+        function switchTab(tab) {
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Update views
+            document.querySelectorAll('.tab-view').forEach(view => view.classList.add('hidden'));
+            
+            if (tab === 'dashboard') {
+                document.getElementById('dashboardView').classList.remove('hidden');
+                document.getElementById('dashboardSubtitle').textContent = 'Welcome back, Administrator';
+            } else if (tab === 'participants') {
+                document.getElementById('participantsView').classList.remove('hidden');
+                document.getElementById('dashboardSubtitle').textContent = 'Manage Participants';
+                updateParticipantsDetailView();
+            }
+        }
 
         const roomNames = {
             1: 'MCQ — The Knowledge Lobby',
@@ -983,6 +1032,18 @@
             }
         }
 
+        function finishEvent() {
+            if (confirm('Finish the event? This will end the event for all participants and show final results.')) {
+                socket.emit('stopEvent');
+                updateStatus('completed', 'Event Completed');
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('forceNextBtn').disabled = true;
+                document.getElementById('finishBtn').disabled = true;
+                showNotification('Event has been finished! All participants can see their final results.', 'success');
+            }
+        }
+
         function updateStatus(type, text) {
             const badge = document.getElementById('statusBadge');
             badge.className = `status-badge ${type}`;
@@ -1023,14 +1084,38 @@
                 const p = participants[id];
                 const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
                 const roomProgress = p.roomProgress ? Object.values(p.roomProgress).reduce((a, b) => a + b.length, 0) : 0;
-                const totalQuestions = 25;
+                const totalQuestions = 48; // Updated: 15 + 10 + 10 + 3 + 10
                 const currentRoom = p.currentRoom || 1;
+                
+                // Calculate accuracy
+                let totalAnswered = 0;
+                let totalCorrect = 0;
+                if (p.roomProgress) {
+                    Object.values(p.roomProgress).forEach(roomAnswers => {
+                        roomAnswers.forEach(answer => {
+                            totalAnswered++;
+                            if (answer.correct) totalCorrect++;
+                        });
+                    });
+                }
+                const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+                
+                // Check for unlocked keys
+                const hasKeys = p.unlockedKeys && p.unlockedKeys.length > 0;
+                const keysHTML = hasKeys ? p.unlockedKeys.map(k => 
+                    `<span style="display:inline-block; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; margin-left:8px;">
+                        🔑 ${k.key}
+                    </span>`
+                ).join('') : '';
                 
                 return `
                     <div class="participant-card">
                         <div class="participant-avatar">${initials}</div>
                         <div class="participant-details">
-                            <div class="participant-name">${p.name}</div>
+                            <div class="participant-name">
+                                ${p.name}
+                                ${keysHTML}
+                            </div>
                             <div class="participant-meta">
                                 <span>
                                     <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor">
@@ -1044,9 +1129,133 @@
                                     </svg>
                                     ${Math.round((roomProgress / totalQuestions) * 100)}% Complete
                                 </span>
+                                <span style="color:#16a34a;font-weight:600">
+                                    <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor">
+                                        <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                                    </svg>
+                                    Accuracy: ${accuracy}% (${totalCorrect}/${totalAnswered})
+                                </span>
                             </div>
                         </div>
                         <div class="participant-room-badge">Room ${currentRoom}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateParticipantsDetailView() {
+            const list = document.getElementById('participantsDetailList');
+            const participantKeys = Object.keys(participants);
+            const count = participantKeys.length;
+            
+            document.getElementById('participantCountBadge2').textContent = count;
+
+            if (count === 0) {
+                list.innerHTML = `
+                    <div class="no-participants">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        <h3>No Participants Yet</h3>
+                        <p>Participants will appear here once they register</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Calculate stats for each participant and find leader
+            const participantStats = participantKeys.map(id => {
+                const p = participants[id];
+                let totalAnswered = 0;
+                let totalCorrect = 0;
+                if (p.roomProgress) {
+                    Object.values(p.roomProgress).forEach(roomAnswers => {
+                        roomAnswers.forEach(answer => {
+                            totalAnswered++;
+                            if (answer.correct) totalCorrect++;
+                        });
+                    });
+                }
+                const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+                
+                return {
+                    id,
+                    participant: p,
+                    totalAnswered,
+                    totalCorrect,
+                    accuracy,
+                    score: totalCorrect
+                };
+            });
+
+            // Sort by score descending
+            participantStats.sort((a, b) => b.score - a.score);
+            const leaderId = participantStats[0].id;
+
+            list.innerHTML = participantStats.map((stat, index) => {
+                const p = stat.participant;
+                const isLeader = stat.id === leaderId && stat.score > 0;
+                const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                const currentRoom = p.currentRoom || 1;
+                const totalQuestions = 48;
+                const roomProgress = p.roomProgress ? Object.values(p.roomProgress).reduce((a, b) => a + b.length, 0) : 0;
+                
+                // Get keys
+                const keysHTML = p.unlockedKeys && p.unlockedKeys.length > 0 ? 
+                    p.unlockedKeys.map(k => `<span style="display:inline-block; background:linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color:#000; padding:6px 12px; border-radius:12px; font-size:12px; font-weight:700; margin-right:8px;">🔑 ${k.key}</span>`).join('') : 
+                    '<span style="color:#94a3b8; font-style:italic;">No keys unlocked</span>';
+                
+                return `
+                    <div style="background:white; border-radius:12px; padding:24px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.08); border:2px solid ${isLeader ? '#16a34a' : '#e2e8f0'}; position:relative;">
+                        ${isLeader ? '<div style="position:absolute; top:16px; right:16px; background:linear-gradient(135deg, #16a34a 0%, #15803d 100%); color:white; padding:6px 16px; border-radius:20px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:6px;"><span>🏆</span> LEADER</div>' : ''}
+                        
+                        <div style="display:flex; gap:20px; align-items:start;">
+                            <div style="width:80px; height:80px; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius:16px; display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:700; flex-shrink:0;">${initials}</div>
+                            
+                            <div style="flex:1;">
+                                <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
+                                    <h3 style="font-size:20px; font-weight:700; color:#1e293b; margin:0;">${p.name}</h3>
+                                    <span style="background:#f1f5f9; color:#64748b; padding:4px 12px; border-radius:12px; font-size:12px; font-weight:600;">Rank #${index + 1}</span>
+                                </div>
+                                
+                                <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:16px; margin-top:16px;">
+                                    <div>
+                                        <div style="color:#64748b; font-size:12px; font-weight:600; margin-bottom:4px;">PHONE NUMBER</div>
+                                        <div style="color:#1e293b; font-size:15px; font-weight:600;">${p.phone || 'Not provided'}</div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div style="color:#64748b; font-size:12px; font-weight:600; margin-bottom:4px;">CURRENT ROOM</div>
+                                        <div style="color:#1e293b; font-size:15px; font-weight:600;">Room ${currentRoom} of 5</div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div style="color:#64748b; font-size:12px; font-weight:600; margin-bottom:4px;">QUESTIONS ANSWERED</div>
+                                        <div style="color:#1e293b; font-size:15px; font-weight:600;">${stat.totalAnswered} / ${totalQuestions}</div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div style="color:#64748b; font-size:12px; font-weight:600; margin-bottom:4px;">CORRECT ANSWERS</div>
+                                        <div style="color:#16a34a; font-size:15px; font-weight:600;">${stat.totalCorrect} / ${stat.totalAnswered}</div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div style="color:#64748b; font-size:12px; font-weight:600; margin-bottom:4px;">ACCURACY</div>
+                                        <div style="color:#1e293b; font-size:15px; font-weight:600;">${stat.accuracy}%</div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div style="color:#64748b; font-size:12px; font-weight:600; margin-bottom:4px;">PROGRESS</div>
+                                        <div style="color:#1e293b; font-size:15px; font-weight:600;">${Math.round((roomProgress / totalQuestions) * 100)}%</div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-top:16px; padding-top:16px; border-top:1px solid #e2e8f0;">
+                                    <div style="color:#64748b; font-size:12px; font-weight:600; margin-bottom:8px;">UNLOCKED KEYS</div>
+                                    <div>${keysHTML}</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -1073,6 +1282,7 @@
             document.getElementById('startBtn').disabled = true;
             document.getElementById('stopBtn').disabled = false;
             document.getElementById('forceNextBtn').disabled = false;
+            document.getElementById('finishBtn').disabled = false;
             document.getElementById('dashboardSubtitle').textContent = `Event started at ${new Date().toLocaleTimeString()}`;
         });
 
@@ -1081,6 +1291,7 @@
             document.getElementById('startBtn').disabled = false;
             document.getElementById('stopBtn').disabled = true;
             document.getElementById('forceNextBtn').disabled = true;
+            document.getElementById('finishBtn').disabled = true;
         });
 
         socket.on('eventReset', () => {
@@ -1092,6 +1303,7 @@
             document.getElementById('startBtn').disabled = false;
             document.getElementById('stopBtn').disabled = true;
             document.getElementById('forceNextBtn').disabled = true;
+            document.getElementById('finishBtn').disabled = true;
         });
 
         socket.on('timerSync', (data) => {
@@ -1118,6 +1330,7 @@
             updateStatus('completed', 'COMPLETED');
             document.getElementById('dashboardSubtitle').textContent = 'Event completed successfully!';
             document.getElementById('forceNextBtn').disabled = true;
+            document.getElementById('finishBtn').disabled = true;
         });
 
         socket.on('gameState', (state) => {
@@ -1129,10 +1342,12 @@
                 document.getElementById('startBtn').disabled = true;
                 document.getElementById('stopBtn').disabled = false;
                 document.getElementById('forceNextBtn').disabled = false;
+                document.getElementById('finishBtn').disabled = false;
             } else {
                 document.getElementById('startBtn').disabled = false;
                 document.getElementById('stopBtn').disabled = true;
                 document.getElementById('forceNextBtn').disabled = true;
+                document.getElementById('finishBtn').disabled = true;
             }
         });
 
@@ -1142,6 +1357,54 @@
                 updateParticipantsList();
             }
         });
+
+        socket.on('keyUnlocked', (data) => {
+            console.log('Key unlocked:', data);
+            if (participants[data.participantId]) {
+                if (!participants[data.participantId].unlockedKeys) {
+                    participants[data.participantId].unlockedKeys = [];
+                }
+                participants[data.participantId].unlockedKeys.push({
+                    key: data.key,
+                    room: data.room,
+                    score: data.score
+                });
+                updateParticipantsList();
+                
+                // Show notification
+                showNotification(`🔑 ${data.participantName} unlocked the "${data.key}" key!`);
+            }
+        });
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const colors = {
+                'success': 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)',
+                'info': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                'warning': 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+                'error': 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)'
+            };
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type] || colors.info};
+                color: white;
+                padding: 16px 24px;
+                border-radius: 12px;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+                z-index: 10000;
+                animation: slideInRight 0.3s ease-out;
+                font-weight: 600;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
 
         // Enter key to login
         document.getElementById('passwordInput')?.addEventListener('keypress', (e) => {

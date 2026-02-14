@@ -9,6 +9,7 @@ const codingQuestions = {
     // ========================================
     // ROOM 1: MCQ - THE KNOWLEDGE LOBBY
     // C Programming Fundamentals & Basics
+    // 15 Questions Total - Need 10/15 to unlock "Python" key
     // ========================================
     room1: [
         {
@@ -65,121 +66,133 @@ const codingQuestions = {
                 "loop(i = 0; i < 10; i++)"
             ],
             correctAnswer: 0
+        },
+        {
+            id: 6,
+            question: "What is the default return type of a function in C?",
+            options: [
+                "void",
+                "int",
+                "char",
+                "float"
+            ],
+            correctAnswer: 1
+        },
+        {
+            id: 7,
+            question: "Which operator is used to access the value at the address stored in a pointer?",
+            options: [
+                "&",
+                "*",
+                "->",
+                "."
+            ],
+            correctAnswer: 1
+        },
+        {
+            id: 8,
+            question: "What is the purpose of the 'continue' statement?",
+            options: [
+                "Exit the loop",
+                "Skip to the next iteration",
+                "Pause the program",
+                "Return from function"
+            ],
+            correctAnswer: 1
+        },
+        {
+            id: 9,
+            question: "Which of these is NOT a valid C data type?",
+            options: [
+                "int",
+                "float",
+                "boolean",
+                "char"
+            ],
+            correctAnswer: 2
+        },
+        {
+            id: 10,
+            question: "What does 'malloc()' function do?",
+            options: [
+                "Frees memory",
+                "Allocates memory dynamically",
+                "Copies memory",
+                "Compares memory"
+            ],
+            correctAnswer: 1
+        },
+        {
+            id: 11,
+            question: "Which loop guarantees at least one execution?",
+            options: [
+                "for loop",
+                "while loop",
+                "do-while loop",
+                "None of the above"
+            ],
+            correctAnswer: 2
+        },
+        {
+            id: 12,
+            question: "What is the correct way to declare an array in C?",
+            options: [
+                "array int[] = {1,2,3};",
+                "int array[3] = {1,2,3};",
+                "int[] array = {1,2,3};",
+                "array[3] int = {1,2,3};"
+            ],
+            correctAnswer: 1
+        },
+        {
+            id: 13,
+            question: "Which function is used to find the length of a string?",
+            options: [
+                "length()",
+                "strlen()",
+                "size()",
+                "len()"
+            ],
+            correctAnswer: 1
+        },
+        {
+            id: 14,
+            question: "What does 'NULL' represent in C?",
+            options: [
+                "Zero value",
+                "Empty string",
+                "Null pointer",
+                "Undefined variable"
+            ],
+            correctAnswer: 2
+        },
+        {
+            id: 15,
+            question: "Which keyword is used to define a constant in C?",
+            options: [
+                "constant",
+                "const",
+                "final",
+                "static"
+            ],
+            correctAnswer: 1
         }
     ],
 
     // ========================================
-    // ROOM 2: PUZZLE - THE LOGIC CHAMBER
-    // First question: 3D Motherboard Assembly
-    // Remaining: Mathematical and Logical Puzzles
-    // Tagline: "Think smart to move ahead"
+    // ROOM 2: 3D MOTHERBOARD ASSEMBLY
+    // Interactive 3D drag-and-drop challenge
+    // Tagline: "Build it in 3D space"
+    // 1 Question - 3D Assembly
     // ========================================
     room2: [
         {
             id: 1,
-            question: "🖥️ MOTHERBOARD ASSEMBLY",
-            instructions: "Drag and place components onto the 3D motherboard in their correct positions",
-            is3D: true,
-            components: [
-                { id: 'ram', name: 'RAM', model: 'ram.glb', position: { x: -4, y: 1, z: -4 } },
-                { id: 'ssd', name: 'SSD', model: 'ssd.glb', position: { x: 4, y: 0.4, z: -4 } },
-                { id: 'gpu', name: 'GPU', model: 'gpu.glb', position: { x: -4, y: 0.7, z: 4 } }
-            ],
-            dropZones: [
-                { id: 'ram-slot', label: 'RAM Slot', position: { x: 2.5, y: 1.0, z: -2.0 }, accepts: 'ram' },
-                { id: 'ssd-slot', label: 'M.2 Slot', position: { x: 0.43, y: 0.30, z: 0.81 }, accepts: 'ssd' },
-                { id: 'gpu-slot', label: 'PCIe Slot', position: { x: -0.4, y: 0.6, z: 5.2 }, accepts: 'gpu' }
-            ]
-        },
-        {
-            id: 2,
-            question: "🔢 NUMBER SEQUENCE PUZZLE",
-            instructions: "Complete the sequence: 2, 6, 12, 20, 30, ?  (Pattern: n×(n+1))",
-            isDragDrop: true,
-            components: [
-                { id: 'ans42', name: '42', icon: '🔢', color: '#00f0ff' },
-                { id: 'ans36', name: '36', icon: '🔢', color: '#ff6b6b' },
-                { id: 'ans40', name: '40', icon: '🔢', color: '#a855f7' },
-                { id: 'ans48', name: '48', icon: '🔢', color: '#ec4899' }
-            ],
-            dropZones: [
-                { id: 'answer-slot', label: '? = ', accepts: 'ans42' },
-                { id: 'wrong1', label: 'Wrong', accepts: 'ans36' },
-                { id: 'wrong2', label: 'Wrong', accepts: 'ans40' },
-                { id: 'wrong3', label: 'Wrong', accepts: 'ans48' }
-            ]
-        },
-        {
-            id: 2,
-            question: "🚣 RIVER CROSSING LOGIC",
-            instructions: "Order the steps: Farmer crosses with fox, chicken, and grain. Fox eats chicken, chicken eats grain.",
-            isDragDrop: true,
-            components: [
-                { id: 'step1', name: '1. Take Chicken', icon: '🐔', color: '#00f0ff' },
-                { id: 'step2', name: '2. Return Alone', icon: '⬅️', color: '#39ff14' },
-                { id: 'step3', name: '3. Take Fox', icon: '🦊', color: '#ec4899' },
-                { id: 'step4', name: '4. Bring Chicken Back', icon: '🐔⬅️', color: '#a855f7' }
-            ],
-            dropZones: [
-                { id: 'first-move', label: 'First Trip', accepts: 'step1' },
-                { id: 'second-move', label: 'Second Trip', accepts: 'step2' },
-                { id: 'third-move', label: 'Third Trip', accepts: 'step3' },
-                { id: 'fourth-move', label: 'Fourth Trip', accepts: 'step4' }
-            ]
-        },
-        {
-            id: 3,
-            question: "⚡ ALGORITHM COMPLEXITY",
-            instructions: "Match time complexity to the correct algorithm",
-            isDragDrop: true,
-            components: [
-                { id: 'on2', name: 'O(n²)', icon: '📈', color: '#ff6b6b' },
-                { id: 'onlogn', name: 'O(n log n)', icon: '📊', color: '#00f0ff' },
-                { id: 'on', name: 'O(n)', icon: '📉', color: '#39ff14' },
-                { id: 'ologn', name: 'O(log n)', icon: '⚡', color: '#a855f7' }
-            ],
-            dropZones: [
-                { id: 'bubble-sort', label: 'Bubble Sort', accepts: 'on2' },
-                { id: 'merge-sort', label: 'Merge Sort', accepts: 'onlogn' },
-                { id: 'linear-search', label: 'Linear Search', accepts: 'on' },
-                { id: 'binary-search', label: 'Binary Search', accepts: 'ologn' }
-            ]
-        },
-        {
-            id: 4,
-            question: "🗼 TOWER OF HANOI",
-            instructions: "Move 3 disks from A to C (smaller on larger only). Minimum moves?",
-            isDragDrop: true,
-            components: [
-                { id: 'moves7', name: '7 moves', icon: '🔢', color: '#00f0ff' },
-                { id: 'moves5', name: '5 moves', icon: '🔢', color: '#ff6b6b' },
-                { id: 'moves9', name: '9 moves', icon: '🔢', color: '#ec4899' },
-                { id: 'moves15', name: '15 moves', icon: '🔢', color: '#a855f7' }
-            ],
-            dropZones: [
-                { id: 'correct-answer', label: 'Minimum Moves', accepts: 'moves7' },
-                { id: 'wrong1', label: 'Incorrect', accepts: 'moves5' },
-                { id: 'wrong2', label: 'Incorrect', accepts: 'moves9' },
-                { id: 'wrong3', label: 'Incorrect', accepts: 'moves15' }
-            ]
-        },
-        {
-            id: 5,
-            question: "⚖️ WEIGHTED JOB SCHEDULING",
-            instructions: "Jobs: A=10, B=20, C=30, D=40. A conflicts with C, B with D. Max weight?",
-            isDragDrop: true,
-            components: [
-                { id: 'w60', name: '60 (B+D)', icon: '⚖️', color: '#00f0ff' },
-                { id: 'w50', name: '50 (A+D)', icon: '⚖️', color: '#ff6b6b' },
-                { id: 'w70', name: '70 (C+D)', icon: '⚖️', color: '#39ff14' },
-                { id: 'w100', name: '100 (All)', icon: '⚖️', color: '#a855f7' }
-            ],
-            dropZones: [
-                { id: 'max-weight', label: 'Maximum Weight', accepts: 'w60' },
-                { id: 'wrong1', label: 'Wrong', accepts: 'w50' },
-                { id: 'wrong2', label: 'Wrong', accepts: 'w70' },
-                { id: 'wrong3', label: 'Wrong', accepts: 'w100' }
-            ]
+            isSlidingPuzzle: true,
+            question: "Solve the Sliding Picture Puzzle",
+            imagePath: "img/puzzle-image.jpg",
+            gridSize: 6,
+            previewTime: 10000
         }
     ],
 
@@ -187,6 +200,7 @@ const codingQuestions = {
     // ROOM 3: OUTPUT PREDICTION - CODE MIRROR ROOM
     // Tagline: "See what the code reveals"
     // Predict the output of C code snippets
+    // 10 Questions Total
     // ========================================
     room3: [
         {
@@ -281,171 +295,322 @@ const codingQuestions = {
                 "Undefined behavior"
             ],
             correctAnswer: 3
+        },
+        {
+            id: 6,
+            question: "What will this program output?",
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+
+<span class="keyword">int</span> <span class="function">main</span>() {
+    <span class="keyword">int</span> i = <span class="number">0</span>;
+    <span class="keyword">while</span>(i < <span class="number">5</span>) {
+        <span class="keyword">if</span>(i == <span class="number">3</span>)
+            <span class="keyword">break</span>;
+        <span class="function">printf</span>(<span class="string">"%d "</span>, i++);
+    }
+    <span class="keyword">return</span> <span class="number">0</span>;
+}`,
+            options: [
+                "0 1 2",
+                "0 1 2 3",
+                "0 1 2 3 4",
+                "Infinite loop"
+            ],
+            correctAnswer: 0
+        },
+        {
+            id: 7,
+            question: "Predict the output:",
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+
+<span class="keyword">int</span> <span class="function">main</span>() {
+    <span class="keyword">char</span> str[] = <span class="string">"Hello"</span>;
+    <span class="function">printf</span>(<span class="string">"%c"</span>, str[<span class="number">1</span>]);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}`,
+            options: [
+                "H",
+                "e",
+                "l",
+                "o"
+            ],
+            correctAnswer: 1
+        },
+        {
+            id: 8,
+            question: "What is the output?",
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+
+<span class="keyword">int</span> <span class="function">main</span>() {
+    <span class="keyword">int</span> x = <span class="number">10</span> % <span class="number">3</span>;
+    <span class="function">printf</span>(<span class="string">"%d"</span>, x);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}`,
+            options: [
+                "0",
+                "1",
+                "3",
+                "3.33"
+            ],
+            correctAnswer: 1
+        },
+        {
+            id: 9,
+            question: "What will be printed?",
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+
+<span class="keyword">int</span> <span class="function">main</span>() {
+    <span class="keyword">int</span> a = <span class="number">5</span>, b = <span class="number">10</span>;
+    <span class="function">printf</span>(<span class="string">"%d"</span>, a > b ? a : b);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}`,
+            options: [
+                "5",
+                "10",
+                "15",
+                "Compilation Error"
+            ],
+            correctAnswer: 1
+        },
+        {
+            id: 10,
+            question: "Predict the output:",
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+
+<span class="keyword">int</span> <span class="function">main</span>() {
+    <span class="keyword">int</span> arr[<span class="number">3</span>] = {<span class="number">1</span>, <span class="number">2</span>};
+    <span class="function">printf</span>(<span class="string">"%d"</span>, arr[<span class="number">2</span>]);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}`,
+            options: [
+                "0",
+                "2",
+                "Garbage value",
+                "Compilation Error"
+            ],
+            correctAnswer: 0
         }
     ],
 
     // ========================================
     // ROOM 4: DEBUGGING - THE BUG FIXING LAB
-    // Find and fix bugs in C code
+    // Interactive debugging with live code editor
+    // Tagline: "Repair before you proceed"
+    // 3 Questions Total - Get 2/3 correct to unlock "Debug" key
     // ========================================
     room4: [
         {
             id: 1,
-            question: "Find the bug in this C code that should print numbers 1 to 5:",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+            question: "Fix this code to print 'Hello World':",
+            buggyCode: `#include <stdio.h>
 
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i < <span class="number">5</span>; i++)
-        <span class="function">printf</span>(<span class="string">"%d "</span>, i);
-    <span class="keyword">return</span> <span class="number">0</span>;
+int main() {
+    printf("Hello World");
+    retrun 0;
 }`,
-            options: [
-                "Loop condition should be i <= 5",
-                "printf format is wrong",
-                "Missing semicolon",
-                "There is no bug"
-            ],
-            correctAnswer: 0
+            expectedOutput: "Hello World",
+            hint: "Check the spelling of 'return' - it's misspelled!",
+            correctCode: `#include <stdio.h>
+
+int main() {
+    printf("Hello World");
+    return 0;
+}`
         },
         {
             id: 2,
-            question: "What's wrong with this factorial function?",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+            question: "Fix the infinite recursion:",
+            buggyCode: `#include <stdio.h>
 
-<span class="keyword">int</span> <span class="function">factorial</span>(<span class="keyword">int</span> n) {
-    <span class="keyword">if</span> (n == <span class="number">0</span>)
-        <span class="keyword">return</span> <span class="number">1</span>;
-    <span class="keyword">return</span> n * <span class="function">factorial</span>(n);
+int factorial(int n) {
+    if (n == 0)
+        return 1;
+    return n * factorial(n);
+}
+
+int main() {
+    printf("%d", factorial(5));
+    return 0;
 }`,
-            options: [
-                "Base case is wrong",
-                "Should be factorial(n-1) not factorial(n)",
-                "Missing return type",
-                "Function name is invalid"
-            ],
-            correctAnswer: 1
+            expectedOutput: "120",
+            hint: "Change factorial(n) to factorial(n-1)",
+            correctCode: `#include <stdio.h>
+
+int factorial(int n) {
+    if (n == 0)
+        return 1;
+    return n * factorial(n-1);
+}
+
+int main() {
+    printf("%d", factorial(5));
+    return 0;
+}`
         },
         {
             id: 3,
-            question: "Find the bug in this array sum code:",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+            question: "Fix the sum calculation:",
+            buggyCode: `#include <stdio.h>
 
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">int</span> arr[] = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>};
-    <span class="keyword">int</span> sum = <span class="number">1</span>;
-    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i < <span class="number">5</span>; i++)
+int main() {
+    int arr[] = {1, 2, 3, 4, 5};
+    int sum = 1;
+    for(int i = 0; i < 5; i++)
         sum += arr[i];
-    <span class="function">printf</span>(<span class="string">"%d"</span>, sum);
+    printf("%d", sum);
+    return 0;
 }`,
-            options: [
-                "Loop condition is wrong",
-                "sum should be initialized to 0",
-                "Array declaration is wrong",
-                "Missing return statement"
-            ],
-            correctAnswer: 1
-        },
-        {
-            id: 4,
-            question: "What's the error in this pointer code?",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+            expectedOutput: "15",
+            hint: "Change sum = 1 to sum = 0",
+            correctCode: `#include <stdio.h>
 
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">int</span> x = <span class="number">10</span>;
-    <span class="keyword">int</span> *ptr;
-    <span class="function">printf</span>(<span class="string">"%d"</span>, *ptr);
-    <span class="keyword">return</span> <span class="number">0</span>;
-}`,
-            options: [
-                "Pointer declaration is wrong",
-                "ptr is not initialized before use",
-                "printf format is incorrect",
-                "Missing semicolon"
-            ],
-            correctAnswer: 1
-        },
-        {
-            id: 5,
-            question: "Find the bug in this string comparison:",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
-
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">char</span> str1[] = <span class="string">"hello"</span>;
-    <span class="keyword">char</span> str2[] = <span class="string">"hello"</span>;
-    <span class="keyword">if</span> (str1 == str2)
-        <span class="function">printf</span>(<span class="string">"Equal"</span>);
-    <span class="keyword">else</span>
-        <span class="function">printf</span>(<span class="string">"Not Equal"</span>);
-}`,
-            options: [
-                "String declaration is wrong",
-                "Should use strcmp() instead of ==",
-                "Missing return statement",
-                "if condition syntax is wrong"
-            ],
-            correctAnswer: 1
+int main() {
+    int arr[] = {1, 2, 3, 4, 5};
+    int sum = 0;
+    for(int i = 0; i < 5; i++)
+        sum += arr[i];
+    printf("%d", sum);
+    return 0;
+}`
         }
     ],
 
     // ========================================
     // ROOM 5: CODING - THE FINAL CODING VAULT
-    // Write complete C programs
+    // Algorithm design and implementation questions
+    // Tagline: "Unlock the ultimate treasure"
+    // 10 Questions Total
     // ========================================
     room5: [
         {
             id: 1,
-            question: "Write a C program to check if a number is prime. What is the correct approach?",
-            options: [
-                "Check divisibility from 2 to n-1",
-                "Check divisibility from 2 to sqrt(n)",
-                "Check divisibility only by 2",
-                "Check divisibility by all numbers"
-            ],
-            correctAnswer: 1
+            question: "Write a C program to print 'Hello World'",
+            starterCode: `#include <stdio.h>
+
+int main() {
+    // Write your code here
+    
+    return 0;
+}`,
+            expectedOutput: "Hello World",
+            hint: "Use printf() to display the text"
         },
         {
             id: 2,
-            question: "To reverse an array in-place, which method is most efficient?",
-            options: [
-                "Create a new array and copy in reverse",
-                "Use two pointers from start and end, swap elements",
-                "Use recursion to swap each element",
-                "Sort the array in descending order"
-            ],
-            correctAnswer: 1
+            question: "Write a C program to add two numbers (5 and 10) and print the result",
+            starterCode: `#include <stdio.h>
+
+int main() {
+    // Write your code here
+    
+    return 0;
+}`,
+            expectedOutput: "15",
+            hint: "Declare two variables, add them, and print the sum"
         },
         {
             id: 3,
-            question: "What is the correct way to find the largest element in an array?",
-            options: [
-                "Sort array and return last element",
-                "Initialize max with first element, iterate and compare",
-                "Use binary search",
-                "Check each element with all others"
-            ],
-            correctAnswer: 1
+            question: "Write a C program to print numbers from 1 to 5",
+            starterCode: `#include <stdio.h>
+
+int main() {
+    // Write your code here
+    
+    return 0;
+}`,
+            expectedOutput: "1 2 3 4 5 ",
+            hint: "Use a for loop from 1 to 5"
         },
         {
             id: 4,
-            question: "To implement a function that counts vowels in a string, what should you do?",
-            options: [
-                "Use nested loops to check each vowel",
-                "Iterate string once, check if each char is vowel using conditions",
-                "Convert string to uppercase then check",
-                "Use regex pattern matching"
-            ],
-            correctAnswer: 1
+            question: "Write a C program to check if 7 is even or odd",
+            starterCode: `#include <stdio.h>
+
+int main() {
+    // Write your code here
+    
+    return 0;
+}`,
+            expectedOutput: "Odd",
+            hint: "Use modulo operator (%) to check if number is divisible by 2"
         },
         {
             id: 5,
-            question: "What is the correct logic for Fibonacci sequence generation?",
-            options: [
-                "fib(n) = fib(n-1) + fib(n-2) with base cases fib(0)=0, fib(1)=1",
-                "fib(n) = 2 * fib(n-1)",
-                "fib(n) = n * fib(n-1)",
-                "fib(n) = fib(n-1) - fib(n-2)"
-            ],
-            correctAnswer: 0
+            question: "Write a C program to find the largest of three numbers: 15, 8, and 22",
+            starterCode: `#include <stdio.h>
+
+int main() {
+    // Write your code here
+    
+    return 0;
+}`,
+            expectedOutput: "22",
+            hint: "Use if-else statements to compare the three numbers"
+        },
+        {
+            id: 6,
+            question: "Write a C program to calculate factorial of 5",
+            starterCode: `#include <stdio.h>
+
+int main() {
+    // Write your code here
+    
+    return 0;
+}`,
+            expectedOutput: "120",
+            hint: "Use a loop to multiply numbers from 1 to 5"
+        },
+        {
+            id: 7,
+            question: "Write a C program to print the first 5 even numbers",
+            starterCode: `#include <stdio.h>
+
+int main() {
+    // Write your code here
+    
+    return 0;
+}`,
+            expectedOutput: "2 4 6 8 10 ",
+            hint: "Use a loop and print i*2 or check if i%2==0"
+        },
+        {
+            id: 8,
+            question: "Write a C program to calculate sum of array elements: {1, 2, 3, 4, 5}",
+            starterCode: `#include <stdio.h>
+
+int main() {
+    // Write your code here
+    
+    return 0;
+}`,
+            expectedOutput: "15",
+            hint: "Declare an array, use a loop to add all elements"
+        },
+        {
+            id: 9,
+            question: "Write a C program to reverse the number 123",
+            starterCode: `#include <stdio.h>
+
+int main() {
+    // Write your code here
+    
+    return 0;
+}`,
+            expectedOutput: "321",
+            hint: "Use modulo and division to extract digits and build reversed number"
+        },
+        {
+            id: 10,
+            question: "Write a C program to check if 17 is a prime number",
+            starterCode: `#include <stdio.h>
+
+int main() {
+    // Write your code here
+    
+    return 0;
+}`,
+            expectedOutput: "Prime",
+            hint: "Check if number is divisible by any number from 2 to sqrt(n)"
         }
     ]
 };
