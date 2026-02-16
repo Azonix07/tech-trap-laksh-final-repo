@@ -1,6 +1,6 @@
 // Tech Trap NIT - Escape Room Challenge Questions
-// Room 1: MCQ - The Knowledge Lobby (C Programming Fundamentals)
-// Room 2: Puzzle - The Logic Chamber (Mathematical & Logical Puzzles)
+// Room 1: MCQ - The Knowledge Lobby (CS Fundamentals, AI & ML, Networking)
+// Room 2: Puzzle - The Logic Chamber (Jigsaw + Maze)
 // Room 3: Output Prediction - The Code Mirror Room (Predict C code output)
 // Room 4: Debugging - The Bug Fixing Lab (Find and fix bugs in C code)
 // Room 5: Coding - The Final Coding Vault (Write complete C programs)
@@ -8,609 +8,282 @@
 const codingQuestions = {
     // ========================================
     // ROOM 1: MCQ - THE KNOWLEDGE LOBBY
-    // C Programming Fundamentals & Basics
-    // 15 Questions Total - Need 10/15 to unlock "Python" key
+    // CS Fundamentals, AI & ML, Networking
+    // 20 Questions Total - Need 13/20 to unlock "JAVA" key
     // ========================================
     room1: [
         {
             id: 1,
-            question: "What is the size of int data type in C (on a 32-bit system)?",
-            options: [
-                "2 bytes",
-                "4 bytes",
-                "8 bytes",
-                "Depends on compiler"
-            ],
+            question: "What is the smallest unit of data in computing?",
+            options: ["Byte", "Bit", "Nibble", "Kilobyte"],
             correctAnswer: 1
         },
         {
             id: 2,
-            question: "Which of the following is the correct way to declare a pointer in C?",
-            options: [
-                "int ptr;",
-                "int *ptr;",
-                "pointer int ptr;",
-                "int &ptr;"
-            ],
+            question: "How many bits are in a byte?",
+            options: ["4", "8", "16", "1024"],
             correctAnswer: 1
         },
         {
             id: 3,
-            question: "What does the 'break' statement do in a loop?",
-            options: [
-                "Exits the entire program",
-                "Skips the current iteration",
-                "Exits the loop completely",
-                "Pauses the loop"
-            ],
+            question: "In programming, a loop that executes at least once, regardless of the condition, is called:",
+            options: ["While loop", "For loop", "Do-while loop", "Recursive loop"],
             correctAnswer: 2
         },
         {
             id: 4,
-            question: "Which header file is used for input/output operations in C?",
-            options: [
-                "stdlib.h",
-                "stdio.h",
-                "string.h",
-                "math.h"
-            ],
-            correctAnswer: 1
+            question: "What is the output of 2 + 4 / 2 + 6 * 2?",
+            options: ["16", "15", "18", "20"],
+            correctAnswer: 0
         },
         {
             id: 5,
-            question: "What is the correct syntax for a 'for' loop in C?",
-            options: [
-                "for (i = 0; i < 10; i++)",
-                "for i in range(10)",
-                "for (i = 0 to 10)",
-                "loop(i = 0; i < 10; i++)"
-            ],
+            question: "Which data structure is used to handle recursion?",
+            options: ["Stack", "Queue", "Linked List", "Graph"],
             correctAnswer: 0
         },
         {
             id: 6,
-            question: "What is the default return type of a function in C?",
-            options: [
-                "void",
-                "int",
-                "char",
-                "float"
-            ],
-            correctAnswer: 1
+            question: "Which of the following is NOT an Object-Oriented Programming (OOP) concept?",
+            options: ["Encapsulation", "Inheritance", "Compilation", "Polymorphism"],
+            correctAnswer: 2
         },
         {
             id: 7,
-            question: "Which operator is used to access the value at the address stored in a pointer?",
-            options: [
-                "&",
-                "*",
-                "->",
-                "."
-            ],
+            question: "Who is known as the \"Father of Artificial Intelligence\"?",
+            options: ["Alan Turing", "John McCarthy", "Geoffrey Hinton", "Andrew Ng"],
             correctAnswer: 1
         },
         {
             id: 8,
-            question: "What is the purpose of the 'continue' statement?",
+            question: "What is the primary goal of Machine Learning?",
             options: [
-                "Exit the loop",
-                "Skip to the next iteration",
-                "Pause the program",
-                "Return from function"
+                "To make computers perform manual tasks",
+                "To enable systems to learn from data without explicit programming",
+                "To replace software engineers",
+                "To build faster hardware"
             ],
             correctAnswer: 1
         },
         {
             id: 9,
-            question: "Which of these is NOT a valid C data type?",
-            options: [
-                "int",
-                "float",
-                "boolean",
-                "char"
-            ],
-            correctAnswer: 2
+            question: "Which type of machine learning requires labeled data for training?",
+            options: ["Unsupervised Learning", "Supervised Learning", "Reinforcement Learning", "Clustering"],
+            correctAnswer: 1
         },
         {
             id: 10,
-            question: "What does 'malloc()' function do?",
+            question: "What does the abbreviation \"PEAS\" stand for in AI agent design?",
             options: [
-                "Frees memory",
-                "Allocates memory dynamically",
-                "Copies memory",
-                "Compares memory"
+                "Peer, Environment, Actuators, Sense",
+                "Performance, Environment, Actuators, Sensors",
+                "Program, Environment, Agents, Sensors",
+                "Practical, Efficient, Active, Smart"
             ],
             correctAnswer: 1
         },
         {
             id: 11,
-            question: "Which loop guarantees at least one execution?",
-            options: [
-                "for loop",
-                "while loop",
-                "do-while loop",
-                "None of the above"
-            ],
+            question: "Which of the following devices is responsible for connecting multiple computers in a local area network (LAN)?",
+            options: ["Router", "Modem", "Switch", "Firewall"],
             correctAnswer: 2
         },
         {
             id: 12,
-            question: "What is the correct way to declare an array in C?",
-            options: [
-                "array int[] = {1,2,3};",
-                "int array[3] = {1,2,3};",
-                "int[] array = {1,2,3};",
-                "array[3] int = {1,2,3};"
-            ],
-            correctAnswer: 1
+            question: "Which networking device operates at the Data Link Layer of the OSI model?",
+            options: ["Router", "Hub", "Switch", "Firewall"],
+            correctAnswer: 2
         },
         {
             id: 13,
-            question: "Which function is used to find the length of a string?",
-            options: [
-                "length()",
-                "strlen()",
-                "size()",
-                "len()"
-            ],
-            correctAnswer: 1
+            question: "What does ISP stand for in the context of internet connectivity?",
+            options: ["Internet Service Provider", "Internet Security Protocol", "Internet Speed Test", "International Server Protocol"],
+            correctAnswer: 0
         },
         {
             id: 14,
-            question: "What does 'NULL' represent in C?",
-            options: [
-                "Zero value",
-                "Empty string",
-                "Null pointer",
-                "Undefined variable"
-            ],
+            question: "Which protocol is used for secure file transfer over a network?",
+            options: ["FTP", "HTTP", "SSH", "SNMP"],
             correctAnswer: 2
         },
         {
             id: 15,
-            question: "Which keyword is used to define a constant in C?",
-            options: [
-                "constant",
-                "const",
-                "final",
-                "static"
-            ],
+            question: "Which type of firewall operates at the application layer of the OSI model?",
+            options: ["Packet-filtering firewall", "Proxy firewall", "Stateful firewall", "Intrusion detection system"],
             correctAnswer: 1
+        },
+        {
+            id: 16,
+            question: "What is the term for a security threat that involves a cybercriminal gaining unauthorized access to a network or system?",
+            options: ["Phishing", "Malware", "Hacking", "Firewall breach"],
+            correctAnswer: 2
+        },
+        {
+            id: 17,
+            question: "What does BIOS stand for in computing?",
+            options: ["Basic Input Output System", "Binary Input Output Service", "Basic Internet Operating System", "Binary Information Output Setup"],
+            correctAnswer: 0
+        },
+        {
+            id: 18,
+            question: "Antivirus is a type of:",
+            options: ["System software", "Application software", "Hardware", "Network protocol"],
+            correctAnswer: 1
+        },
+        {
+            id: 19,
+            question: "Which of the following is the correct way to declare a pointer in C?",
+            options: ["int ptr;", "int *ptr;", "pointer int ptr;", "int &ptr;"],
+            correctAnswer: 1
+        },
+        {
+            id: 20,
+            question: "What does 'NULL' represent in C?",
+            options: ["Zero value", "Empty string", "Null pointer", "Undefined variable"],
+            correctAnswer: 2
         }
     ],
 
     // ========================================
-    // ROOM 2: 3D MOTHERBOARD ASSEMBLY
-    // Interactive 3D drag-and-drop challenge
-    // Tagline: "Build it in 3D space"
-    // 1 Question - 3D Assembly
+    // ROOM 2: THE LOGIC CHAMBER
+    // Jigsaw Puzzle + Maze Game
+    // 2 Questions - Need 2/2 to unlock "BIT" key
     // ========================================
     room2: [
         {
             id: 1,
-            isSlidingPuzzle: true,
-            question: "Solve the Sliding Picture Puzzle",
-            imagePath: "img/puzzle-image.jpg",
-            gridSize: 6,
+            isJigsawPuzzle: true,
+            question: "Complete the Jigsaw Puzzle",
+            imagePath: "img/jigsaw.PNG",
+            rows: 4,
+            cols: 5,
             previewTime: 10000
+        },
+        {
+            id: 2,
+            isMazePuzzle: true,
+            question: "Use your brain power to find the exit! Guide the bug through the maze using arrow keys.",
+            mazeSize: 15
         }
     ],
 
     // ========================================
     // ROOM 3: OUTPUT PREDICTION - CODE MIRROR ROOM
-    // Tagline: "See what the code reveals"
-    // Predict the output of C code snippets
-    // 10 Questions Total
+    // 10 Questions Total - Need 5/10 to unlock "HTML" key
     // ========================================
     room3: [
         {
             id: 1,
             question: "What will be the output of this C code?",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
-
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">int</span> x = <span class="number">5</span>;
-    <span class="function">printf</span>(<span class="string">"%d"</span>, x++);
-    <span class="keyword">return</span> <span class="number">0</span>;
-}`,
-            options: [
-                "5",
-                "6",
-                "Compilation Error",
-                "Undefined behavior"
-            ],
-            correctAnswer: 0
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>\n\n<span class="keyword">int</span> <span class="function">main</span>() {\n    <span class="keyword">int</span> i = <span class="number">0</span>;\n    <span class="keyword">for</span>(; i &lt; <span class="number">5</span>; i++);\n    <span class="function">printf</span>(<span class="string">"%d"</span>, i);\n    <span class="keyword">return</span> <span class="number">0</span>;\n}`,
+            options: ["0 1 2 3 4", "5", "4", "Infinite loop"],
+            correctAnswer: 1
         },
         {
             id: 2,
             question: "What will be the output of this code?",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
-
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">int</span> arr[] = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>};
-    <span class="function">printf</span>(<span class="string">"%d"</span>, arr[<span class="number">3</span>]);
-    <span class="keyword">return</span> <span class="number">0</span>;
-}`,
-            options: [
-                "3",
-                "4",
-                "5",
-                "Garbage value"
-            ],
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>\n\n<span class="keyword">int</span> <span class="function">main</span>() {\n    <span class="keyword">int</span> a = <span class="number">10</span>;\n    <span class="keyword">int</span> *p = &amp;a;\n    <span class="function">printf</span>(<span class="string">"%d"</span>, *p + <span class="number">1</span>);\n    <span class="keyword">return</span> <span class="number">0</span>;\n}`,
+            options: ["10", "11", "Address + 1", "Compilation Error"],
             correctAnswer: 1
         },
         {
             id: 3,
             question: "What is the output of this program?",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
-
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">int</span> a = <span class="number">10</span>, b = <span class="number">20</span>;
-    <span class="keyword">if</span> (a < b)
-        <span class="function">printf</span>(<span class="string">"A"</span>);
-    <span class="keyword">else</span>
-        <span class="function">printf</span>(<span class="string">"B"</span>);
-    <span class="keyword">return</span> <span class="number">0</span>;
-}`,
-            options: [
-                "A",
-                "B",
-                "AB",
-                "Compilation Error"
-            ],
-            correctAnswer: 0
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>\n\n<span class="keyword">int</span> <span class="function">main</span>() {\n    <span class="keyword">int</span> a[] = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>};\n    <span class="function">printf</span>(<span class="string">"%d"</span>, *(a + <span class="number">2</span>));\n    <span class="keyword">return</span> <span class="number">0</span>;\n}`,
+            options: ["1", "2", "3", "4"],
+            correctAnswer: 2
         },
         {
             id: 4,
             question: "What will this code print?",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
-
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i < <span class="number">3</span>; i++)
-        <span class="function">printf</span>(<span class="string">"%d "</span>, i);
-    <span class="keyword">return</span> <span class="number">0</span>;
-}`,
-            options: [
-                "0 1 2",
-                "1 2 3",
-                "0 1 2 3",
-                "Compilation Error"
-            ],
-            correctAnswer: 0
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>\n\n<span class="keyword">void</span> <span class="function">fun</span>(<span class="keyword">int</span> x) {\n    x = <span class="number">10</span>;\n}\n\n<span class="keyword">int</span> <span class="function">main</span>() {\n    <span class="keyword">int</span> a = <span class="number">5</span>;\n    <span class="function">fun</span>(a);\n    <span class="function">printf</span>(<span class="string">"%d"</span>, a);\n    <span class="keyword">return</span> <span class="number">0</span>;\n}`,
+            options: ["10", "5", "0", "Compilation Error"],
+            correctAnswer: 1
         },
         {
             id: 5,
             question: "What is the output?",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
-
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">int</span> x = <span class="number">5</span>;
-    <span class="function">printf</span>(<span class="string">"%d %d"</span>, ++x, x++);
-    <span class="keyword">return</span> <span class="number">0</span>;
-}`,
-            options: [
-                "6 5",
-                "6 6",
-                "7 6",
-                "Undefined behavior"
-            ],
-            correctAnswer: 3
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>\n\n<span class="keyword">int</span> <span class="function">main</span>() {\n    <span class="keyword">int</span> a[] = {<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>};\n    <span class="keyword">int</span> *p = a;\n    <span class="function">printf</span>(<span class="string">"%d"</span>, *p++);\n    <span class="keyword">return</span> <span class="number">0</span>;\n}`,
+            options: ["10", "20", "11", "Compilation Error"],
+            correctAnswer: 0
         },
         {
             id: 6,
             question: "What will this program output?",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
-
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">int</span> i = <span class="number">0</span>;
-    <span class="keyword">while</span>(i < <span class="number">5</span>) {
-        <span class="keyword">if</span>(i == <span class="number">3</span>)
-            <span class="keyword">break</span>;
-        <span class="function">printf</span>(<span class="string">"%d "</span>, i++);
-    }
-    <span class="keyword">return</span> <span class="number">0</span>;
-}`,
-            options: [
-                "0 1 2",
-                "0 1 2 3",
-                "0 1 2 3 4",
-                "Infinite loop"
-            ],
-            correctAnswer: 0
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>\n\n<span class="keyword">int</span> <span class="function">main</span>() {\n    <span class="keyword">int</span> i;\n    <span class="keyword">for</span>(<span class="function">printf</span>(<span class="string">"A"</span>), i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++, <span class="function">printf</span>(<span class="string">"B"</span>))\n        <span class="function">printf</span>(<span class="string">"C"</span>);\n    <span class="keyword">return</span> <span class="number">0</span>;\n}`,
+            options: ["ABCBC", "ACBCB", "ABCABC", "AACBB"],
+            correctAnswer: 1
         },
         {
             id: 7,
             question: "Predict the output:",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
-
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">char</span> str[] = <span class="string">"Hello"</span>;
-    <span class="function">printf</span>(<span class="string">"%c"</span>, str[<span class="number">1</span>]);
-    <span class="keyword">return</span> <span class="number">0</span>;
-}`,
-            options: [
-                "H",
-                "e",
-                "l",
-                "o"
-            ],
-            correctAnswer: 1
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>\n\n<span class="keyword">int</span> <span class="function">main</span>() {\n    <span class="keyword">int</span> i = <span class="number">0</span>;\n    <span class="keyword">if</span> (i = <span class="number">1</span>)\n        <span class="function">printf</span>(<span class="string">"YES"</span>);\n    <span class="keyword">else</span>\n        <span class="function">printf</span>(<span class="string">"NO"</span>);\n    <span class="keyword">return</span> <span class="number">0</span>;\n}`,
+            options: ["YES", "NO", "Compilation Error", "0"],
+            correctAnswer: 0
         },
         {
             id: 8,
             question: "What is the output?",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
-
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">int</span> x = <span class="number">10</span> % <span class="number">3</span>;
-    <span class="function">printf</span>(<span class="string">"%d"</span>, x);
-    <span class="keyword">return</span> <span class="number">0</span>;
-}`,
-            options: [
-                "0",
-                "1",
-                "3",
-                "3.33"
-            ],
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>\n\n<span class="keyword">int</span> <span class="function">main</span>() {\n    <span class="keyword">int</span> x = <span class="number">0</span>;\n    <span class="keyword">int</span> y = x++ &amp;&amp; ++x;\n    <span class="function">printf</span>(<span class="string">"%d"</span>, y);\n    <span class="keyword">return</span> <span class="number">0</span>;\n}`,
+            options: ["1", "0", "2", "Undefined behavior"],
             correctAnswer: 1
         },
         {
             id: 9,
             question: "What will be printed?",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
-
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">int</span> a = <span class="number">5</span>, b = <span class="number">10</span>;
-    <span class="function">printf</span>(<span class="string">"%d"</span>, a > b ? a : b);
-    <span class="keyword">return</span> <span class="number">0</span>;
-}`,
-            options: [
-                "5",
-                "10",
-                "15",
-                "Compilation Error"
-            ],
-            correctAnswer: 1
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>\n\n<span class="keyword">int</span> <span class="function">main</span>() {\n    <span class="keyword">int</span> a = <span class="number">2</span>;\n    <span class="function">printf</span>(<span class="string">"%d %d"</span>, a &lt;&lt; <span class="number">1</span>, a &gt;&gt; <span class="number">1</span>);\n    <span class="keyword">return</span> <span class="number">0</span>;\n}`,
+            options: ["4 1", "2 1", "1 4", "2 2"],
+            correctAnswer: 0
         },
         {
             id: 10,
             question: "Predict the output:",
-            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>
-
-<span class="keyword">int</span> <span class="function">main</span>() {
-    <span class="keyword">int</span> arr[<span class="number">3</span>] = {<span class="number">1</span>, <span class="number">2</span>};
-    <span class="function">printf</span>(<span class="string">"%d"</span>, arr[<span class="number">2</span>]);
-    <span class="keyword">return</span> <span class="number">0</span>;
-}`,
-            options: [
-                "0",
-                "2",
-                "Garbage value",
-                "Compilation Error"
-            ],
-            correctAnswer: 0
+            codeBlock: `<span class="keyword">#include</span> <span class="string">&lt;stdio.h&gt;</span>\n\n<span class="keyword">int</span> <span class="function">main</span>() {\n    <span class="keyword">int</span> a[] = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>};\n    <span class="keyword">int</span> *p = a;\n    <span class="function">printf</span>(<span class="string">"%d"</span>, *++p);\n    <span class="keyword">return</span> <span class="number">0</span>;\n}`,
+            options: ["1", "2", "3", "Compilation Error"],
+            correctAnswer: 1
         }
     ],
 
     // ========================================
     // ROOM 4: DEBUGGING - THE BUG FIXING LAB
-    // Interactive debugging with live code editor
-    // Tagline: "Repair before you proceed"
-    // 3 Questions Total - Get 2/3 correct to unlock "Debug" key
+    // 3 Questions Total - Get 2/3 correct to unlock "DEBUG" key
+    // NO HINTS - Challenging bugs
     // ========================================
     room4: [
         {
             id: 1,
-            question: "Fix this code to print 'Hello World':",
-            buggyCode: `#include <stdio.h>
-
-int main() {
-    printf("Hello World");
-    retrun 0;
-}`,
-            expectedOutput: "Hello World",
-            hint: "Check the spelling of 'return' - it's misspelled!",
-            correctCode: `#include <stdio.h>
-
-int main() {
-    printf("Hello World");
-    return 0;
-}`
+            question: "This program should swap two numbers without a temp variable, but it has a bug. Fix it so it prints 'a=10 b=5':",
+            buggyCode: `#include <stdio.h>\n\nint main() {\n    int a = 5, b = 10;\n    a = a + b;\n    b = a + b;\n    a = a - b;\n    printf("a=%d b=%d", a, b);\n    return 0;\n}`,
+            expectedOutput: "a=10 b=5",
+            correctCode: `#include <stdio.h>\n\nint main() {\n    int a = 5, b = 10;\n    a = a + b;\n    b = a - b;\n    a = a - b;\n    printf("a=%d b=%d", a, b);\n    return 0;\n}`
         },
         {
             id: 2,
-            question: "Fix the infinite recursion:",
-            buggyCode: `#include <stdio.h>
-
-int factorial(int n) {
-    if (n == 0)
-        return 1;
-    return n * factorial(n);
-}
-
-int main() {
-    printf("%d", factorial(5));
-    return 0;
-}`,
-            expectedOutput: "120",
-            hint: "Change factorial(n) to factorial(n-1)",
-            correctCode: `#include <stdio.h>
-
-int factorial(int n) {
-    if (n == 0)
-        return 1;
-    return n * factorial(n-1);
-}
-
-int main() {
-    printf("%d", factorial(5));
-    return 0;
-}`
+            question: "This recursive function should return the nth Fibonacci number (fib(6) = 8), but it has a logic error. Fix it:",
+            buggyCode: `#include <stdio.h>\n\nint fib(int n) {\n    if (n <= 0) return 0;\n    if (n == 1) return 1;\n    return fib(n - 1) + fib(n - 3);\n}\n\nint main() {\n    printf("%d", fib(6));\n    return 0;\n}`,
+            expectedOutput: "8",
+            correctCode: `#include <stdio.h>\n\nint fib(int n) {\n    if (n <= 0) return 0;\n    if (n == 1) return 1;\n    return fib(n - 1) + fib(n - 2);\n}\n\nint main() {\n    printf("%d", fib(6));\n    return 0;\n}`
         },
         {
             id: 3,
-            question: "Fix the sum calculation:",
-            buggyCode: `#include <stdio.h>
-
-int main() {
-    int arr[] = {1, 2, 3, 4, 5};
-    int sum = 1;
-    for(int i = 0; i < 5; i++)
-        sum += arr[i];
-    printf("%d", sum);
-    return 0;
-}`,
-            expectedOutput: "15",
-            hint: "Change sum = 1 to sum = 0",
-            correctCode: `#include <stdio.h>
-
-int main() {
-    int arr[] = {1, 2, 3, 4, 5};
-    int sum = 0;
-    for(int i = 0; i < 5; i++)
-        sum += arr[i];
-    printf("%d", sum);
-    return 0;
-}`
+            question: "This program should reverse the string 'HELLO' in-place and print 'OLLEH', but it has two bugs. Fix them:",
+            buggyCode: `#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char str[] = "HELLO";\n    int len = strlen(str);\n    for (int i = 0; i < len; i++) {\n        char temp = str[i];\n        str[i] = str[len - i];\n        str[len - i] = temp;\n    }\n    printf("%s", str);\n    return 0;\n}`,
+            expectedOutput: "OLLEH",
+            correctCode: `#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char str[] = "HELLO";\n    int len = strlen(str);\n    for (int i = 0; i < len / 2; i++) {\n        char temp = str[i];\n        str[i] = str[len - 1 - i];\n        str[len - 1 - i] = temp;\n    }\n    printf("%s", str);\n    return 0;\n}`
         }
     ],
 
     // ========================================
     // ROOM 5: CODING - THE FINAL CODING VAULT
-    // Algorithm design and implementation questions
-    // Tagline: "Unlock the ultimate treasure"
-    // 10 Questions Total
+    // 1 Question - Pattern Generation (10 min)
+    // NO HINTS
     // ========================================
     room5: [
         {
             id: 1,
-            question: "Write a C program to print 'Hello World'",
-            starterCode: `#include <stdio.h>
-
-int main() {
-    // Write your code here
-    
-    return 0;
-}`,
-            expectedOutput: "Hello World",
-            hint: "Use printf() to display the text"
-        },
-        {
-            id: 2,
-            question: "Write a C program to add two numbers (5 and 10) and print the result",
-            starterCode: `#include <stdio.h>
-
-int main() {
-    // Write your code here
-    
-    return 0;
-}`,
-            expectedOutput: "15",
-            hint: "Declare two variables, add them, and print the sum"
-        },
-        {
-            id: 3,
-            question: "Write a C program to print numbers from 1 to 5",
-            starterCode: `#include <stdio.h>
-
-int main() {
-    // Write your code here
-    
-    return 0;
-}`,
-            expectedOutput: "1 2 3 4 5 ",
-            hint: "Use a for loop from 1 to 5"
-        },
-        {
-            id: 4,
-            question: "Write a C program to check if 7 is even or odd",
-            starterCode: `#include <stdio.h>
-
-int main() {
-    // Write your code here
-    
-    return 0;
-}`,
-            expectedOutput: "Odd",
-            hint: "Use modulo operator (%) to check if number is divisible by 2"
-        },
-        {
-            id: 5,
-            question: "Write a C program to find the largest of three numbers: 15, 8, and 22",
-            starterCode: `#include <stdio.h>
-
-int main() {
-    // Write your code here
-    
-    return 0;
-}`,
-            expectedOutput: "22",
-            hint: "Use if-else statements to compare the three numbers"
-        },
-        {
-            id: 6,
-            question: "Write a C program to calculate factorial of 5",
-            starterCode: `#include <stdio.h>
-
-int main() {
-    // Write your code here
-    
-    return 0;
-}`,
-            expectedOutput: "120",
-            hint: "Use a loop to multiply numbers from 1 to 5"
-        },
-        {
-            id: 7,
-            question: "Write a C program to print the first 5 even numbers",
-            starterCode: `#include <stdio.h>
-
-int main() {
-    // Write your code here
-    
-    return 0;
-}`,
-            expectedOutput: "2 4 6 8 10 ",
-            hint: "Use a loop and print i*2 or check if i%2==0"
-        },
-        {
-            id: 8,
-            question: "Write a C program to calculate sum of array elements: {1, 2, 3, 4, 5}",
-            starterCode: `#include <stdio.h>
-
-int main() {
-    // Write your code here
-    
-    return 0;
-}`,
-            expectedOutput: "15",
-            hint: "Declare an array, use a loop to add all elements"
-        },
-        {
-            id: 9,
-            question: "Write a C program to reverse the number 123",
-            starterCode: `#include <stdio.h>
-
-int main() {
-    // Write your code here
-    
-    return 0;
-}`,
-            expectedOutput: "321",
-            hint: "Use modulo and division to extract digits and build reversed number"
-        },
-        {
-            id: 10,
-            question: "Write a C program to check if 17 is a prime number",
-            starterCode: `#include <stdio.h>
-
-int main() {
-    // Write your code here
-    
-    return 0;
-}`,
-            expectedOutput: "Prime",
-            hint: "Check if number is divisible by any number from 2 to sqrt(n)"
+            question: "Write a C program to print the following centered pyramid number pattern (5 rows):\n\n    1\n   1 2\n  1 2 3\n 1 2 3 4\n1 2 3 4 5",
+            starterCode: `#include <stdio.h>\n\nint main() {\n    // Generate the number pattern\n    // Each row i prints numbers from 1 to i\n    // Separate numbers with a space\n    // End each row with a newline\n    \n    return 0;\n}`,
+            expectedOutput: "    1\n   1 2\n  1 2 3\n 1 2 3 4\n1 2 3 4 5"
         }
     ]
 };

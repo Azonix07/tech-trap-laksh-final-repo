@@ -753,17 +753,23 @@
             </div>
 
             <nav class="sidebar-nav">
-                <div class="nav-item active" onclick="switchTab('dashboard')">
+                <div class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard', this)">
                     <svg viewBox="0 0 24 24">
                         <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                     </svg>
                     Dashboard
                 </div>
-                <div class="nav-item" onclick="switchTab('participants')">
+                <div class="nav-item" data-tab="participants" onclick="switchTab('participants', this)">
                     <svg viewBox="0 0 24 24">
                         <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
                     </svg>
                     Participants
+                </div>
+                <div class="nav-item" data-tab="history" onclick="switchTab('history', this)">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                    </svg>
+                    Event History
                 </div>
             </nav>
 
@@ -875,15 +881,15 @@
                         </div>
                         <div class="info-box">
                             <div class="info-label">Room Duration</div>
-                            <div class="info-value">10 min</div>
+                            <div class="info-value">5-10 min</div>
                         </div>
                         <div class="info-box">
                             <div class="info-label">Total Duration</div>
-                            <div class="info-value">50 min</div>
+                            <div class="info-value">35 min</div>
                         </div>
                         <div class="info-box">
                             <div class="info-label">Questions</div>
-                            <div class="info-value">48</div>
+                            <div class="info-value">36</div>
                         </div>
                     </div>
 
@@ -953,6 +959,27 @@
                     <div id="participantsDetailList"></div>
                 </div>
                 <!-- End Participants View -->
+
+                <!-- Event History View -->
+                <div id="historyView" class="tab-view hidden">
+                    <div class="section-header" style="margin-bottom: 24px;">
+                        <h2>Event History</h2>
+                        <div style="display:flex;gap:12px;">
+                            <button class="btn btn-primary" onclick="saveCurrentEvent()" style="background:#667eea;">
+                                <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                                Save Current Event
+                            </button>
+                        </div>
+                    </div>
+                    <div id="eventHistoryList" style="display:grid;gap:20px;">
+                        <div class="no-participants">
+                            <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                            <h3>No Event History</h3>
+                            <p>Click "Save Current Event" during or after an event to record it.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Event History View -->
             </div>
         </main>
     </div>
@@ -962,10 +989,16 @@
         let isAuthenticated = false;
         let participants = {};
 
-        function switchTab(tab) {
+        function switchTab(tab, clickedEl) {
             // Update nav items
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            event.target.closest('.nav-item').classList.add('active');
+            if (clickedEl) {
+                const navItem = clickedEl.closest ? clickedEl.closest('.nav-item') : clickedEl;
+                if (navItem) navItem.classList.add('active');
+            } else {
+                // Fallback: find by data-tab
+                document.querySelector(`.nav-item[data-tab="${tab}"]`)?.classList.add('active');
+            }
             
             // Update views
             document.querySelectorAll('.tab-view').forEach(view => view.classList.add('hidden'));
@@ -977,6 +1010,10 @@
                 document.getElementById('participantsView').classList.remove('hidden');
                 document.getElementById('dashboardSubtitle').textContent = 'Manage Participants';
                 updateParticipantsDetailView();
+            } else if (tab === 'history') {
+                document.getElementById('historyView').classList.remove('hidden');
+                document.getElementById('dashboardSubtitle').textContent = 'Event History & Reports';
+                socket.emit('getEventHistory');
             }
         }
 
@@ -1084,7 +1121,7 @@
                 const p = participants[id];
                 const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
                 const roomProgress = p.roomProgress ? Object.values(p.roomProgress).reduce((a, b) => a + b.length, 0) : 0;
-                const totalQuestions = 48; // Updated: 15 + 10 + 10 + 3 + 10
+                const totalQuestions = 36; // Total: 20 (Room1) + 2 (Room2) + 10 (Room3) + 3 (Room4) + 1 (Room5)
                 const currentRoom = p.currentRoom || 1;
                 
                 // Calculate accuracy
@@ -1117,6 +1154,12 @@
                                 ${keysHTML}
                             </div>
                             <div class="participant-meta">
+                                <span>
+                                    <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor">
+                                        <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                    </svg>
+                                    ${p.phone || 'N/A'}
+                                </span>
                                 <span>
                                     <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor">
                                         <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
@@ -1197,7 +1240,7 @@
                 const isLeader = stat.id === leaderId && stat.score > 0;
                 const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
                 const currentRoom = p.currentRoom || 1;
-                const totalQuestions = 48;
+                const totalQuestions = 36; // Total: 20 + 2 + 10 + 3 + 1
                 const roomProgress = p.roomProgress ? Object.values(p.roomProgress).reduce((a, b) => a + b.length, 0) : 0;
                 
                 // Get keys
@@ -1419,6 +1462,200 @@
                 socket.emit('getGameState');
             }
         }, 5000);
+
+        // ==================== EVENT HISTORY ====================
+        const roomNamesMap = {
+            1: 'Room 1 — MCQ (Knowledge Lobby)',
+            2: 'Room 2 — Puzzle (Logic Chamber)',
+            3: 'Room 3 — Output Prediction (Code Mirror)',
+            4: 'Room 4 — Debugging (Bug Fixing Lab)',
+            5: 'Room 5 — Coding (Final Vault)'
+        };
+
+        function saveCurrentEvent() {
+            if (confirm('Save a snapshot of the current event to history?')) {
+                socket.emit('saveEventHistory');
+                showNotification('Event snapshot saved!', 'success');
+            }
+        }
+
+        socket.on('eventHistoryData', (history) => {
+            renderEventHistory(history);
+        });
+
+        socket.on('eventHistoryUpdated', (history) => {
+            renderEventHistory(history);
+        });
+
+        function renderEventHistory(history) {
+            const list = document.getElementById('eventHistoryList');
+            if (!history || history.length === 0) {
+                list.innerHTML = `
+                    <div class="no-participants">
+                        <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                        <h3>No Event History</h3>
+                        <p>Click "Save Current Event" during or after an event to record it.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = history.map((evt, idx) => {
+                const date = new Date(evt.date).toLocaleString();
+                const winner = evt.winner;
+                const runnerUp = evt.runnerUp;
+                return `
+                    <div style="background:white; border-radius:12px; padding:24px; border:1px solid #e2e8f0; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                            <div>
+                                <h3 style="font-size:18px; font-weight:700; color:#1e293b; margin:0;">Event #${idx + 1}</h3>
+                                <p style="color:#64748b; font-size:13px; margin-top:4px;">📅 ${date} &nbsp;|&nbsp; 👥 ${evt.totalParticipants} Participants</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="downloadEventPDF(${idx})" style="background:#667eea; padding:10px 20px; font-size:13px;">
+                                <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                                Download PDF
+                            </button>
+                        </div>
+                        
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                            <div style="background:linear-gradient(135deg, #fef3c7, #fde68a); padding:16px; border-radius:10px; border:2px solid #f59e0b;">
+                                <div style="font-size:12px; font-weight:700; color:#92400e; margin-bottom:8px;">🥇 1ST PLACE — WINNER</div>
+                                <div style="font-size:18px; font-weight:700; color:#1e293b;">${winner ? winner.name : 'N/A'}</div>
+                                <div style="font-size:13px; color:#64748b; margin-top:4px;">${winner ? `📱 ${winner.phone} &nbsp;|&nbsp; ✅ ${winner.totalCorrect} correct &nbsp;|&nbsp; 🎯 ${winner.accuracy}%` : ''}</div>
+                            </div>
+                            <div style="background:linear-gradient(135deg, #e0e7ff, #c7d2fe); padding:16px; border-radius:10px; border:2px solid #818cf8;">
+                                <div style="font-size:12px; font-weight:700; color:#3730a3; margin-bottom:8px;">🥈 2ND PLACE — RUNNER UP</div>
+                                <div style="font-size:18px; font-weight:700; color:#1e293b;">${runnerUp ? runnerUp.name : 'N/A'}</div>
+                                <div style="font-size:13px; color:#64748b; margin-top:4px;">${runnerUp ? `📱 ${runnerUp.phone} &nbsp;|&nbsp; ✅ ${runnerUp.totalCorrect} correct &nbsp;|&nbsp; 🎯 ${runnerUp.accuracy}%` : ''}</div>
+                            </div>
+                        </div>
+                        
+                        <details style="cursor:pointer;">
+                            <summary style="font-size:14px; font-weight:600; color:#667eea; padding:8px 0;">View All Participants (${evt.totalParticipants})</summary>
+                            <div style="margin-top:12px; display:grid; gap:8px;">
+                                ${evt.participants.map((p, i) => `
+                                    <div style="background:#f8fafc; padding:12px 16px; border-radius:8px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+                                        <div>
+                                            <span style="font-weight:700; color:#1e293b;">#${i+1} ${p.name}</span>
+                                            <span style="color:#64748b; font-size:13px; margin-left:12px;">📱 ${p.phone}</span>
+                                        </div>
+                                        <div style="display:flex; gap:16px; font-size:13px; color:#64748b;">
+                                            <span>✅ ${p.totalCorrect}/${p.totalAnswered}</span>
+                                            <span>🎯 ${p.accuracy}%</span>
+                                            <span>🔑 ${p.unlockedKeys.length} keys</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </details>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Store history locally for PDF generation
+        let localEventHistory = [];
+        socket.on('eventHistoryData', (history) => { localEventHistory = history; });
+        socket.on('eventHistoryUpdated', (history) => { localEventHistory = history; });
+
+        function downloadEventPDF(eventIndex) {
+            const evt = localEventHistory[eventIndex];
+            if (!evt) { alert('Event data not found.'); return; }
+
+            const date = new Date(evt.date).toLocaleString();
+            const winner = evt.winner;
+            const runnerUp = evt.runnerUp;
+
+            // Build HTML content for PDF
+            let html = `
+            <html><head><style>
+                body { font-family: 'Segoe UI', Arial, sans-serif; padding: 40px; color: #1e293b; }
+                h1 { color: #667eea; font-size: 28px; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
+                h2 { color: #334155; font-size: 20px; margin-top: 30px; }
+                .info { color: #64748b; font-size: 14px; margin: 8px 0; }
+                .winner-box { background: #fef3c7; border: 2px solid #f59e0b; border-radius: 10px; padding: 16px; margin: 12px 0; }
+                .runner-box { background: #e0e7ff; border: 2px solid #818cf8; border-radius: 10px; padding: 16px; margin: 12px 0; }
+                table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+                th { background: #667eea; color: white; padding: 10px 12px; text-align: left; }
+                td { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; }
+                tr:nth-child(even) { background: #f8fafc; }
+                .section { margin-top: 24px; page-break-inside: avoid; }
+                .room-title { background: #f1f5f9; padding: 8px 12px; font-weight: 700; border-left: 4px solid #667eea; margin-top: 16px; }
+            </style></head><body>
+                <h1>🏆 Tech Trap NIT — Event Report</h1>
+                <p class="info">📅 Date: ${date}</p>
+                <p class="info">👥 Total Participants: ${evt.totalParticipants}</p>
+                
+                <h2>🥇 Winner — 1st Place</h2>
+                <div class="winner-box">
+                    <strong style="font-size:18px;">${winner ? winner.name : 'N/A'}</strong><br>
+                    ${winner ? `📱 Phone: ${winner.phone}<br>✅ Correct: ${winner.totalCorrect} / ${winner.totalAnswered}<br>🎯 Accuracy: ${winner.accuracy}%<br>🔑 Keys: ${winner.unlockedKeys.map(k => k.key).join(', ') || 'None'}` : ''}
+                </div>
+                
+                <h2>🥈 Runner Up — 2nd Place</h2>
+                <div class="runner-box">
+                    <strong style="font-size:18px;">${runnerUp ? runnerUp.name : 'N/A'}</strong><br>
+                    ${runnerUp ? `📱 Phone: ${runnerUp.phone}<br>✅ Correct: ${runnerUp.totalCorrect} / ${runnerUp.totalAnswered}<br>🎯 Accuracy: ${runnerUp.accuracy}%<br>🔑 Keys: ${runnerUp.unlockedKeys.map(k => k.key).join(', ') || 'None'}` : ''}
+                </div>
+                
+                <h2>📊 All Participants — Leaderboard</h2>
+                <table>
+                    <tr><th>Rank</th><th>Name</th><th>Phone</th><th>Correct</th><th>Answered</th><th>Accuracy</th><th>Keys</th></tr>
+                    ${evt.participants.map((p, i) => `
+                        <tr>
+                            <td>#${i+1}</td>
+                            <td><strong>${p.name}</strong></td>
+                            <td>${p.phone}</td>
+                            <td>${p.totalCorrect}</td>
+                            <td>${p.totalAnswered}</td>
+                            <td>${p.accuracy}%</td>
+                            <td>${p.unlockedKeys.map(k => k.key).join(', ') || '—'}</td>
+                        </tr>
+                    `).join('')}
+                </table>`;
+
+            // Detailed Q&A per participant
+            html += `<h2>📝 Detailed Question & Answer Log</h2>`;
+            evt.participants.forEach((p, i) => {
+                html += `
+                    <div class="section">
+                        <h3 style="color:#334155;">#${i+1} ${p.name} (${p.phone})</h3>`;
+                if (p.roomProgress && Object.keys(p.roomProgress).length > 0) {
+                    Object.entries(p.roomProgress).forEach(([room, answers]) => {
+                        html += `<div class="room-title">${roomNamesMap[room] || 'Room ' + room}</div>`;
+                        html += `<table><tr><th>Q#</th><th>Answer</th><th>Result</th><th>Time</th></tr>`;
+                        answers.forEach(a => {
+                            const time = a.timestamp ? new Date(a.timestamp).toLocaleTimeString() : '—';
+                            const answerText = typeof a.answer === 'string' && a.answer.length > 80 ? a.answer.substring(0, 80) + '...' : (a.answer || '—');
+                            html += `<tr>
+                                <td>Q${a.question}</td>
+                                <td style="max-width:300px;word-break:break-all;">${answerText}</td>
+                                <td style="color:${a.correct ? '#16a34a' : '#dc2626'}; font-weight:700;">${a.correct ? '✅ Correct' : '❌ Wrong'}</td>
+                                <td>${time}</td>
+                            </tr>`;
+                        });
+                        html += `</table>`;
+                    });
+                } else {
+                    html += `<p style="color:#94a3b8; font-style:italic;">No answers recorded.</p>`;
+                }
+                html += `</div>`;
+            });
+
+            html += `
+                <div style="margin-top:40px; border-top:2px solid #e2e8f0; padding-top:16px; text-align:center; color:#94a3b8; font-size:12px;">
+                    Generated by Tech Trap NIT Admin Dashboard — ${date}
+                </div>
+            </body></html>`;
+
+            // Open a new window and print as PDF
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(html);
+            printWindow.document.close();
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
+        }
     </script>
 </body>
 </html>

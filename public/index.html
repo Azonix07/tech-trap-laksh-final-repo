@@ -6,7 +6,7 @@
     <title>Tech Trap NIT - Escape Room Challenge v2.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
-    <script src="questions.js?v=4.0"></script>
+    <script src="questions.js?v=5.0"></script>
     <style>
         * {
             margin: 0;
@@ -758,10 +758,12 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             padding: 20px 40px;
             gap: 30px;
+            overflow-y: auto;
+            max-height: calc(100vh - 180px);
         }
 
         /* Question Container */
@@ -879,16 +881,20 @@
         }
 
         .code-block {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(0, 240, 255, 0.15);
-            padding: 20px 25px;
-            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 16px 18px;
+            margin: 16px 0;
             font-family: 'Fira Code', 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 13px;
+            line-height: 1.55;
             text-align: left;
             color: #e0e0e0;
             clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+            max-height: 260px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
         /* ==================== OPTIONS ==================== */
@@ -1634,37 +1640,243 @@
 
         /* ==================== COMPLETED SCREEN ==================== */
         .completed-content {
+            max-width: 900px;
+            width: 95%;
+            margin: 0 auto;
+            padding: 20px 10px;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+        
+        .stats-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .stats-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--neon-green);
+            text-shadow: 0 0 20px var(--neon-green), 0 0 40px var(--neon-green);
+            margin: 0;
+            letter-spacing: 4px;
+        }
+        
+        .stats-subtitle {
+            font-size: 14px;
+            color: var(--primary-cyan);
+            letter-spacing: 2px;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+        
+        .stats-dashboard {
+            background: rgba(0,0,0,0.6);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0,240,255,0.3);
+        }
+        
+        .stats-main-score {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .score-circle {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+        
+        .score-circle svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
         }
-
-        .trophy-icon {
-            font-size: 150px;
-            filter: drop-shadow(0 0 50px rgba(255, 215, 0, 0.8));
-        }
-
-        .final-score {
+        
+        .score-value {
             font-family: 'Orbitron', sans-serif;
-            font-size: 72px;
+            font-size: 32px;
             font-weight: 900;
-            color: #ffd700;
-            text-shadow: 0 0 50px rgba(255, 215, 0, 0.8), 0 0 100px rgba(255, 215, 0, 0.4);
-            margin: 30px 0;
-            letter-spacing: 10px;
+            color: var(--neon-green);
+            text-shadow: 0 0 15px var(--neon-green);
+            line-height: 1;
         }
-
-        .completed-text {
-            color: rgba(255, 255, 255, 0.6);
+        
+        .score-label {
+            font-size: 12px;
+            color: var(--primary-cyan);
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(0,240,255,0.05);
+            border: 2px solid rgba(0,240,255,0.3);
+            border-radius: 10px;
+            padding: 15px 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 20px rgba(0,240,255,0.4);
+        }
+        
+        .stat-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 8px rgba(0,240,255,0.5));
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-cyan);
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .room-breakdown {
+            margin-top: 20px;
+        }
+        
+        .breakdown-title {
+            font-family: 'Orbitron', sans-serif;
             font-size: 16px;
-            letter-spacing: 4px;
+            color: var(--neon-green);
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        
+        .room-stat {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(0,240,255,0.3);
+            border-radius: 8px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+        
+        .room-stat-name {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .room-stat-score {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-cyan);
+        }
+        
+        .room-stat-score.perfect {
+            color: var(--neon-green);
+            text-shadow: 0 0 15px var(--neon-green);
+        }
+        
+        .special-achievements {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(57,255,20,0.05);
+            border: 2px solid rgba(57,255,20,0.3);
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .achievement-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            color: var(--neon-green);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .achievement-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .achievement-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid var(--neon-green);
+            box-shadow: 0 0 12px rgba(57,255,20,0.3);
+        }
+        
+        .achievement-badge-icon {
+            font-size: 20px;
+        }
+        
+        .achievement-badge-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            color: var(--neon-green);
+            font-weight: 600;
+        }
+        
+        .completed-message {
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 16px;
+            letter-spacing: 3px;
+            margin-top: 30px;
+            text-transform: uppercase;
         }
 
         /* ==================== CODE EDITOR (ROOM 4 DEBUGGING) ==================== */
         .debug-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
-            height: 350px;
+            gap: 15px;
+            margin-top: 10px;
+            height: 55vh;
+            min-height: 350px;
         }
 
         .code-editor-panel, .console-panel {
@@ -1712,17 +1924,20 @@
         .code-editor {
             flex: 1;
             width: 100%;
-            padding: 20px;
+            padding: 15px;
             background: rgba(5, 10, 20, 0.95);
             color: #e0e0e0;
             font-family: 'Fira Code', 'Courier New', monospace;
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.6;
             border: none;
             outline: none;
             resize: none;
             overflow-y: auto;
             tab-size: 4;
+            -moz-tab-size: 4;
+            white-space: pre;
+            word-wrap: normal;
         }
 
         .code-editor::-webkit-scrollbar {
@@ -1972,6 +2187,182 @@
             box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
         }
 
+        @keyframes snapPulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* ==================== MAZE GAME ==================== */
+        .maze-game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+        }
+        .maze-canvas-wrapper {
+            border: 3px solid var(--neon-green);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(57,255,20,0.4), inset 0 0 20px rgba(57,255,20,0.1);
+            background: rgba(0,0,0,0.8);
+            padding: 5px;
+        }
+        .maze-info-bar {
+            display: flex; gap: 30px; align-items: center; justify-content: center;
+            font-family: 'Orbitron', sans-serif; font-size: 14px;
+            color: var(--primary-cyan); letter-spacing: 1px;
+        }
+        .maze-info-bar span { display: flex; align-items: center; gap: 8px; }
+        .maze-controls-hint {
+            color: rgba(255,255,255,0.5); font-size: 13px; letter-spacing: 1px;
+            text-align: center;
+        }
+        .maze-btn {
+            padding: 10px 30px; background: var(--neon-green); border: 2px solid var(--neon-green);
+            color: #000; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 13px;
+            cursor: pointer; border-radius: 6px; transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(57,255,20,0.3);
+        }
+        .maze-btn:hover { box-shadow: 0 0 25px rgba(57,255,20,0.6); transform: translateY(-2px); }
+
+        /* ==================== KIOSK EXIT LOCK ==================== */
+        .kiosk-exit-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 12000;
+            padding: 20px;
+        }
+
+        .kiosk-exit-dialog {
+            width: min(440px, 92vw);
+            background: linear-gradient(135deg, rgba(10, 25, 47, 0.95) 0%, rgba(15, 32, 56, 0.95) 100%);
+            border: 2px solid rgba(0, 240, 255, 0.6);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.35), inset 0 0 30px rgba(0, 240, 255, 0.08);
+            border-radius: 12px;
+            padding: 28px;
+            color: #fff;
+        }
+
+        .kiosk-exit-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            letter-spacing: 2px;
+            color: var(--primary-cyan);
+            margin-bottom: 10px;
+        }
+
+        .kiosk-exit-sub {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .kiosk-exit-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(0, 240, 255, 0.5);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            letter-spacing: 1px;
+            outline: none;
+        }
+
+        .kiosk-exit-input:focus {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        }
+
+        .kiosk-exit-error {
+            min-height: 18px;
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .kiosk-exit-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .kiosk-exit-hint {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.55);
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .kiosk-btn-primary {
+            padding: 12px 22px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            font-weight: 700;
+            color: #000;
+            background: var(--primary-cyan);
+            border: 1px solid var(--primary-cyan);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
+        }
+
+        .kiosk-btn-primary:hover { box-shadow: 0 0 28px rgba(0, 240, 255, 0.7); transform: translateY(-1px); }
+
+        .kiosk-btn-ghost {
+            padding: 12px 18px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.85);
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.25s ease;
+        }
+
+        .kiosk-btn-ghost:hover { border-color: rgba(255, 255, 255, 0.7); color: #fff; }
+
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 900px) {
             .mega-logo { width: 280px; height: 280px; }
@@ -1999,6 +2390,23 @@
 </head>
 <body>
     <div class="scanlines"></div>
+
+    <!-- Admin-only kiosk exit overlay (Ctrl + Shift + K) -->
+    <div id="kioskExitOverlay" class="kiosk-exit-overlay hidden">
+        <div class="kiosk-exit-dialog">
+            <div class="kiosk-exit-title">Admin Exit</div>
+            <div class="kiosk-exit-sub">Press Ctrl + Shift + K to open. Enter the password to unlock exit from kiosk/fullscreen.</div>
+            <form id="kioskExitForm">
+                <input id="kioskExitPassword" class="kiosk-exit-input" type="password" placeholder="Enter admin password" autocomplete="off">
+                <div id="kioskExitError" class="kiosk-exit-error"></div>
+                <div class="kiosk-exit-actions">
+                    <button type="button" class="kiosk-btn-ghost" id="kioskExitCancel">Cancel</button>
+                    <button type="submit" class="kiosk-btn-primary">Unlock Exit</button>
+                </div>
+            </form>
+            <div class="kiosk-exit-hint">After unlocking, press Alt + F4 (or close the window) to leave kiosk mode.</div>
+        </div>
+    </div>
 
     <!-- Loading Screen -->
     <div id="loadingScreen">
@@ -2070,9 +2478,66 @@
     <!-- Completed Screen -->
     <div id="completedScreen" class="fullscreen hidden">
         <div class="completed-content">
-            <div class="trophy-icon">🏆</div>
-            <div class="final-score" id="finalScore">0/15</div>
-            <p class="completed-text">Mission Complete</p>
+            <div class="stats-header">
+                <h1 class="stats-title">GAME COMPLETED</h1>
+                <div class="stats-subtitle">Performance Summary</div>
+            </div>
+            
+            <div class="stats-dashboard">
+                <div class="stats-main-score">
+                    <div class="score-circle">
+                        <svg viewBox="0 0 200 200">
+                            <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(0,240,255,0.1)" stroke-width="12"/>
+                            <circle id="scoreProgressCircle" cx="100" cy="100" r="90" fill="none" stroke="var(--neon-green)" stroke-width="12" 
+                                stroke-dasharray="565" stroke-dashoffset="565" stroke-linecap="round" 
+                                transform="rotate(-90 100 100)" style="transition: stroke-dashoffset 2s ease;"/>
+                        </svg>
+                        <div class="score-text">
+                            <div class="score-value" id="finalScore">0/45</div>
+                            <div class="score-label">CORRECT</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value" id="accuracyPercent">0%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value" id="timeTaken">--:--</div>
+                        <div class="stat-label">Time Taken</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value" id="totalAttempts">0</div>
+                        <div class="stat-label">Total Attempts</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value" id="performanceRank">-</div>
+                        <div class="stat-label">Performance</div>
+                    </div>
+                </div>
+                
+                <div class="room-breakdown">
+                    <div class="breakdown-title">Room-by-Room Breakdown</div>
+                    <div class="breakdown-grid" id="roomBreakdown">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+                
+                <div class="special-achievements" id="specialAchievements">
+                    <!-- Will show special keys if earned -->
+                </div>
+            </div>
+            
+            <p class="completed-message">Thank you for participating!</p>
         </div>
     </div>
 
@@ -2085,10 +2550,44 @@
             5: { name: 'The Final Coding Vault', bg: '/img/finalcodevaultbg.PNG', logo: '/img/finalcodingvaultlogo.PNG' }
         };
 
+        const ROOM_NAMES = ['Knowledge Lobby', 'Logic Chamber', 'Code Mirror', 'Bug Fixing', 'Final Vault'];
+        const ROOM_TOTALS = [20, 2, 10, 3, 1];
+        const TOTAL_QUESTIONS = ROOM_TOTALS.reduce((sum, n) => sum + n, 0);
+        const TOTAL_TIME_MINUTES = 40; // Sum of per-room timers
+
         const socket = io();
         let participantId = null, currentRoom = 1, userAnswers = {}, totalCorrect = 0, currentQuestionIndex = 0;
         let roomScores = {}; // Track correct answers per room
         let unlockedKeys = []; // Track unlocked special keys
+        let clientRoomStartTime = null; // Client-side room timer
+        let clientTimerInterval = null;
+        const ROOM_DURATION = 300000; // default 5 minutes
+        const ROOM_DURATIONS = { 1: 300000, 2: 600000, 3: 600000, 4: 300000, 5: 600000 }; // Room 2 & 3 & 5 = 10 min
+        
+        function startClientRoomTimer() {
+            clientRoomStartTime = Date.now();
+            if (clientTimerInterval) clearInterval(clientTimerInterval);
+            clientTimerInterval = setInterval(() => {
+                if (!clientRoomStartTime) return;
+                const duration = ROOM_DURATIONS[currentRoom] || ROOM_DURATION;
+                const elapsed = Date.now() - clientRoomStartTime;
+                const remaining = Math.max(0, duration - elapsed);
+                const m = Math.floor(remaining / 60000);
+                const s = Math.floor((remaining % 60000) / 1000);
+                document.getElementById('timer').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                if (remaining <= 0) {
+                    clearInterval(clientTimerInterval);
+                    // Auto-advance when time runs out
+                    if (currentRoom < 5) {
+                        currentRoom++;
+                        currentQuestionIndex = 0;
+                        loadRoom(currentRoom);
+                    } else {
+                        showFinalCompletion();
+                    }
+                }
+            }, 1000);
+        }
 
         window.addEventListener('load', () => {
             setTimeout(() => document.getElementById('loadingScreen').classList.add('fade-out'), 2500);
@@ -2190,19 +2689,102 @@
         });
 
         socket.on('timerSync', (data) => {
-            const m = Math.floor(data.remaining / 60000), s = Math.floor((data.remaining % 60000) / 1000);
-            document.getElementById('timer').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            // Only use server timer if it matches our current room (admin-driven)
+            if (data.currentRoom === currentRoom && !clientRoomStartTime) {
+                const m = Math.floor(data.remaining / 60000), s = Math.floor((data.remaining % 60000) / 1000);
+                document.getElementById('timer').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
         });
 
-        socket.on('roomChanged', (data) => { currentRoom = data.currentRoom; currentQuestionIndex = 0; loadRoom(currentRoom); });
+        socket.on('roomChanged', (data) => {
+            // Ignore stale room changes (e.g., server timer firing while player already progressed)
+            if (data.currentRoom <= currentRoom) return;
+            currentRoom = data.currentRoom;
+            currentQuestionIndex = 0;
+            // Reset client timer to avoid overlap
+            clientRoomStartTime = null;
+            loadRoom(currentRoom);
+        });
         socket.on('eventStopped', () => { alert('Event stopped'); location.reload(); });
         socket.on('eventCompleted', () => {
             document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('completedScreen').classList.remove('hidden');
-            document.getElementById('finalScore').textContent = `${totalCorrect}/15`;
+            renderCompletionStats();
         });
 
+        function renderCompletionStats() {
+            const totalQuestions = TOTAL_QUESTIONS;
+            const accuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
+
+            document.getElementById('finalScore').textContent = `${totalCorrect}/${totalQuestions}`;
+
+            const progressCircle = document.getElementById('scoreProgressCircle');
+            const circumference = 565;
+            const progress = totalQuestions > 0 ? (totalCorrect / totalQuestions) * circumference : 0;
+            setTimeout(() => {
+                progressCircle.style.strokeDashoffset = circumference - progress;
+            }, 200);
+
+            document.getElementById('accuracyPercent').textContent = `${accuracy}%`;
+
+            document.getElementById('timeTaken').textContent = `${TOTAL_TIME_MINUTES}:00`;
+
+            const totalAttempts = totalCorrect + (totalQuestions - totalCorrect);
+            document.getElementById('totalAttempts').textContent = totalAttempts;
+
+            let rank = 'Beginner';
+            if (accuracy >= 90) rank = 'Expert';
+            else if (accuracy >= 75) rank = 'Advanced';
+            else if (accuracy >= 60) rank = 'Intermediate';
+            document.getElementById('performanceRank').textContent = rank;
+
+            const roomBreakdownEl = document.getElementById('roomBreakdown');
+            roomBreakdownEl.innerHTML = '';
+            for (let i = 1; i <= ROOM_TOTALS.length; i++) {
+                const score = roomScores[i] || 0;
+                const total = ROOM_TOTALS[i - 1];
+                const isPerfect = score === total;
+
+                const roomStatEl = document.createElement('div');
+                roomStatEl.className = 'room-stat';
+                roomStatEl.innerHTML = `
+                    <div class="room-stat-name">Room ${i}: ${ROOM_NAMES[i - 1]}</div>
+                    <div class="room-stat-score ${isPerfect ? 'perfect' : ''}">${score}/${total}</div>
+                `;
+                roomBreakdownEl.appendChild(roomStatEl);
+            }
+
+            const achievementsEl = document.getElementById('specialAchievements');
+            if (unlockedKeys.length > 0) {
+                achievementsEl.innerHTML = `
+                    <div class="achievement-title">🎖️ Special Keys Unlocked</div>
+                    <div class="achievement-badges">
+                        ${unlockedKeys.map(key => {
+                            let icon = '🔑';
+                            if (key === 'JAVA') icon = '☕';
+                            else if (key === 'BIT') icon = '💾';
+                            else if (key === 'HTML') icon = '🌐';
+                            else if (key === 'DEBUG') icon = '🐛';
+                            else if (key === 'PYTHON') icon = '🐍';
+                            return `
+                                <div class="achievement-badge">
+                                    <div class="achievement-badge-icon">${icon}</div>
+                                    <div class="achievement-badge-text">${key} KEY</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                achievementsEl.style.display = 'block';
+            } else {
+                achievementsEl.style.display = 'none';
+            }
+        }
+
         function loadRoom(roomNum) {
+            // Reset client-side room timer
+            startClientRoomTimer();
+            
             const config = roomConfig[roomNum];
             if (config) {
                 // Set background and logo
@@ -2241,23 +2823,42 @@
             if (index >= questions.length) {
                 // User finished all questions in this room
                 // Check if they unlocked a special key
+                const roomScore = roomScores[currentRoom] || 0;
+                let keyName = null;
+                let threshold = 0;
+                
                 if (currentRoom === 1) {
-                    // Room 1: Python key requires 10/15
-                    const room1Score = roomScores[1] || 0;
-                    if (room1Score >= 10) {
-                        unlockedKeys.push('Python');
-                        socket.emit('unlockKey', { key: 'Python', room: 1, score: room1Score });
-                        showKeyUnlockAnimation('Python', room1Score, questions.length);
-                        return; // Animation will handle room advancement
-                    }
+                    // Room 1: JAVA key requires 13/20
+                    threshold = 13;
+                    if (roomScore >= threshold) keyName = 'JAVA';
+                } else if (currentRoom === 2) {
+                    // Room 2: BIT key requires 2/2
+                    threshold = 2;
+                    if (roomScore >= threshold) keyName = 'BIT';
+                } else if (currentRoom === 3) {
+                    // Room 3: HTML key requires 5/10
+                    threshold = 5;
+                    if (roomScore >= threshold) keyName = 'HTML';
                 } else if (currentRoom === 4) {
-                    // Room 4: Debug key requires 2/3
-                    const room4Score = roomScores[4] || 0;
-                    if (room4Score >= 2) {
-                        unlockedKeys.push('Debug');
-                        socket.emit('unlockKey', { key: 'Debug', room: 4, score: room4Score });
-                        showKeyUnlockAnimation('Debug', room4Score, questions.length);
-                        return; // Animation will handle room advancement
+                    // Room 4: DEBUG key requires 2/3
+                    threshold = 2;
+                    if (roomScore >= threshold) keyName = 'DEBUG';
+                } else if (currentRoom === 5) {
+                    // Room 5: PYTHON key requires 1/1
+                    threshold = 1;
+                    if (roomScore >= threshold) keyName = 'PYTHON';
+                }
+                
+                if (keyName) {
+                    unlockedKeys.push(keyName);
+                    socket.emit('unlockKey', { key: keyName, room: currentRoom, score: roomScore });
+                    if (currentRoom < 5) {
+                        showKeyUnlockAnimation(keyName, roomScore, questions.length);
+                        return;
+                    } else {
+                        // Last room - show key then final completion
+                        showKeyUnlockAnimationFinal(keyName, roomScore, questions.length);
+                        return;
                     }
                 }
                 
@@ -2422,16 +3023,14 @@
                         </div>
                     </div>
                     
-                    <div class="bug-hints">
-                        <div class="bug-hints-title">💡 HINT: ${q.hint || 'Check the code carefully'}</div>
-                    </div>
-                    
                     <div class="debug-controls">
                         <button class="reset-code-btn" onclick="resetCode()">🔄 Reset Code</button>
                     </div>
                     
                     <div class="feedback-container" id="feedback"></div>
                 `;
+                // Enable tab key in code editor
+                setTimeout(() => enableCodeEditorTab(), 100);
             } else if (currentRoom === 5 && q.starterCode) {
                 // Room 5: Code Vault - Write code from scratch
                 container.innerHTML = `
@@ -2471,47 +3070,101 @@
                         </div>
                     </div>
                     
-                    <div class="bug-hints">
-                        <div class="bug-hints-title">💡 HINT: ${q.hint || 'Think about the problem'}</div>
-                    </div>
-                    
                     <div class="debug-controls">
                         <button class="reset-code-btn" onclick="resetCode()">🔄 Reset Code</button>
                     </div>
                     
                     <div class="feedback-container" id="feedback"></div>
                 `;
-            } else if (currentRoom === 2 && q.isSlidingPuzzle) {
-                // Room 2: Sliding Picture Puzzle
+                // Enable tab key in code editor
+                setTimeout(() => enableCodeEditorTab(), 100);
+            } else if (currentRoom === 2 && q.isMazePuzzle) {
+                // Room 2: Maze Puzzle
                 container.innerHTML = `
                     <div class="question-container" style="margin-bottom: 10px;">
-                        <div class="question-text" style="font-size: 16px; text-align: center; margin: 10px 0;">
-                            <strong>🧩 ${q.question}</strong>
+                        <div class="question-header">
+                            <span class="question-number">Challenge 2 of ${questions.length}</span>
+                            <div class="question-indicator">
+                                ${questions.map((_, i) => `<div class="indicator-dot ${i < index ? 'completed' : i === index ? 'active' : ''}"></div>`).join('')}
+                            </div>
+                        </div>
+                        <div class="question-text" style="font-size: 18px; text-align: center; margin: 5px 0; color: var(--neon-green);">
+                            <strong>🐛 ${q.question}</strong>
                         </div>
                     </div>
                     
-                    <div id="previewOverlay" class="puzzle-preview-overlay">
-                        <div class="preview-content">
-                            <h2>🖼️ MEMORIZE THE IMAGE!</h2>
-                            <img id="previewImage" src="${q.imagePath}" alt="Complete Puzzle" class="preview-image">
-                            <div class="preview-timer" id="previewTimer">10</div>
+                    <div class="maze-game-container">
+                        <div class="maze-info-bar">
+                            <span>🐛 Bug: <span style="color:var(--neon-green);">START</span></span>
+                            <span>⏱️ Time: <span id="mazeTimer" style="color:var(--neon-green);">0s</span></span>
+                            <span>👣 Steps: <span id="mazeSteps" style="color:var(--neon-green);">0</span></span>
                         </div>
-                    </div>
-                    
-                    <div class="puzzle-container">
-                        <div class="puzzle-info">
-                            <div class="puzzle-moves">Moves: <span id="moveCount">0</span></div>
-                            <button class="puzzle-button" onclick="showPreviewAgain()">👁️ Preview</button>
-                            <button class="puzzle-button" onclick="checkPuzzleSolution()">✓ Check Solution</button>
+                        <div class="maze-canvas-wrapper">
+                            <canvas id="mazeCanvas" width="450" height="450"></canvas>
                         </div>
-                        <div id="puzzleGrid" class="puzzle-grid"></div>
+                        <div class="maze-controls-hint">Use ⬆️ ⬇️ ⬅️ ➡️ Arrow Keys to move</div>
+                        <button class="maze-btn" onclick="resetMaze()">🔄 Reset Maze</button>
                     </div>
                     
                     <div class="feedback-container" id="feedback"></div>
                 `;
                 
-                // Initialize puzzle
-                setTimeout(() => initSlidingPuzzle(q), 100);
+                // Initialize maze game
+                setTimeout(() => initMazeGame(q), 200);
+            } else if (currentRoom === 2 && q.isJigsawPuzzle) {
+                // Room 2: Jigsaw Puzzle
+                container.innerHTML = `
+                    <div class="question-container" style="margin-bottom: 10px;">
+                        <div class="question-text" style="font-size: 18px; text-align: center; margin: 10px 0; color: var(--neon-green);">
+                            <strong>🧩 ${q.question}</strong>
+                        </div>
+                        <div style="text-align: center; color: var(--primary-cyan); font-size: 14px; margin-top: 5px;">
+                            Drag pieces from the left onto the board to complete the puzzle
+                        </div>
+                        <div class="maze-info-bar" style="justify-content: center; margin-top: 8px;">
+                            <span>⏱️ Puzzle time left: <span id="jigsawTimeLeft" style="color:var(--neon-green);">07:00</span></span>
+                            <span style="margin-left: 10px; color: #8aa;">(Total room time: 10:00)</span>
+                        </div>
+                    </div>
+                    
+                    <div id="previewOverlay" class="puzzle-preview-overlay" style="display: none;">
+                        <div class="preview-content" style="max-width: 90%; max-height: 90%;">
+                            <h2 style="color: var(--neon-green); text-shadow: 0 0 20px var(--neon-green); margin-bottom: 20px;">🖼️ MEMORIZE THE IMAGE!</h2>
+                            <img id="previewImage" src="${q.imagePath}" alt="Complete Puzzle" style="max-width: 600px; max-height: 400px; width: auto; height: auto; border: 3px solid var(--neon-green); border-radius: 10px; box-shadow: 0 0 30px rgba(57,255,20,0.5);">
+                            <div class="preview-timer" id="previewTimer" style="font-size: 48px; color: var(--primary-cyan); margin-top: 20px; font-family: 'Orbitron', sans-serif; font-weight: 900;">10</div>
+                        </div>
+                    </div>
+                    
+                    <div class="jigsaw-main-container" style="display: flex; gap: 10px; justify-content: center; align-items: flex-start; padding: 10px; max-width: 100%; margin: 0 auto;">
+                        <div class="jigsaw-pieces-panel" id="jigsawPiecesLeft" style="flex: 0 0 170px;">
+                            <div style="background: rgba(0,240,255,0.1); border: 2px solid var(--primary-cyan); border-radius: 12px; padding: 10px; box-shadow: 0 0 15px rgba(0,240,255,0.3);">
+                                <div style="color: var(--primary-cyan); font-weight: 700; font-size: 12px; margin-bottom: 10px; text-align: center; text-transform: uppercase; letter-spacing: 2px;">📦 Pieces</div>
+                                <div id="jigsawPiecesAreaLeft" style="display: grid; grid-template-columns: repeat(2, minmax(70px, 1fr)); gap: 6px; justify-items: center; align-items: start;"></div>
+                            </div>
+                        </div>
+                        <div class="jigsaw-board-panel" style="flex: 0 0 auto;">
+                            <div style="background: rgba(255,255,255,0.05); border: 2px solid var(--neon-green); border-radius: 12px; padding: 10px; box-shadow: 0 0 20px rgba(57,255,20,0.3);">
+                                <div style="color: var(--neon-green); font-weight: 700; font-size: 12px; margin-bottom: 10px; text-align: center; text-transform: uppercase; letter-spacing: 2px;">🎯 Puzzle Board</div>
+                                <div id="jigsawBoardContainer" style="display: flex; justify-content: center;"></div>
+                            </div>
+                        </div>
+                        <div class="jigsaw-pieces-panel" id="jigsawPiecesRight" style="flex: 0 0 170px;">
+                            <div style="background: rgba(0,240,255,0.1); border: 2px solid var(--primary-cyan); border-radius: 12px; padding: 10px; box-shadow: 0 0 15px rgba(0,240,255,0.3);">
+                                <div style="color: var(--primary-cyan); font-weight: 700; font-size: 12px; margin-bottom: 10px; text-align: center; text-transform: uppercase; letter-spacing: 2px;">📦 Pieces</div>
+                                <div id="jigsawPiecesAreaRight" style="display: grid; grid-template-columns: repeat(2, minmax(70px, 1fr)); gap: 6px; justify-items: center; align-items: start;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="puzzle-info" style="text-align: center; margin-top: 10px;">
+                        <button class="puzzle-button" onclick="showJigsawPreview()" style="margin: 0 10px; padding: 10px 25px; font-size: 14px;">👁️ Preview Image</button>
+                    </div>
+                    
+                    <div class="feedback-container" id="feedback"></div>
+                `;
+                
+                // Initialize jigsaw puzzle
+                setTimeout(() => initJigsawPuzzle(q), 100);
             } else {
                 // MCQ questions
                 let qText = q.question + (q.codeBlock ? `<div class="code-block">${q.codeBlock}</div>` : '');
@@ -2645,7 +3298,12 @@
                         consoleOutput.classList.add('error');
                         consoleOutput.innerHTML = `❌ COMPILATION ERROR:<br>${output.error}`;
                     } else {
-                        const matches = output.result === q.expectedOutput;
+                        // Flexible output matching (trim whitespace and compare)
+                        const userOutput = (output.result || '').toString().trim();
+                        const expectedOutput = (q.expectedOutput || '').toString().trim();
+                        const matches = userOutput === expectedOutput || 
+                                      userOutput.replace(/\s+/g, ' ') === expectedOutput.replace(/\s+/g, ' ');
+                        
                         if (matches) {
                             // Auto-advance to next question
                             totalCorrect++;
@@ -2667,63 +3325,65 @@
                             });
                             
                             consoleOutput.classList.add('success');
-                            consoleOutput.innerHTML = `📤 Output:<br>${output.result}<br><br>✅ SUCCESS! Bug fixed correctly!<br><br>⏭️ Moving to next challenge...`;
+                            consoleOutput.innerHTML = `📤 Output:<br><pre style="margin: 5px 0;">${output.result}</pre><br>✅ SUCCESS! Bug fixed correctly!<br><br>⏭️ Moving to next challenge...`;
                             
                             // Move to next question after delay
                             setTimeout(() => {
-                                displayQuestion(currentQuestionIndex + 1);
+                                nextQuestion();
                             }, 1500);
                         } else {
                             consoleOutput.classList.add('error');
-                            consoleOutput.innerHTML = `📤 Output:<br>${output.result}<br><br>⚠️ Bug still exists! Try again.`;
+                            consoleOutput.innerHTML = `📤 Output:<br><pre style="margin: 5px 0;">${output.result}</pre><br>⚠️ Expected:<br><pre style="margin: 5px 0;">${expectedOutput}</pre><br>Bug still exists! Try again.`;
                         }
                     }
                 } catch (error) {
                     consoleOutput.classList.add('error');
                     consoleOutput.innerHTML = `❌ RUNTIME ERROR:<br>${error.message}`;
                 }
-            }, 800);
+            }, 500);
         }
         
         function simulateCExecution(code, question) {
-            // This is a simplified simulation - in production, you'd use a backend API
-            // For this demo, we'll do pattern matching based on expected behavior
+            // Simplified simulation - checking for fixes on new harder bugs
             
-            // Check for common syntax errors
-            if (!code.includes('int main')) {
+            const hasMain = code.includes('int main') || code.includes('void main');
+            if (!hasMain) {
                 return { error: 'Missing main() function' };
             }
             
-            if (!code.includes('return 0')) {
-                return { error: 'Missing return statement in main()' };
-            }
-            
-            // Try to match against the expected output based on the correct code
-            // This is a simulation - we check if key fixes are present
             const expectedOutput = question.expectedOutput;
-            const correctCode = question.correctCode;
-            
-            // Calculate similarity score
             let isFixed = false;
             
-            // Check specific fixes for each question (simplified)
-            if (question.id === 1 && !code.includes('retrun') && code.includes('return 0')) isFixed = true;
-            else if (question.id === 2 && code.includes('factorial(n-1)') && !code.includes('factorial(n);')) isFixed = true;
-            else if (question.id === 3 && code.includes('sum = 0') && !code.includes('sum = 1')) isFixed = true;
+            if (question.id === 1) {
+                // Swap bug: b = a + b should be b = a - b
+                isFixed = code.includes('a - b') && !code.includes('a + b;') || 
+                          (code.match(/b\s*=\s*a\s*-\s*b/g) && code.match(/b\s*=\s*a\s*-\s*b/g).length >= 1);
+                // More flexible: just check output would be correct
+                const hasSubtract = (code.match(/a\s*-\s*b/g) || []).length >= 2;
+                isFixed = hasSubtract;
+            } else if (question.id === 2) {
+                // Fibonacci: fib(n-3) should be fib(n-2)
+                isFixed = code.includes('fib(n - 2)') || code.includes('fib(n-2)');
+                isFixed = isFixed && !code.includes('fib(n - 3)') && !code.includes('fib(n-3)');
+            } else if (question.id === 3) {
+                // String reverse: two bugs - loop should be len/2, and index should be len-1-i
+                const hasHalfLoop = code.includes('len / 2') || code.includes('len/2') || code.includes('len/ 2') || code.includes('len /2');
+                const hasCorrectIndex = code.includes('len - 1 - i') || code.includes('len-1-i') || code.includes('len - i - 1') || code.includes('len-i-1');
+                isFixed = hasHalfLoop && hasCorrectIndex;
+            }
             
             if (isFixed) {
                 return { result: expectedOutput };
             } else {
-                // Return buggy output
                 return { result: getBuggyOutput(question.id) };
             }
         }
         
         function getBuggyOutput(questionId) {
             const buggyOutputs = {
-                1: 'Compilation failed',
-                2: 'Stack Overflow (infinite recursion)',
-                3: '16'
+                1: 'a=0 b=15',
+                2: 'Stack Overflow / incorrect result',
+                3: '(empty string or garbled output)'
             };
             return buggyOutputs[questionId] || 'Error in execution';
         }
@@ -2744,6 +3404,47 @@
                     }
                 }
             }
+        }
+
+        function enableCodeEditorTab() {
+            const editor = document.getElementById('codeEditor');
+            if (!editor) return;
+            editor.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    const value = this.value;
+                    this.value = value.substring(0, start) + '    ' + value.substring(end);
+                    this.selectionStart = this.selectionEnd = start + 4;
+                }
+                // Auto-close brackets and quotes
+                const pairs = { '(': ')', '{': '}', '[': ']', '"': '"', "'": "'" };
+                if (pairs[e.key]) {
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    if (start !== end) return; // Let default handle selection
+                    e.preventDefault();
+                    const value = this.value;
+                    this.value = value.substring(0, start) + e.key + pairs[e.key] + value.substring(end);
+                    this.selectionStart = this.selectionEnd = start + 1;
+                }
+                // Enter auto-indent
+                if (e.key === 'Enter') {
+                    const start = this.selectionStart;
+                    const value = this.value;
+                    const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+                    const currentLine = value.substring(lineStart, start);
+                    const indent = currentLine.match(/^(\s*)/)[1];
+                    const lastChar = value.substring(start - 1, start);
+                    let extra = '';
+                    if (lastChar === '{') extra = '    ';
+                    e.preventDefault();
+                    const insertion = '\n' + indent + extra;
+                    this.value = value.substring(0, start) + insertion + value.substring(start);
+                    this.selectionStart = this.selectionEnd = start + insertion.length;
+                }
+            });
         }
 
         function runCodeRoom5() {
@@ -2768,7 +3469,12 @@
                         consoleOutput.classList.add('error');
                         consoleOutput.innerHTML = `❌ COMPILATION ERROR:<br>${output.error}`;
                     } else {
-                        const matches = output.result === q.expectedOutput;
+                        // Flexible output matching (trim and normalize whitespace)
+                        const userOutput = (output.result || '').toString().trim();
+                        const expectedOutput = (q.expectedOutput || '').toString().trim();
+                        const matches = userOutput === expectedOutput || 
+                                      userOutput.replace(/\s+/g, ' ') === expectedOutput.replace(/\s+/g, ' ');
+                        
                         if (matches) {
                             // Auto-advance to next question
                             totalCorrect++;
@@ -2790,68 +3496,73 @@
                             });
                             
                             consoleOutput.classList.add('success');
-                            consoleOutput.innerHTML = `📤 Output:<br>${output.result}<br><br>✅ CORRECT! Your code works perfectly!<br><br>⏭️ Moving to next challenge...`;
+                            consoleOutput.innerHTML = `📤 Output:<br><pre style="margin: 5px 0;">${output.result}</pre><br>✅ CORRECT! Your code works perfectly!<br><br>⏭️ Moving to next challenge...`;
                             
                             // Move to next question after delay
                             setTimeout(() => {
-                                displayQuestion(currentQuestionIndex + 1);
+                                nextQuestion();
                             }, 1500);
                         } else {
                             consoleOutput.classList.add('error');
-                            consoleOutput.innerHTML = `📤 Output:<br>${output.result}<br><br>⚠️ Incorrect output! Try again.`;
+                            consoleOutput.innerHTML = `📤 Your Output:<br><pre style="margin: 5px 0;">${output.result}</pre><br>🎯 Expected:<br><pre style="margin: 5px 0;">${expectedOutput}</pre><br>Incorrect output! Try again.`;
                         }
                     }
                 } catch (error) {
                     consoleOutput.classList.add('error');
                     consoleOutput.innerHTML = `❌ RUNTIME ERROR:<br>${error.message}`;
                 }
-            }, 800);
+            }, 500);
         }
 
         function simulateCExecutionRoom5(code, question) {
-            // Check for common syntax errors
-            if (!code.includes('int main')) {
+            // Syntax check
+            const hasMain = code.includes('int main') || code.includes('void main');
+            if (!hasMain) {
                 return { error: 'Missing main() function' };
             }
-            
-            if (!code.includes('return 0')) {
-                return { error: 'Missing return statement in main()' };
-            }
 
-            if (!code.includes('printf')) {
-                return { error: 'Missing printf() statement' };
+            const hasPrintf = code.includes('printf') || code.includes('cout');
+            if (!hasPrintf) {
+                return { error: 'Missing output statement (printf)' };
             }
             
-            // Simulate output based on question ID
-            const qId = question.id;
-            let output = '';
+            // Room 5 now has a single pattern-generation question
+            // Check if code uses nested loops (for pattern generation, not hardcoded printf lines)
+            const hasNestedFor = (code.match(/for\s*\(/g) || []).length >= 2;
+            const hasWhile = (code.match(/while\s*\(/g) || []).length >= 2;
+            const usesLoops = hasNestedFor || hasWhile;
             
-            // Basic pattern matching for each question
-            if (qId === 1 && code.includes('Hello World')) {
-                output = 'Hello World';
-            } else if (qId === 2 && (code.includes('5 + 10') || (code.includes('5') && code.includes('10') && code.includes('+')))) {
-                output = '15';
-            } else if (qId === 3 && code.includes('for') && code.includes('i <= 5')) {
-                output = '1 2 3 4 5 ';
-            } else if (qId === 4 && code.includes('7 % 2') && code.includes('Odd')) {
-                output = 'Odd';
-            } else if (qId === 5 && (code.includes('15') && code.includes('22') && code.includes('8'))) {
-                output = '22';
-            } else if (qId === 6 && code.includes('for') && (code.includes('5') || code.includes('factorial'))) {
-                output = '120';
-            } else if (qId === 7 && code.includes('for') && (code.includes('i * 2') || code.includes('i%2==0'))) {
-                output = '2 4 6 8 10 ';
-            } else if (qId === 8 && code.includes('arr') && code.includes('sum')) {
-                output = '15';
-            } else if (qId === 9 && (code.includes('123') && code.includes('%'))) {
-                output = '321';
-            } else if (qId === 10 && code.includes('17') && (code.includes('for') || code.includes('while'))) {
-                output = 'Prime';
+            // Count how many printf lines exist (to detect hardcoded approach)
+            const printfCount = (code.match(/printf\s*\(/g) || []).length;
+            
+            if (!usesLoops && printfCount >= 5) {
+                // Anti-cheat: hardcoded printf lines without loops
+                console.log('%c⚠️ ANTI-CHEAT: Hardcoded output detected! Use loops for pattern generation.', 'color:red;font-size:16px;font-weight:bold;');
+                return { result: '⚠️ Anti-cheat: You must use loops (for/while) to generate the pattern, not hardcoded printf statements.' };
+            }
+            
+            if (usesLoops && hasPrintf) {
+                // Check for pattern logic indicators
+                const hasIncrementingLoop = code.match(/i\s*<=?\s*(5|n|rows)/i) || code.match(/i\s*<\s*(5|6|n|rows)/i);
+                const hasInnerLoop = code.match(/j\s*<=?\s*i/i) || code.match(/j\s*<\s*i/i) || code.match(/j\s*<=\s*i/i);
+                const printsNewline = code.includes('\\n') || code.includes('newline') || code.includes('puts');
+                
+                if (hasIncrementingLoop && hasInnerLoop && printsNewline) {
+                    return { result: "    1\n   1 2\n  1 2 3\n 1 2 3 4\n1 2 3 4 5" };
+                } else if (hasIncrementingLoop && hasInnerLoop) {
+                    return { result: "    1\n   1 2\n  1 2 3\n 1 2 3 4\n1 2 3 4 5" };
+                } else {
+                    return { result: 'Pattern logic incomplete. Check your loop bounds and print statements.' };
+                }
             } else {
-                output = 'No output / Incorrect logic';
+                // Try to extract printf content as fallback
+                const printfMatch = code.match(/printf\s*\(\s*"([^"]+)"/i);
+                if (printfMatch) {
+                    const extracted = printfMatch[1].replace(/\\n/g, '\n').replace(/%d|%s|%c/g, '?');
+                    return { result: extracted };
+                }
+                return { result: 'No output / Incorrect logic. Use nested for loops.' };
             }
-            
-            return { result: output };
         }
 
         // ==================== SLIDING PUZZLE FUNCTIONS ====================
@@ -2861,16 +3572,350 @@
         let puzzleImagePath = '';
         let puzzleGridSize = 10;
 
-        function initSlidingPuzzle(question) {
-            puzzleImagePath = question.imagePath;
-            puzzleGridSize = question.gridSize;
-            emptyIndex = puzzleGridSize * puzzleGridSize - 1; // Last position
-            moveCount = 0;
+        // ===== JIGSAW PUZZLE VARIABLES =====
+        let jigsawPieces = [];
+        let jigsawImage = null;
+        let jigsawRows = 4;
+        let jigsawCols = 5;
+        let pieceWidth = 70;
+        let pieceHeight = 70;
+        let selectedPiece = null;
+        let jigsawQuestion = null;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+        let jigsawCompleted = false;
+        let room2PuzzleStartTime = null;
+        let room2PuzzleTimerInterval = null;
+        const ROOM2_PUZZLE_LIMIT_MS = 7 * 60 * 1000; // 7 minutes for puzzle
+        const ROOM2_MAZE_BASE_MS = 3 * 60 * 1000;   // 3 minutes base for maze
+        let room2PuzzleBonusMs = 0;
+        let room2MazeDeadline = null;
+        
+        function initJigsawPuzzle(question) {
+            jigsawQuestion = question;
+            jigsawRows = question.rows || 3;
+            jigsawCols = question.cols || 3;
+            jigsawCompleted = false;
+            room2PuzzleBonusMs = 0;
+            startRoom2PuzzleTimer();
             
-            // Show preview for specified time
+            jigsawImage = new Image();
+            jigsawImage.crossOrigin = "anonymous";
+            jigsawImage.onload = function() {
+                createJigsawPieces();
+                renderJigsawBoard();
+                renderJigsawPieces();
+                showJigsawPreviewWithTimer();
+            };
+            jigsawImage.src = question.imagePath;
+        }
+
+        function startRoom2PuzzleTimer() {
+            if (room2PuzzleTimerInterval) clearInterval(room2PuzzleTimerInterval);
+            room2PuzzleStartTime = Date.now();
+            updatePuzzleTimerDisplay(ROOM2_PUZZLE_LIMIT_MS);
+            room2PuzzleTimerInterval = setInterval(() => {
+                const elapsed = Date.now() - room2PuzzleStartTime;
+                const remaining = Math.max(0, ROOM2_PUZZLE_LIMIT_MS - elapsed);
+                updatePuzzleTimerDisplay(remaining);
+                if (remaining <= 0) {
+                    clearInterval(room2PuzzleTimerInterval);
+                    handlePuzzleTimeout();
+                }
+            }, 1000);
+        }
+
+        function updatePuzzleTimerDisplay(ms) {
+            const el = document.getElementById('jigsawTimeLeft');
+            if (!el) return;
+            el.textContent = formatMsToClock(ms);
+        }
+
+        function formatMsToClock(ms) {
+            const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+            const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+            const s = (totalSeconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+        
+        function renderJigsawBoard() {
+            const boardContainer = document.getElementById('jigsawBoardContainer');
+            const boardGrid = document.createElement('div');
+            boardGrid.id = 'jigsawBoardGrid';
+            boardGrid.style.cssText = `
+                display: grid;
+                grid-template-columns: repeat(${jigsawCols}, ${pieceWidth}px);
+                grid-template-rows: repeat(${jigsawRows}, ${pieceHeight}px);
+                gap: 2px;
+                background: rgba(0,0,0,0.5);
+                padding: 2px;
+                border-radius: 10px;
+            `;
+            
+            // Create drop zones
+            for (let row = 0; row < jigsawRows; row++) {
+                for (let col = 0; col < jigsawCols; col++) {
+                    const dropZone = document.createElement('div');
+                    dropZone.className = 'jigsaw-drop-zone';
+                    dropZone.dataset.row = row;
+                    dropZone.dataset.col = col;
+                    dropZone.style.cssText = `
+                        width: ${pieceWidth}px;
+                        height: ${pieceHeight}px;
+                        background: rgba(0,240,255,0.1);
+                        border: 2px dashed rgba(0,240,255,0.4);
+                        border-radius: 6px;
+                        position: relative;
+                        transition: all 0.3s ease;
+                    `;
+                    
+                    dropZone.addEventListener('dragover', handleDragOver);
+                    dropZone.addEventListener('drop', handleDrop);
+                    dropZone.addEventListener('dragleave', handleDragLeave);
+                    boardGrid.appendChild(dropZone);
+                }
+            }
+            
+            boardContainer.appendChild(boardGrid);
+        }
+        
+        function createJigsawPieces() {
+            jigsawPieces = [];
+            
+            // Create pieces data
+            for (let row = 0; row < jigsawRows; row++) {
+                for (let col = 0; col < jigsawCols; col++) {
+                    const piece = {
+                        id: row * jigsawCols + col,
+                        row: row,
+                        col: col,
+                        placed: false
+                    };
+                    jigsawPieces.push(piece);
+                }
+            }
+            
+            // Shuffle pieces
+            shuffleArray(jigsawPieces);
+        }
+        
+        function renderJigsawPieces() {
+            const leftArea = document.getElementById('jigsawPiecesAreaLeft');
+            const rightArea = document.getElementById('jigsawPiecesAreaRight');
+            if (leftArea) leftArea.innerHTML = '';
+            if (rightArea) rightArea.innerHTML = '';
+            
+            // Also support old single-panel layout as fallback
+            const singleArea = document.getElementById('jigsawPiecesArea');
+            if (singleArea) singleArea.innerHTML = '';
+            
+            const unplacedPieces = jigsawPieces.filter(p => !p.placed);
+            const half = Math.ceil(unplacedPieces.length / 2);
+            
+            unplacedPieces.forEach((piece, index) => {
+                const pieceEl = document.createElement('div');
+                pieceEl.className = 'jigsaw-piece';
+                pieceEl.draggable = true;
+                pieceEl.dataset.row = piece.row;
+                pieceEl.dataset.col = piece.col;
+                pieceEl.dataset.id = piece.id;
+                
+                // Create canvas for piece image
+                const canvas = document.createElement('canvas');
+                canvas.width = pieceWidth;
+                canvas.height = pieceHeight;
+                canvas.style.pointerEvents = 'none';
+                canvas.style.display = 'block';
+                const ctx = canvas.getContext('2d');
+                
+                const sx = piece.col * (jigsawImage.width / jigsawCols);
+                const sy = piece.row * (jigsawImage.height / jigsawRows);
+                const sw = jigsawImage.width / jigsawCols;
+                const sh = jigsawImage.height / jigsawRows;
+                
+                ctx.drawImage(jigsawImage, sx, sy, sw, sh, 0, 0, pieceWidth, pieceHeight);
+                
+                pieceEl.appendChild(canvas);
+                
+                pieceEl.style.cssText = `
+                    width: ${pieceWidth}px;
+                    height: ${pieceHeight}px;
+                    cursor: grab;
+                    border: 2px solid var(--primary-cyan);
+                    border-radius: 5px;
+                    box-shadow: 0 0 8px rgba(0,240,255,0.5);
+                    transition: all 0.3s ease;
+                    background: #000;
+                    position: relative;
+                `;
+                
+                pieceEl.addEventListener('dragstart', handlePieceDragStart);
+                pieceEl.addEventListener('dragend', handlePieceDragEnd);
+                pieceEl.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.boxShadow = '0 0 25px rgba(0,240,255,0.8)';
+                });
+                pieceEl.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = '0 0 15px rgba(0,240,255,0.5)';
+                });
+                
+                // Split pieces: first half to left panel, second half to right panel
+                if (leftArea && rightArea) {
+                    if (index < half) {
+                        leftArea.appendChild(pieceEl);
+                    } else {
+                        rightArea.appendChild(pieceEl);
+                    }
+                } else if (singleArea) {
+                    singleArea.appendChild(pieceEl);
+                }
+            });
+        }
+        
+        function handlePieceDragStart(e) {
+            // Get the piece element (might be canvas or the parent div)
+            const pieceElement = e.target.classList.contains('jigsaw-piece') ? e.target : e.target.parentElement;
+            
+            selectedPiece = {
+                row: parseInt(pieceElement.dataset.row),
+                col: parseInt(pieceElement.dataset.col),
+                id: parseInt(pieceElement.dataset.id),
+                element: pieceElement
+            };
+            pieceElement.style.opacity = '0.5';
+            pieceElement.style.cursor = 'grabbing';
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', 'jigsaw-piece');
+        }
+        
+        function handlePieceDragEnd(e) {
+            const pieceElement = e.target.classList.contains('jigsaw-piece') ? e.target : e.target.parentElement;
+            pieceElement.style.opacity = '1';
+            pieceElement.style.cursor = 'grab';
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            e.currentTarget.style.background = 'rgba(57,255,20,0.3)';
+            e.currentTarget.style.borderColor = 'var(--neon-green)';
+            e.currentTarget.style.transform = 'scale(1.05)';
+        }
+        
+        function handleDragLeave(e) {
+            e.currentTarget.style.background = 'rgba(0,240,255,0.1)';
+            e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)';
+            e.currentTarget.style.transform = 'scale(1)';
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            const dropZone = e.currentTarget;
+            dropZone.style.background = 'rgba(0,240,255,0.1)';
+            dropZone.style.borderColor = 'rgba(0,240,255,0.4)';
+            dropZone.style.transform = 'scale(1)';
+            
+            if (!selectedPiece) return;
+            
+            const dropRow = parseInt(dropZone.dataset.row);
+            const dropCol = parseInt(dropZone.dataset.col);
+            
+            // Check if already has a piece
+            if (dropZone.querySelector('.placed-piece')) {
+                return;
+            }
+            
+            // Check if correct position
+            if (selectedPiece.row === dropRow && selectedPiece.col === dropCol) {
+                // Correct! Place the piece
+                const piece = jigsawPieces.find(p => p.row === dropRow && p.col === dropCol);
+                piece.placed = true;
+                
+                // Create placed piece
+                const canvas = document.createElement('canvas');
+                canvas.className = 'placed-piece';
+                canvas.width = pieceWidth;
+                canvas.height = pieceHeight;
+                const ctx = canvas.getContext('2d');
+                
+                const sx = selectedPiece.col * (jigsawImage.width / jigsawCols);
+                const sy = selectedPiece.row * (jigsawImage.height / jigsawRows);
+                const sw = jigsawImage.width / jigsawCols;
+                const sh = jigsawImage.height / jigsawRows;
+                
+                ctx.drawImage(jigsawImage, sx, sy, sw, sh, 0, 0, pieceWidth, pieceHeight);
+                
+                canvas.style.cssText = `
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 8px;
+                `;
+                
+                dropZone.innerHTML = '';
+                dropZone.appendChild(canvas);
+                dropZone.style.border = '3px solid var(--neon-green)';
+                dropZone.style.background = 'rgba(57,255,20,0.2)';
+                dropZone.style.boxShadow = '0 0 20px rgba(57,255,20,0.6)';
+                
+                // Remove from pieces area
+                selectedPiece.element.remove();
+                
+                // Show success animation
+                showSnapEffect(dropZone);
+                
+                // Re-render pieces
+                renderJigsawPieces();
+                
+                // Auto-check if all pieces are placed
+                const allPlaced = jigsawPieces.every(p => p.placed);
+                if (allPlaced) {
+                    setTimeout(() => checkJigsawSolution(), 500);
+                }
+            } else {
+                // Wrong position - shake animation
+                selectedPiece.element.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    selectedPiece.element.style.animation = '';
+                }, 500);
+            }
+            
+            selectedPiece = null;
+        }
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        function showSnapEffect(element) {
+            const rect = element.getBoundingClientRect();
+            const effect = document.createElement('div');
+            effect.innerHTML = '✓';
+            effect.style.cssText = `
+                position: fixed;
+                left: ${rect.left + rect.width/2}px;
+                top: ${rect.top + rect.height/2}px;
+                color: var(--neon-green);
+                font-size: 40px;
+                font-weight: bold;
+                text-shadow: 0 0 20px var(--neon-green);
+                pointer-events: none;
+                animation: snapPulse 0.6s ease-out;
+                z-index: 10000;
+            `;
+            document.body.appendChild(effect);
+            setTimeout(() => effect.remove(), 600);
+        }
+        
+        function showJigsawPreviewWithTimer() {
             const overlay = document.getElementById('previewOverlay');
             const timerEl = document.getElementById('previewTimer');
-            let timeLeft = question.previewTime / 1000;
+            overlay.style.display = 'flex';
+            let timeLeft = jigsawQuestion.previewTime / 1000;
+            timerEl.textContent = timeLeft;
             
             const countdown = setInterval(() => {
                 timeLeft--;
@@ -2878,7 +3923,6 @@
                 if (timeLeft <= 0) {
                     clearInterval(countdown);
                     overlay.style.display = 'none';
-                    createPuzzle();
                 }
             }, 1000);
         }
@@ -3012,11 +4056,12 @@
             }
         }
 
-        function showPreviewAgain() {
+        function showJigsawPreview() {
+            if (!jigsawQuestion) return;
             const overlay = document.getElementById('previewOverlay');
             const timerEl = document.getElementById('previewTimer');
             overlay.style.display = 'flex';
-            let timeLeft = 5;
+            let timeLeft = 5; // 5 seconds for preview again
             timerEl.textContent = timeLeft;
             
             const countdown = setInterval(() => {
@@ -3027,6 +4072,76 @@
                     overlay.style.display = 'none';
                 }
             }, 1000);
+        }
+        
+        function checkJigsawSolution() {
+            if (jigsawCompleted) return;
+            const allPlaced = jigsawPieces.every(piece => piece.placed);
+            
+            if (allPlaced) {
+                jigsawCompleted = true;
+                if (room2PuzzleTimerInterval) clearInterval(room2PuzzleTimerInterval);
+                const elapsed = Date.now() - (room2PuzzleStartTime || Date.now());
+                room2PuzzleBonusMs = Math.max(0, ROOM2_PUZZLE_LIMIT_MS - elapsed);
+                
+                // Puzzle completed!
+                totalCorrect++;
+                if (!roomScores[currentRoom]) roomScores[currentRoom] = 0;
+                roomScores[currentRoom]++;
+                
+                if (!userAnswers[currentRoom]) userAnswers[currentRoom] = [];
+                userAnswers[currentRoom].push({ 
+                    questionId: 1, 
+                    answer: 'Jigsaw completed', 
+                    correct: true 
+                });
+                
+                socket.emit('submitAnswer', { 
+                    room: currentRoom, 
+                    questionId: 1, 
+                    answer: 'Jigsaw completed', 
+                    correct: true 
+                });
+                
+                // Show success feedback briefly, then advance to next question via displayQuestion
+                const container = document.getElementById('questionsContainer');
+                container.innerHTML = `
+                    <div style="text-align:center; padding:40px;">
+                        <div style="font-size:80px; margin-bottom:20px;">🧩✅</div>
+                        <div class="cleared-badge" style="font-size:28px;">PUZZLE COMPLETE!</div>
+                        <div style="color:var(--neon-green); font-size:18px; margin-top:15px;">Great work! Moving to next challenge...</div>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    displayQuestion(codingQuestions[`room${currentRoom}`], currentQuestionIndex);
+                }, 2000);
+            }
+        }
+
+        function handlePuzzleTimeout() {
+            if (jigsawCompleted) return;
+            jigsawCompleted = true;
+            room2PuzzleBonusMs = 0;
+            if (room2PuzzleTimerInterval) clearInterval(room2PuzzleTimerInterval);
+            const feedback = document.getElementById('feedback');
+            if (feedback) {
+                feedback.innerHTML = `<div class="feedback incorrect">⏱️ Time's up for the puzzle. Moving to the maze.</div>`;
+            }
+
+            if (!userAnswers[currentRoom]) userAnswers[currentRoom] = [];
+            userAnswers[currentRoom].push({ questionId: 1, answer: 'Time expired', correct: false });
+            socket.emit('submitAnswer', { room: currentRoom, questionId: 1, answer: 'Time expired', correct: false });
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                displayQuestion(codingQuestions[`room${currentRoom}`], currentQuestionIndex);
+            }, 1200);
+        }
+        
+        function showPreviewAgain() {
+            showJigsawPreview();
         }
 
         function selectOption(index) {
@@ -3178,18 +4293,9 @@
         }
         
         function showFinalCompletion() {
-            const roomNames = ['One', 'Two', 'Three', 'Four', 'Five'];
-            const container = document.getElementById('questionsContainer');
-            container.innerHTML = `
-                <div class="room-complete">
-                    <div class="cleared-badge">🏆 ALL ROOMS COMPLETED!</div>
-                    <div class="next-room-preview">
-                        <div class="room-complete-icon">🎉</div>
-                        <div class="next-room-name">CONGRATULATIONS!</div>
-                        <div class="warp-message">You've completed all challenges!</div>
-                    </div>
-                </div>
-            `;
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('completedScreen').classList.remove('hidden');
+            renderCompletionStats();
         }
         
         function showKeyUnlockAnimation(keyName, score, totalQuestions) {
@@ -3252,6 +4358,249 @@
             }, 5000); // 5 second animation
         }
         
+        function showKeyUnlockAnimationFinal(keyName, score, totalQuestions) {
+            const container = document.getElementById('questionsContainer');
+            createWarpEffect();
+            
+            container.innerHTML = `
+                <div class="key-unlock-container" style="text-align:center; padding:30px;">
+                    <div class="key-unlock-animation" style="animation: keyPulse 2s infinite;">
+                        <div style="font-size:100px; margin-bottom:15px; animation: keyRotate 3s linear infinite;">🔑</div>
+                        <div class="cleared-badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size:28px; margin-bottom:15px; padding:15px 40px;">
+                            ✨ SPECIAL KEY UNLOCKED! ✨
+                        </div>
+                        <div style="font-size:42px; font-weight:900; color:#ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.8); margin:15px 0; animation: keyGlow 1.5s ease-in-out infinite;">
+                            "${keyName}"
+                        </div>
+                        <div style="font-size:18px; color:#00f0ff; margin:10px 0;">
+                            🎯 Score: ${score}/${totalQuestions} Correct
+                        </div>
+                        <div class="next-room-preview" style="margin-top:20px;">
+                            <div style="font-size:80px;">🏆</div>
+                            <div class="next-room-name">ALL ROOMS COMPLETED!</div>
+                            <div class="warp-message">Congratulations!</div>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    @keyframes keyPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+                    @keyframes keyRotate { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+                    @keyframes keyGlow { 0%, 100% { text-shadow: 0 0 20px rgba(255,215,0,0.8); } 50% { text-shadow: 0 0 30px rgba(255,215,0,1), 0 0 60px rgba(255,215,0,0.8); } }
+                </style>
+            `;
+            
+            // After showing the key animation, show final completion
+            setTimeout(() => {
+                showFinalCompletion();
+            }, 5000);
+        }
+        
+        // ==================== MAZE GAME ====================
+        let mazeGrid = [];
+        let mazePlayer = { x: 1, y: 1 };
+        let mazeExit = { x: 13, y: 13 };
+        let mazeCellSize = 30;
+        let mazeSize = 15;
+        let mazeSteps = 0;
+        let mazeTimerInterval = null;
+        let mazeStartTime = 0;
+        let mazeSolved = false;
+        let mazeKeyHandler = null;
+        
+        function initMazeGame(question) {
+            // Tougher maze: minimum size 21x21
+            mazeSize = Math.max(question.mazeSize || 21, 21);
+            mazeCellSize = Math.floor(450 / mazeSize);
+            mazePlayer = { x: 1, y: 1 };
+            mazeExit = { x: mazeSize - 2, y: mazeSize - 2 };
+            mazeSteps = 0;
+            mazeSolved = false;
+            
+            generateMaze();
+            drawMaze();
+            
+            // Start countdown (base 3 min + leftover puzzle time)
+            const bonus = room2PuzzleBonusMs || 0;
+            const mazeLimitMs = ROOM2_MAZE_BASE_MS + bonus;
+            mazeStartTime = Date.now();
+            mazeDeadline = mazeStartTime + mazeLimitMs;
+            if (mazeTimerInterval) clearInterval(mazeTimerInterval);
+            updateMazeTimerDisplay(mazeDeadline - Date.now());
+            mazeTimerInterval = setInterval(() => {
+                const remaining = mazeDeadline - Date.now();
+                updateMazeTimerDisplay(remaining);
+                if (remaining <= 0) {
+                    clearInterval(mazeTimerInterval);
+                    handleMazeTimeout();
+                }
+            }, 1000);
+            
+            // Add keyboard listener
+            if (mazeKeyHandler) document.removeEventListener('keydown', mazeKeyHandler);
+            mazeKeyHandler = function(e) {
+                if (mazeSolved) return;
+                if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+                    e.preventDefault();
+                    moveMazePlayer(e.key);
+                }
+            };
+            document.addEventListener('keydown', mazeKeyHandler);
+        }
+
+        function updateMazeTimerDisplay(ms) {
+            const timerEl = document.getElementById('mazeTimer');
+            if (!timerEl) return;
+            timerEl.textContent = formatMsToClock(ms);
+        }
+        
+        function generateMaze() {
+            // Initialize grid with walls
+            mazeGrid = [];
+            for (let y = 0; y < mazeSize; y++) {
+                mazeGrid[y] = [];
+                for (let x = 0; x < mazeSize; x++) {
+                    mazeGrid[y][x] = 1; // 1 = wall
+                }
+            }
+            
+            // DFS maze generation
+            function carve(x, y) {
+                mazeGrid[y][x] = 0; // 0 = path
+                const dirs = [[0,-2],[0,2],[-2,0],[2,0]];
+                shuffleArray(dirs);
+                
+                for (const [dx, dy] of dirs) {
+                    const nx = x + dx, ny = y + dy;
+                    if (nx > 0 && nx < mazeSize - 1 && ny > 0 && ny < mazeSize - 1 && mazeGrid[ny][nx] === 1) {
+                        mazeGrid[y + dy/2][x + dx/2] = 0; // Remove wall between
+                        carve(nx, ny);
+                    }
+                }
+            }
+            
+            carve(1, 1);
+            
+            // Ensure start and exit are paths
+            mazeGrid[1][1] = 0;
+            mazeGrid[mazeExit.y][mazeExit.x] = 0;
+            // Open path to exit if blocked
+            if (mazeGrid[mazeExit.y - 1][mazeExit.x] === 1 && mazeGrid[mazeExit.y][mazeExit.x - 1] === 1) {
+                mazeGrid[mazeExit.y - 1][mazeExit.x] = 0;
+            }
+        }
+        
+        function drawMaze() {
+            const canvas = document.getElementById('mazeCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = mazeSize * mazeCellSize;
+            canvas.height = mazeSize * mazeCellSize;
+            
+            // Draw cells
+            for (let y = 0; y < mazeSize; y++) {
+                for (let x = 0; x < mazeSize; x++) {
+                    if (mazeGrid[y][x] === 1) {
+                        // Wall
+                        ctx.fillStyle = '#1a1a2e';
+                        ctx.fillRect(x * mazeCellSize, y * mazeCellSize, mazeCellSize, mazeCellSize);
+                        ctx.strokeStyle = 'rgba(0,240,255,0.2)';
+                        ctx.lineWidth = 0.5;
+                        ctx.strokeRect(x * mazeCellSize, y * mazeCellSize, mazeCellSize, mazeCellSize);
+                    } else {
+                        // Path
+                        ctx.fillStyle = '#0a0a15';
+                        ctx.fillRect(x * mazeCellSize, y * mazeCellSize, mazeCellSize, mazeCellSize);
+                    }
+                }
+            }
+            
+            // Draw exit
+            ctx.fillStyle = '#39ff14';
+            ctx.fillRect(mazeExit.x * mazeCellSize + 2, mazeExit.y * mazeCellSize + 2, mazeCellSize - 4, mazeCellSize - 4);
+            ctx.fillStyle = '#000';
+            ctx.font = `${mazeCellSize * 0.6}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🚪', mazeExit.x * mazeCellSize + mazeCellSize/2, mazeExit.y * mazeCellSize + mazeCellSize/2);
+            
+            // Draw player (bug)
+            ctx.fillStyle = '#00f0ff';
+            ctx.beginPath();
+            ctx.arc(mazePlayer.x * mazeCellSize + mazeCellSize/2, mazePlayer.y * mazeCellSize + mazeCellSize/2, mazeCellSize/2 - 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.font = `${mazeCellSize * 0.55}px Arial`;
+            ctx.fillText('🐛', mazePlayer.x * mazeCellSize + mazeCellSize/2, mazePlayer.y * mazeCellSize + mazeCellSize/2);
+        }
+        
+        function moveMazePlayer(key) {
+            let nx = mazePlayer.x, ny = mazePlayer.y;
+            if (key === 'ArrowUp') ny--;
+            else if (key === 'ArrowDown') ny++;
+            else if (key === 'ArrowLeft') nx--;
+            else if (key === 'ArrowRight') nx++;
+            
+            if (nx >= 0 && nx < mazeSize && ny >= 0 && ny < mazeSize && mazeGrid[ny][nx] === 0) {
+                mazePlayer.x = nx;
+                mazePlayer.y = ny;
+                mazeSteps++;
+                const stepsEl = document.getElementById('mazeSteps');
+                if (stepsEl) stepsEl.textContent = mazeSteps;
+                
+                drawMaze();
+                
+                // Check if reached exit
+                if (mazePlayer.x === mazeExit.x && mazePlayer.y === mazeExit.y) {
+                    mazeSolved = true;
+                    if (mazeTimerInterval) clearInterval(mazeTimerInterval);
+                    if (mazeKeyHandler) document.removeEventListener('keydown', mazeKeyHandler);
+                    
+                    // Score it
+                    totalCorrect++;
+                    if (!roomScores[currentRoom]) roomScores[currentRoom] = 0;
+                    roomScores[currentRoom]++;
+                    
+                    if (!userAnswers[currentRoom]) userAnswers[currentRoom] = [];
+                    userAnswers[currentRoom].push({ questionId: 2, answer: `Solved in ${mazeSteps} steps`, correct: true });
+                    socket.emit('submitAnswer', { room: currentRoom, questionId: 2, answer: `Solved in ${mazeSteps} steps`, correct: true });
+                    
+                    const elapsed = Math.floor((Date.now() - mazeStartTime) / 1000);
+                    const feedback = document.getElementById('feedback');
+                    feedback.innerHTML = `<div class="feedback correct">🎉 MAZE SOLVED! ${mazeSteps} steps in ${elapsed}s!</div>`;
+                    
+                    // Advance to next room
+                    setTimeout(() => {
+                        currentQuestionIndex++;
+                        displayQuestion(codingQuestions[`room${currentRoom}`], currentQuestionIndex);
+                    }, 2000);
+                }
+            }
+        }
+
+        function handleMazeTimeout() {
+            if (mazeSolved) return;
+            mazeSolved = true;
+            if (mazeTimerInterval) clearInterval(mazeTimerInterval);
+            if (mazeKeyHandler) document.removeEventListener('keydown', mazeKeyHandler);
+            if (!userAnswers[currentRoom]) userAnswers[currentRoom] = [];
+            userAnswers[currentRoom].push({ questionId: 2, answer: 'Maze time expired', correct: false });
+            socket.emit('submitAnswer', { room: currentRoom, questionId: 2, answer: 'Maze time expired', correct: false });
+            const feedback = document.getElementById('feedback');
+            if (feedback) feedback.innerHTML = `<div class="feedback incorrect">⏱️ Time's up for the maze.</div>`;
+            setTimeout(() => {
+                currentQuestionIndex++;
+                displayQuestion(codingQuestions[`room${currentRoom}`], currentQuestionIndex);
+            }, 1200);
+        }
+        
+        function resetMaze() {
+            if (mazeSolved) return;
+            const q = codingQuestions.room2[1]; // Maze is question 2
+            if (mazeTimerInterval) clearInterval(mazeTimerInterval);
+            if (mazeKeyHandler) document.removeEventListener('keydown', mazeKeyHandler);
+            initMazeGame(q);
+        }
+
         function createWarpEffect() {
             const warpContainer = document.createElement('div');
             warpContainer.className = 'warp-container';
@@ -3320,7 +4669,91 @@
                 warpContainer.remove();
             }, 2500);
         }
-        
+
+        // ==================== KIOSK EXIT GUARD ====================
+        const KIOSK_EXIT_PASSWORD = 'TECHTRAP2026';
+        let kioskExitOverlay = null;
+        let kioskExitInput = null;
+        let kioskExitError = null;
+        let kioskExitOpen = false;
+
+        function setupKioskExitGuard() {
+            kioskExitOverlay = document.getElementById('kioskExitOverlay');
+            kioskExitInput = document.getElementById('kioskExitPassword');
+            kioskExitError = document.getElementById('kioskExitError');
+            const kioskExitForm = document.getElementById('kioskExitForm');
+            const kioskExitCancel = document.getElementById('kioskExitCancel');
+
+            if (kioskExitForm) {
+                kioskExitForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    handleKioskExitSubmit();
+                });
+            }
+
+            if (kioskExitCancel) {
+                kioskExitCancel.addEventListener('click', () => {
+                    hideKioskExitOverlay();
+                });
+            }
+
+            document.addEventListener('keydown', handleKioskExitShortcut, true);
+        }
+
+        function handleKioskExitShortcut(e) {
+            // Secret combo to open exit dialog
+            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                showKioskExitOverlay();
+            }
+
+            // Allow closing the dialog with Escape
+            if (e.key === 'Escape' && kioskExitOpen) {
+                e.preventDefault();
+                hideKioskExitOverlay();
+            }
+        }
+
+        function showKioskExitOverlay() {
+            if (!kioskExitOverlay) return;
+            kioskExitOverlay.classList.remove('hidden');
+            kioskExitOpen = true;
+            if (kioskExitInput) {
+                kioskExitInput.value = '';
+                kioskExitInput.focus();
+            }
+            if (kioskExitError) kioskExitError.textContent = '';
+        }
+
+        function hideKioskExitOverlay() {
+            if (!kioskExitOverlay) return;
+            kioskExitOverlay.classList.add('hidden');
+            kioskExitOpen = false;
+        }
+
+        function handleKioskExitSubmit() {
+            if (!kioskExitInput) return;
+            const entered = kioskExitInput.value.trim();
+            if (entered !== KIOSK_EXIT_PASSWORD) {
+                if (kioskExitError) kioskExitError.textContent = 'Incorrect password.';
+                kioskExitInput.focus();
+                kioskExitInput.select();
+                return;
+            }
+
+            if (kioskExitError) kioskExitError.textContent = '';
+            attemptKioskExit();
+        }
+
+        function attemptKioskExit() {
+            hideKioskExitOverlay();
+            try { window.close(); } catch (err) { /* window may refuse close in kiosk */ }
+            setTimeout(() => {
+                alert('Password accepted. Press Alt + F4 (or close the window) to exit kiosk mode.');
+            }, 50);
+        }
+
+        setupKioskExitGuard();
         document.getElementById('nameInput')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') register(); });
     </script>
 </body>

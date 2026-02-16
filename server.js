@@ -12,16 +12,32 @@ const PORT = process.env.PORT || 3000;
 // Admin password (change this for security)
 const ADMIN_PASSWORD = 'admin123';
 
+// Per-room durations (ms)
+const roomDurations = {
+  1: 300000, // 5 min
+  2: 600000, // 10 min (Room 2 puzzle + maze)
+  3: 600000, // 10 min for Code Mirror Room
+  4: 300000, // 5 min
+  5: 600000  // 10 min for Final Coding Vault
+};
+
+function getRoomDuration(room) {
+  return roomDurations[room] || 300000;
+}
+
 // Game state
 let gameState = {
   isRunning: false,
   startTime: null,
   currentRoom: 1,
-  totalRooms: 5,  // 5 rooms: Knowledge Lobby, Logic Chamber, Code Mirror Room, Bug Fixing Lab, Final Coding Vault
-  roomDuration: 300000, // 5 minutes in milliseconds (5 * 60 * 1000)
+  totalRooms: 5,
+  roomDuration: getRoomDuration(1),
   participants: {},
   roomStartTimes: {}
 };
+
+// Event history storage
+let eventHistory = [];
 
 let roomTimerId = null;
 
@@ -67,6 +83,7 @@ io.on('connection', (socket) => {
     gameState.startTime = Date.now();
     gameState.currentRoom = 1;
     gameState.roomStartTimes[1] = Date.now();
+      gameState.roomDuration = getRoomDuration(1);
     
     // Broadcast to all clients
     io.emit('eventStarted', {
@@ -125,6 +142,7 @@ io.on('connection', (socket) => {
       
       gameState.currentRoom++;
       gameState.roomStartTimes[gameState.currentRoom] = Date.now();
+      gameState.roomDuration = getRoomDuration(gameState.currentRoom);
       
       io.emit('roomChanged', {
         currentRoom: gameState.currentRoom,
@@ -154,6 +172,7 @@ io.on('connection', (socket) => {
   socket.on('registerParticipant', (data) => {
     gameState.participants[socket.id] = {
       name: data.name,
+      phone: data.phone,
       email: data.email,
       currentRoom: gameState.currentRoom,
       roomProgress: {},
@@ -220,7 +239,7 @@ io.on('connection', (socket) => {
     if (gameState.isRunning && gameState.roomStartTimes[gameState.currentRoom]) {
       const roomStartTime = gameState.roomStartTimes[gameState.currentRoom];
       const elapsed = Date.now() - roomStartTime;
-      const remaining = Math.max(0, gameState.roomDuration - elapsed);
+      const remaining = Math.max(0, getRoomDuration(gameState.currentRoom) - elapsed);
       socket.emit('timeRemaining', {
         remaining: remaining,
         currentRoom: gameState.currentRoom
@@ -228,12 +247,23 @@ io.on('connection', (socket) => {
     }
   });
 
+  // Save current event snapshot to history
+  socket.on('saveEventHistory', () => {
+    const snapshot = buildEventSnapshot();
+    eventHistory.push(snapshot);
+    io.to('admins').emit('eventHistoryUpdated', eventHistory);
+    console.log('Event snapshot saved to history');
+  });
+
+  // Get event history
+  socket.on('getEventHistory', () => {
+    socket.emit('eventHistoryData', eventHistory);
+  });
+
   // Disconnect
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
-    if (gameState.participants[socket.id]) {
-      delete gameState.participants[socket.id];
-    }
+    // Don't delete participants on disconnect so history is preserved
   });
 });
 
@@ -247,6 +277,7 @@ function startRoomTimer() {
     if (gameState.isRunning && gameState.currentRoom < gameState.totalRooms) {
       gameState.currentRoom++;
       gameState.roomStartTimes[gameState.currentRoom] = Date.now();
+      gameState.roomDuration = getRoomDuration(gameState.currentRoom);
       
       io.emit('roomChanged', {
         currentRoom: gameState.currentRoom,
@@ -261,7 +292,7 @@ function startRoomTimer() {
       gameState.isRunning = false;
       console.log('Event completed');
     }
-  }, gameState.roomDuration);
+  }, getRoomDuration(gameState.currentRoom));
 }
 
 // Sync timer broadcast (every second)
@@ -269,7 +300,7 @@ setInterval(() => {
   if (gameState.isRunning && gameState.roomStartTimes[gameState.currentRoom]) {
     const roomStartTime = gameState.roomStartTimes[gameState.currentRoom];
     const elapsed = Date.now() - roomStartTime;
-    const remaining = Math.max(0, gameState.roomDuration - elapsed);
+    const remaining = Math.max(0, getRoomDuration(gameState.currentRoom) - elapsed);
     
     io.emit('timerSync', {
       currentRoom: gameState.currentRoom,
@@ -278,6 +309,44 @@ setInterval(() => {
     });
   }
 }, 1000);
+
+// Build a snapshot of the current event for history
+function buildEventSnapshot() {
+  const participants = Object.values(gameState.participants);
+  // Calculate scores
+  const scored = participants.map(p => {
+    let totalCorrect = 0;
+    let totalAnswered = 0;
+    const roomDetails = {};
+    if (p.roomProgress) {
+      Object.entries(p.roomProgress).forEach(([room, answers]) => {
+        roomDetails[room] = answers;
+        answers.forEach(a => {
+          totalAnswered++;
+          if (a.correct) totalCorrect++;
+        });
+      });
+    }
+    return {
+      name: p.name,
+      phone: p.phone || 'N/A',
+      totalCorrect,
+      totalAnswered,
+      accuracy: totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0,
+      unlockedKeys: p.unlockedKeys || [],
+      roomProgress: roomDetails
+    };
+  });
+  scored.sort((a, b) => b.totalCorrect - a.totalCorrect || b.accuracy - a.accuracy);
+  return {
+    id: Date.now(),
+    date: new Date().toISOString(),
+    totalParticipants: participants.length,
+    winner: scored[0] || null,
+    runnerUp: scored[1] || null,
+    participants: scored
+  };
+}
 
 // Start server
 server.listen(PORT, () => {

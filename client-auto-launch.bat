@@ -6,7 +6,7 @@ REM ========================================
 
 REM IMPORTANT: Replace SERVER_IP with your actual server IP
 REM Example: set SERVER_IP=192.168.1.100
-set SERVER_IP=YOUR_SERVER_IP_HERE
+set SERVER_IP= 192.168.1.135
 set PORT=3000
 
 REM Wait a moment for network to be ready
