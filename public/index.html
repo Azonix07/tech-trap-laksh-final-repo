@@ -2553,7 +2553,7 @@
         const ROOM_NAMES = ['Knowledge Lobby', 'Logic Chamber', 'Code Mirror', 'Bug Fixing', 'Final Vault'];
         const ROOM_TOTALS = [20, 2, 10, 3, 1];
         const TOTAL_QUESTIONS = ROOM_TOTALS.reduce((sum, n) => sum + n, 0);
-        const TOTAL_TIME_MINUTES = 40; // Sum of per-room timers
+        const TOTAL_TIME_MINUTES = 41; // Sum of per-room timers
 
         const socket = io();
         let participantId = null, currentRoom = 1, userAnswers = {}, totalCorrect = 0, currentQuestionIndex = 0;
