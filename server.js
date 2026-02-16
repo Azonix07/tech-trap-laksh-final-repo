@@ -132,6 +132,12 @@ io.on('connection', (socket) => {
   });
 
   // Force next room (Admin only)
+  // Tiebreaker additional level
+  socket.on('startTiebreaker', () => {
+    console.log('Tiebreaker level started');
+    io.emit('startTiebreaker');
+  });
+
   socket.on('forceNextRoom', () => {
     if (gameState.isRunning && gameState.currentRoom < gameState.totalRooms) {
       // Clear existing timer

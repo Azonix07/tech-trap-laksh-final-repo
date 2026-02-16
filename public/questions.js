@@ -163,7 +163,7 @@ const codingQuestions = {
             id: 2,
             isMazePuzzle: true,
             question: "Use your brain power to find the exit! Guide the bug through the maze using arrow keys.",
-            mazeSize: 15
+            mazeSize: 31
         }
     ],
 
@@ -281,9 +281,26 @@ const codingQuestions = {
     room5: [
         {
             id: 1,
-            question: "Write a C program to print the following centered pyramid number pattern (5 rows):\n\n    1\n   1 2\n  1 2 3\n 1 2 3 4\n1 2 3 4 5",
-            starterCode: `#include <stdio.h>\n\nint main() {\n    // Generate the number pattern\n    // Each row i prints numbers from 1 to i\n    // Separate numbers with a space\n    // End each row with a newline\n    \n    return 0;\n}`,
+            questionText: "Write a C program to print the following centered pyramid number pattern (5 rows):",
+            patternDisplay: "    1\n   1 2\n  1 2 3\n 1 2 3 4\n1 2 3 4 5",
+            question: "Write a C program to print the following centered pyramid number pattern (5 rows):",
+            starterCode: `#include <stdio.h>\n\nint main() {\n    // Generate the centered pyramid pattern\n    // Each row i prints (5-i) spaces then numbers 1 to i\n    // Separate numbers with a space\n    // End each row with a newline\n    \n    return 0;\n}`,
             expectedOutput: "    1\n   1 2\n  1 2 3\n 1 2 3 4\n1 2 3 4 5"
+        }
+    ],
+
+    // ========================================
+    // TIEBREAKER: Additional Level for tied participants
+    // Uses same Final Coding Vault UI
+    // ========================================
+    tiebreaker: [
+        {
+            id: 1,
+            questionText: "Write a C program to print the following diamond star pattern (5 rows):",
+            patternDisplay: "    *\n   ***\n  *****\n *******\n*********\n *******\n  *****\n   ***\n    *",
+            question: "Write a C program to print the following diamond star pattern (5 rows):",
+            starterCode: `#include <stdio.h>\n\nint main() {\n    // Generate the diamond star pattern\n    // Upper half: row i has (n-i) spaces then (2*i-1) stars\n    // Lower half: mirror of upper half\n    // n = 5 rows for each half\n    \n    return 0;\n}`,
+            expectedOutput: "    *\n   ***\n  *****\n *******\n*********\n *******\n  *****\n   ***\n    *"
         }
     ]
 };

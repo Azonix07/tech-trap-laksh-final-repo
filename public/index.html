@@ -2063,6 +2063,7 @@
             padding: 6px 10px;
             border-radius: 4px;
             margin-top: 4px;
+            white-space: pre;
         }
 
         /* ==================== SLIDING PUZZLE ==================== */
@@ -2705,12 +2706,163 @@
             clientRoomStartTime = null;
             loadRoom(currentRoom);
         });
-        socket.on('eventStopped', () => { alert('Event stopped'); location.reload(); });
+        socket.on('eventStopped', () => { location.reload(); });
         socket.on('eventCompleted', () => {
             document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('completedScreen').classList.remove('hidden');
             renderCompletionStats();
         });
+
+        // Tiebreaker additional level
+        let tiebreakerActive = false;
+        let tiebreakerStartTime = null;
+        let tiebreakerTimerInterval = null;
+        const TIEBREAKER_DURATION = 600000; // 10 min
+
+        socket.on('startTiebreaker', () => {
+            tiebreakerActive = true;
+            document.getElementById('completedScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            // Use vault background & logo
+            const config = roomConfig[5];
+            document.getElementById('roomBg').style.backgroundImage = `url('${config.bg}')`;
+            document.getElementById('roomLogo').src = config.logo;
+            document.getElementById('roomTitle').textContent = '⚡ TIEBREAKER - Final Coding Vault';
+            document.querySelector('.game-header').classList.add('show');
+            document.getElementById('questionsContainer').classList.add('show');
+
+            // Start tiebreaker timer
+            tiebreakerStartTime = Date.now();
+            if (tiebreakerTimerInterval) clearInterval(tiebreakerTimerInterval);
+            tiebreakerTimerInterval = setInterval(() => {
+                const remaining = Math.max(0, TIEBREAKER_DURATION - (Date.now() - tiebreakerStartTime));
+                const m = Math.floor(remaining / 60000).toString().padStart(2, '0');
+                const s = Math.floor((remaining % 60000) / 1000).toString().padStart(2, '0');
+                document.getElementById('timer').textContent = `${m}:${s}`;
+                if (remaining <= 0) {
+                    clearInterval(tiebreakerTimerInterval);
+                    document.getElementById('timer').textContent = '00:00';
+                }
+            }, 1000);
+
+            loadTiebreakerQuestion();
+        });
+
+        function loadTiebreakerQuestion() {
+            const tbQ = codingQuestions.tiebreaker[0];
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = `
+                <div class="question-container">
+                    <div class="question-header">
+                        <span class="question-number">⚡ TIEBREAKER CHALLENGE</span>
+                    </div>
+                    <div class="question-text" style="font-size: 16px;">
+                        <strong>${tbQ.questionText}</strong>
+                        <pre style="font-family:'Fira Code',monospace; background:rgba(0,0,0,0.5); color:#39ff14; padding:12px 18px; border-radius:8px; margin-top:10px; font-size:15px; display:inline-block; text-align:left;">${tbQ.patternDisplay}</pre>
+                    </div>
+                </div>
+
+                <div class="expected-output">
+                    <div class="expected-output-label">📋 EXPECTED OUTPUT:</div>
+                    <div class="expected-output-value">${tbQ.expectedOutput}</div>
+                </div>
+
+                <div class="debug-container">
+                    <div class="code-editor-panel">
+                        <div class="panel-header">
+                            <span>💻 CODE EDITOR</span>
+                            <button class="run-btn-inline" onclick="runTiebreakerCode()">▶️ Run Code</button>
+                        </div>
+                        <textarea class="code-editor" id="codeEditor" spellcheck="false">${tbQ.starterCode}</textarea>
+                    </div>
+
+                    <div class="console-panel">
+                        <div class="panel-header">
+                            <span>🖥️ CONSOLE OUTPUT</span>
+                        </div>
+                        <div class="console-output" id="consoleOutput">
+                            <span style="opacity: 0.5;">// Console ready. Write your code and click "Run Code"...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="debug-controls">
+                    <button class="reset-code-btn" onclick="document.getElementById('codeEditor').value = codingQuestions.tiebreaker[0].starterCode.replace(/\\n/g, '\n').replace(/\\t/g, '\t')">🔄 Reset Code</button>
+                </div>
+
+                <div class="feedback-container" id="feedback"></div>
+            `;
+            setTimeout(() => enableCodeEditorTab(), 100);
+        }
+
+        function runTiebreakerCode() {
+            const code = document.getElementById('codeEditor').value;
+            const consoleOutput = document.getElementById('consoleOutput');
+            consoleOutput.className = 'console-output';
+            consoleOutput.innerHTML = '<span style="opacity: 0.7;">⏳ Compiling and running...</span>';
+
+            setTimeout(() => {
+                const tbQ = codingQuestions.tiebreaker[0];
+                const expectedOutput = tbQ.expectedOutput.replace(/\\n/g, '\n');
+                const output = simulateTiebreakerExecution(code, tbQ);
+
+                if (output.error) {
+                    consoleOutput.classList.add('error');
+                    consoleOutput.innerHTML = `❌ COMPILATION ERROR:<br>${output.error}`;
+                } else {
+                    const normalizeStr = s => s.replace(/[ \t]+$/gm, '').replace(/\n+$/, '');
+                    if (normalizeStr(output.result) === normalizeStr(expectedOutput)) {
+                        consoleOutput.classList.add('success');
+                        consoleOutput.innerHTML = `✅ OUTPUT MATCHES!<br><pre style="margin: 5px 0;">${output.result}</pre>`;
+                        totalCorrect++;
+                        if (!roomScores[6]) roomScores[6] = 0;
+                        roomScores[6]++;
+                        socket.emit('submitAnswer', { room: 6, questionId: 'TB1', answer: code, correct: true });
+                        const feedback = document.getElementById('feedback');
+                        feedback.innerHTML = `<div class="feedback correct">🏆 TIEBREAKER SOLVED! Amazing work!</div>`;
+                    } else {
+                        consoleOutput.classList.add('error');
+                        consoleOutput.innerHTML = `📤 Your Output:<br><pre style="margin: 5px 0;">${output.result}</pre><br>🎯 Expected:<br><pre style="margin: 5px 0;">${expectedOutput}</pre><br>Incorrect output! Try again.`;
+                    }
+                }
+            }, 500);
+        }
+
+        function simulateTiebreakerExecution(code, question) {
+            const hasMain = code.includes('int main') || code.includes('void main');
+            if (!hasMain) return { error: 'Missing main() function' };
+            const hasPrintf = code.includes('printf') || code.includes('cout');
+            if (!hasPrintf) return { error: 'Missing output statement (printf)' };
+
+            const hasNestedFor = (code.match(/for\s*\(/g) || []).length >= 2;
+            const hasWhile = (code.match(/while\s*\(/g) || []).length >= 2;
+            const usesLoops = hasNestedFor || hasWhile;
+            const printfCount = (code.match(/printf\s*\(/g) || []).length;
+
+            if (!usesLoops && printfCount >= 5) {
+                return { result: '⚠️ Anti-cheat: You must use loops to generate the pattern, not hardcoded printf statements.' };
+            }
+
+            if (usesLoops && hasPrintf) {
+                // Check for diamond pattern logic
+                const hasNRows = code.match(/n\s*=\s*5/i) || code.match(/rows\s*=\s*5/i) || code.match(/i\s*<=?\s*5/i) || code.match(/i\s*<\s*6/i);
+                const hasSpaceLoop = code.match(/j.*<.*n\s*-\s*i/i) || code.match(/j.*<.*[0-9]\s*-\s*i/i) || code.match(/space/i) || (code.match(/for\s*\(/g) || []).length >= 3;
+                const hasStarLoop = code.match(/j.*<=?.*i/i) || code.match(/\*/i) || code.match(/star/i);
+
+                if (hasNRows && (hasSpaceLoop || hasStarLoop)) {
+                    return { result: question.expectedOutput.replace(/\\n/g, '\n') };
+                } else {
+                    return { result: 'Pattern logic incomplete. Check your loop bounds, spacing, and print statements.' };
+                }
+            }
+
+            const printfMatch = code.match(/printf\s*\(\s*"([^"]+)"/i);
+            if (printfMatch) {
+                const extracted = printfMatch[1].replace(/\\n/g, '\n').replace(/%d|%s|%c/g, '?');
+                return { result: extracted };
+            }
+            return { result: 'No output / Incorrect logic. Use nested for loops.' };
+        }
 
         function renderCompletionStats() {
             const totalQuestions = TOTAL_QUESTIONS;
@@ -3042,7 +3194,8 @@
                             </div>
                         </div>
                         <div class="question-text" style="font-size: 16px;">
-                            <strong>${q.question}</strong>
+                            <strong>${q.questionText || q.question.split('\n')[0]}</strong>
+                            ${q.patternDisplay ? `<pre style="font-family:'Fira Code',monospace; background:rgba(0,0,0,0.5); color:#39ff14; padding:12px 18px; border-radius:8px; margin-top:10px; font-size:15px; display:inline-block; text-align:left;">${q.patternDisplay}</pre>` : ''}
                         </div>
                     </div>
                     
@@ -3100,7 +3253,7 @@
                             <span>👣 Steps: <span id="mazeSteps" style="color:var(--neon-green);">0</span></span>
                         </div>
                         <div class="maze-canvas-wrapper">
-                            <canvas id="mazeCanvas" width="450" height="450"></canvas>
+                            <canvas id="mazeCanvas" width="560" height="560"></canvas>
                         </div>
                         <div class="maze-controls-hint">Use ⬆️ ⬇️ ⬅️ ➡️ Arrow Keys to move</div>
                         <button class="maze-btn" onclick="resetMaze()">🔄 Reset Maze</button>
@@ -4398,9 +4551,9 @@
         // ==================== MAZE GAME ====================
         let mazeGrid = [];
         let mazePlayer = { x: 1, y: 1 };
-        let mazeExit = { x: 13, y: 13 };
-        let mazeCellSize = 30;
-        let mazeSize = 15;
+        let mazeExit = { x: 29, y: 29 };
+        let mazeCellSize = 18;
+        let mazeSize = 31;
         let mazeSteps = 0;
         let mazeTimerInterval = null;
         let mazeStartTime = 0;
@@ -4408,9 +4561,11 @@
         let mazeKeyHandler = null;
         
         function initMazeGame(question) {
-            // Tougher maze: minimum size 21x21
-            mazeSize = Math.max(question.mazeSize || 21, 21);
-            mazeCellSize = Math.floor(450 / mazeSize);
+            // Very hard maze: minimum size 31x31
+            mazeSize = Math.max(question.mazeSize || 31, 31);
+            // Force odd size for proper maze generation
+            if (mazeSize % 2 === 0) mazeSize++;
+            mazeCellSize = Math.floor(560 / mazeSize);
             mazePlayer = { x: 1, y: 1 };
             mazeExit = { x: mazeSize - 2, y: mazeSize - 2 };
             mazeSteps = 0;
@@ -4486,6 +4641,23 @@
             // Open path to exit if blocked
             if (mazeGrid[mazeExit.y - 1][mazeExit.x] === 1 && mazeGrid[mazeExit.y][mazeExit.x - 1] === 1) {
                 mazeGrid[mazeExit.y - 1][mazeExit.x] = 0;
+            }
+
+            // Create misleading loops: randomly remove some interior walls
+            // This makes the maze harder by offering multiple paths & dead-end traps
+            const loopCount = Math.floor(mazeSize * mazeSize * 0.04);
+            for (let i = 0; i < loopCount; i++) {
+                const rx = 2 + Math.floor(Math.random() * (mazeSize - 4));
+                const ry = 2 + Math.floor(Math.random() * (mazeSize - 4));
+                if (mazeGrid[ry][rx] === 1) {
+                    // Only remove if it connects two path cells (creates a loop)
+                    const adj = [
+                        [rx-1, ry], [rx+1, ry], [rx, ry-1], [rx, ry+1]
+                    ].filter(([ax, ay]) => ax > 0 && ax < mazeSize-1 && ay > 0 && ay < mazeSize-1 && mazeGrid[ay][ax] === 0);
+                    if (adj.length >= 2) {
+                        mazeGrid[ry][rx] = 0;
+                    }
+                }
             }
         }
         
